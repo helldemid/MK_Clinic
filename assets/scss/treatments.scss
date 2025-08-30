@@ -169,6 +169,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: 3rem;
 	padding: 0;
 	padding-left: var(--big-padding);
 
@@ -176,25 +177,25 @@
 		max-width: 700px;
 
 		span {
-			font-size: 20px;
+			font-size: 1.25rem;
 		}
 
 		h1 {
-			font-size: 40px;
+			font-size: 2.5rem;
 			font-weight: 700;
 		}
 
 		p {
-			font-size: 16px;
+			font-size: 1rem;
 			font-weight: 300;
-			margin: 20px 0;
+			margin: 1.25rem 0;
 			text-align: justify;
 			width: 70%;
 		}
 
 		button {
 			border: solid 1px black;
-			margin-right: 20px;
+			margin-right: 1.25rem;
 
 			&.book {
 				background: black;
@@ -236,7 +237,7 @@
 
 .key_details {
 	position: relative;
-	padding: 60px;
+	padding: var(--big-padding);
 
 	.content {
 		position: relative;
@@ -253,7 +254,7 @@
 			flex-direction: column;
 			align-items: center;
 			text-align: center;
-			gap: 12px;
+			gap: 0.75rem;
 			color: white;
 
 			.point_icon {
@@ -269,7 +270,7 @@
 	}
 }
 
-@media (max-width: 1440px) {
+@media (min-width: 1440px) {
 	.treatment_banner {
 		justify-content: center;
 	}
@@ -321,6 +322,24 @@
 	.treatments_banner {
 		height: calc(100vh - 110px);
 	}
+
+	.treatment_banner {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		padding: 0 2rem;
+
+		.treatment_main_info {
+			width: 100%;
+			p { width: 90%; }
+		}
+	}
+
+	.key_details {
+		.details_wrap {
+			justify-content: space-between;
+		}
+	}
 }
 
 @media (max-width: 650px) {
@@ -333,10 +352,75 @@
 			p { font-size: 1rem; padding: 1.25rem 0;}
 		}
 	}
+
+	.treatment_banner {
+		flex-direction: column-reverse;
+		gap: 1rem;
+		padding: 2rem;
+
+		.treatment_main_info {
+			text-align: center;
+			p { width: 100%; }
+		}
+	}
+
+	.key_details {
+		padding: 1.5rem;
+		.details_wrap {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(20%, 1fr));
+			width: 70%;
+			margin: auto;
+			gap: 2rem;
+		}
+	}
 }
 
 @media (max-width: 480px) {
 	.treatments_banner {
 		height: calc(100vh - 70px);
+	}
+	.filters {
+		height: unset;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.treatment_card {
+		&.fixed_card {
+			width: 280px;
+			height: 425px;
+		}
+		.content {
+			padding: 3rem 1.25rem;
+			.top {
+				p {
+					font-size: 1.4rem;
+				}
+			}
+			.bottom {
+				p {
+					font-size: 1rem;
+					font-weight: 300;
+					text-align: justify;
+				}
+			}
+		}
+	}
+	#treatments_container {
+		grid-template-columns: repeat(auto-fit, minmax(30%, 280px));
+	}
+
+	.key_details {
+		.details_wrap {
+			width: 100%;
+			.point {
+				.point_icon {
+					width: 60px;
+					height: 60px;
+				}
+			}
+		}
 	}
 }

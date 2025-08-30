@@ -122,3 +122,11 @@ button[type="submit"] {
 		}
 	}
 }
+
+@media (max-width: 480px) {
+	section.book_form {
+		.book_form_wrap form {
+			h3 { font-size: 1.25rem;}
+		}
+	}
+}

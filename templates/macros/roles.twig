@@ -1,0 +1,13 @@
+{% macro main_role(roles) %}
+	{% if 'ROLE_SUPER_ADMIN' in roles %}
+		Super Admin
+	{% elseif 'ROLE_ADMIN' in roles %}
+		Admin
+	{% elseif 'ROLE_MANAGER' in roles %}
+		Manager
+	{% elseif 'ROLE_USER' in roles %}
+		User
+	{% else %}
+		Unknown
+	{% endif %}
+{% endmacro %}

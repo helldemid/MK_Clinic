@@ -417,7 +417,8 @@ footer {
 		background-color: $gray-back;
 		padding: var(--huge-padding);
 		margin: auto;
-		width: 60%;
+		width: 80%;
+		box-sizing: border-box;
 
 		.question_block {
 			overflow: hidden;
@@ -446,7 +447,7 @@ footer {
 				}
 
 				.accordion-title-text {
-					font-size: 28px;
+					font-size: 1.75rem;
 					line-height: 1.1428571429;
 					font-weight: 600;
 					letter-spacing: .007em;
@@ -455,7 +456,7 @@ footer {
 			}
 
 			p {
-				font-size: 17px;
+				font-size: 1rem;
 				line-height: 1.47;
 				font-weight: 400;
 				letter-spacing: -0.022em;
@@ -498,31 +499,51 @@ footer {
 
 	header {
 		nav {
-
 			.desktop-menu,
-			.header_book {
-				display: none;
-			}
+			.header_book { display: none; }
 
-			.menu-btn {
-				display: flex;
-			}
+			.menu-btn { display: flex; }
 		}
 	}
 
 	footer {
-		.content {
-			flex-wrap: wrap;
-		}
+		.content { flex-wrap: wrap; }
 
-		.links {
-			text-align: center;
-		}
+		.links { text-align: center; }
 
 		#map {
 			width: 100% !important;
 			height: 300px !important;
 			order: 1;
+		}
+	}
+	.additional_information {
+		.questions_block_wrap {
+			width: 90%;
+			padding: 3rem;
+			.question_block {
+				h3 {
+					.accordion-title-text {
+						font-size: 1.5rem;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 780px) {
+	.additional_information {
+		.questions_block_wrap {
+			width: 90%;
+			padding: 3rem;
+			.question_block {
+				h3 {
+					.accordion-title-text {
+						font-size: 1.25rem;
+					}
+				}
+			}
 		}
 	}
 }
@@ -532,9 +553,7 @@ footer {
 		--big-padding: 2rem;
 		--huge-padding: 4rem;
 	}
-	h2 {
-		font-size: 2rem;
-	}
+	h2 { font-size: 2rem; }
 
 	header {
 		nav {
@@ -547,6 +566,15 @@ footer {
 				top: 90px;
 				height: calc(100% - 90px);
 			}
+		}
+	}
+}
+
+@media (max-width: 580px) {
+	.additional_information {
+		.questions_block_wrap {
+			width: 100%;
+			padding: 2rem;
 		}
 	}
 }
@@ -586,9 +614,7 @@ footer {
 			img { width: 60px; }
 		}
 
-		.content {
-			flex-direction: column;
-		}
+		.content { flex-direction: column; }
 	}
 }
 

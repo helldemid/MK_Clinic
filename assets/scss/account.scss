@@ -1,15 +1,30 @@
 @use "variables" as *;
 
+.account-page {
+	padding: var(--big-padding) var(--big-padding) 0 var(--big-padding);
+}
+#users-table_wrapper {
+	td select {
+		margin: 0;
+		padding-left: 0.5rem;
+		min-width: 150px;
+	}
+}
+
+.account-content {
+	width: 100%;
+}
+
 .page-wrap {
 	display: flex;
-	gap: 60px;
+	gap: var(--big-padding);
 
 	.sidebar {
 		max-width: 400px;
 		width: 100%;
 
 		p {
-			font-size: 22px;
+			font-size: 1.4rem;
 		}
 
 		hr {
@@ -43,6 +58,7 @@
 				border-radius: 20px;
 				transition: 0.6s ease;
 				cursor: pointer;
+				border: 1px solid black;
 
 				a {
 					text-decoration: none;
@@ -69,7 +85,7 @@
 
 	h3 {
 		margin-bottom: 10px;
-		font-size: 22px;
+		font-size: 1.375rem;
 	}
 
 	p {
@@ -91,16 +107,17 @@
 		}
 
 		.icon {
-			width: 22px;
+			width: 1.375rem;
 			transition: filter 0.3s ease;
 		}
 
 		&.done {
 			background: rgb(0 117 0);
-			font-size: 30px;
+			font-size: 1.875rem;
 			margin: 0;
 			box-sizing: border-box;
-			width: 48px;
+			width: 3rem;
+
 			&:hover {
 				background: black;
 			}
@@ -110,6 +127,7 @@
 	form {
 		display: inline-flex;
 		gap: 10px;
+		flex-wrap: wrap;
 
 		& input {
 			margin: 0;
@@ -121,6 +139,72 @@
 	}
 }
 
-.field-error { display:block; font-size:12px; margin-top:4px; }
-.field-error:not(:empty) { color:#d32f2f; } /* красная ошибка */
-input[aria-invalid="true"] { outline: 2px solid #d32f2f; }
+.field-error {
+	display: block;
+	font-size: 0.75rem;
+	margin-top: 4px;
+}
+
+.field-error:not(:empty) {
+	color: #d32f2f;
+}
+
+/* красная ошибка */
+input[aria-invalid="true"] {
+	outline: 2px solid #d32f2f;
+}
+
+
+@media (max-width: 780px) {
+	.account-page {
+		.page-wrap {
+			flex-direction: column;
+
+			.sidebar {
+				max-width: unset;
+
+				display: grid;
+				grid-template-columns: auto 1fr;
+				grid-template-areas:
+					"welcome logout"
+					"divider divider"
+					"menu menu";
+				align-items: center;
+				gap: 1rem;
+				width: 100%;
+
+				p {
+					grid-area: welcome;
+					margin: 0;
+					font-weight: 600;
+					border-right: 2px solid #ddd;
+					padding-right: 1rem;
+				}
+
+				.logout {
+					grid-area: logout;
+					display: flex;
+					align-items: center;
+					gap: 0.5rem;
+					font-weight: 600;
+					text-decoration: none;
+				}
+
+				hr {
+					grid-area: divider;
+					width: 100%;
+					border: none;
+					border-top: 1px solid #ddd;
+					margin: 0;
+				}
+
+				.side-menu {
+					grid-area: menu;
+					display: flex;
+					gap: 1rem;
+				}
+			}
+
+		}
+	}
+}

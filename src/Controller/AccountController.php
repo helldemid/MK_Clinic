@@ -27,6 +27,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use Symfony\Component\Form\FormError;
 
+use App\Repository\UserRepository;
+
 class AccountController extends AbstractController
 {
 
@@ -57,6 +59,8 @@ class AccountController extends AbstractController
 	private LoginFormAuthenticator $authenticator;
 	private UserPasswordHasherInterface $passwordHasher;
 
+	private UserRepository $userRepository;
+
 	public function __construct(
 		EmailVerificationService $emailVerificationService,
 		MailerService $mailerService,
@@ -64,7 +68,8 @@ class AccountController extends AbstractController
 		UserAuthenticatorInterface $userAuthenticator,
 		LoginFormAuthenticator $authenticator,
 		Security $security,
-		UserPasswordHasherInterface $passwordHasher
+		UserPasswordHasherInterface $passwordHasher,
+		UserRepository $userRepository
 	) {
 		$this->emailVerificationService = $emailVerificationService;
 		$this->mailerService = $mailerService;
@@ -73,6 +78,7 @@ class AccountController extends AbstractController
 		$this->security = $security;
 		$this->authenticator = $authenticator;
 		$this->passwordHasher = $passwordHasher;
+		$this->userRepository = $userRepository;
 	}
 
 
@@ -82,15 +88,133 @@ class AccountController extends AbstractController
 	 * @param Request $request
 	 */
 	#[Route('/account', name: 'app_account')]
-	public function account(Request $request) {
+	public function account(Request $request)
+	{
 		$user = $this->getUser();
 
 		if (null === $user) {
 			return $this->redirectToRoute('app_login');
 		}
 
-		return $this->render('account/index.html.twig', ['user' => $user]);
+		if ($this->isGranted('ROLE_ADMIN')) {
+			$users = $this->userRepository->createQueryBuilder('u')
+				->where('u.id != :currentId')
+				->setParameter('currentId', $user->getId())
+				->getQuery()
+				->getResult();
+		}
+
+		return $this->render('account/index.html.twig', ['user' => $user, 'users' => $users ?? []]);
 	}
+
+	#[Route('/account/user/{id}/change-role', name: 'admin_change_role', methods: ['POST'])]
+	/**
+	 * Change the role of a user.
+	 *
+	 * This endpoint allows a SUPER_ADMIN to change a user's role.
+	 *
+	 * @param Request $request
+	 * @param User $user The user entity resolved by ParamConverter
+	 * @param EntityManagerInterface $em
+	 * @return JsonResponse
+	 */
+	public function changeRole(Request $request, User $user, EntityManagerInterface $em): JsonResponse
+	{
+		try {
+			// Deny access if current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
+			// Decode JSON payload
+			$data = json_decode($request->getContent(), true);
+			$role = $data['role'] ?? null;
+
+			// Validate role
+			$allowedRoles = ['ROLE_USER', 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN'];
+			if (!$role || !in_array($role, $allowedRoles, true)) {
+				return $this->json([
+					'success' => false,
+					'error' => 'Invalid role'
+				], 400);
+			}
+
+			// Prevent changing own role
+			if ($this->getUser()->getId() === $user->getId()) {
+				return $this->json([
+					'success' => false,
+					'error' => 'You cannot change your own role'
+				], 403);
+			}
+
+			// Update user's role
+			$user->setRoles([$role]);
+			$em->flush();
+
+			return $this->json(['success' => true, 'role' => $role]);
+		} catch (\Throwable $e) {
+			// Catch any unexpected errors
+			return $this->json([
+				'success' => false,
+				'message' => 'An unexpected error occurred',
+				'error' => $e->getMessage() // optional for debug
+			], 500);
+		}
+	}
+
+
+	#[Route('/account/user/{id}/toggle-active', name: 'admin_toggle_active', methods: ['POST'])]
+	/**
+	 * Toggle the "active" status of a user.
+	 *
+	 * This endpoint allows a SUPER_ADMIN to activate or deactivate other users.
+	 *
+	 * @param Request $request
+	 * @param User $user The user entity resolved by ParamConverter
+	 * @param EntityManagerInterface $em
+	 * @return JsonResponse
+	 */
+	public function toggleActive(
+		Request $request,
+		User $user,
+		EntityManagerInterface $em
+	): JsonResponse {
+		try {
+			// Deny access if the current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
+			// Decode JSON payload
+			$data = json_decode($request->getContent(), true);
+
+			// Validate incoming data
+			if (!isset($data['isActive'])) {
+				return $this->json(['success' => false, 'message' => 'Missing isActive field'], 400);
+			}
+
+			$isActive = filter_var($data['isActive'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+			if ($isActive === null) {
+				return $this->json(['success' => false, 'message' => 'Invalid isActive value'], 400);
+			}
+
+			// Prevent user from toggling their own status
+			if ($this->getUser()->getId() === $user->getId()) {
+				return $this->json(['success' => false, 'message' => 'You cannot change your own status'], 403);
+			}
+
+			// Update the user's active status
+			$user->setIsActive($isActive);
+			$em->flush();
+
+			// Return the updated status
+			return $this->json(['success' => true, 'isActive' => $user->isActive()]);
+		} catch (\Throwable $e) {
+			// Catch any exception and return a safe JSON response
+			return $this->json([
+				'success' => false,
+				'message' => 'An unexpected error occurred',
+				'error' => $e->getMessage() // optional: remove in production
+			], 500);
+		}
+	}
+
 
 	/**
 	 * Create a confirmation link that will be send for action verification
@@ -98,7 +222,8 @@ class AccountController extends AbstractController
 	 * @param string $action
 	 * @return string
 	 */
-	private function createConfirmationLink(string $code, string $action): string {
+	private function createConfirmationLink(string $code, string $action): string
+	{
 		return $this->generateUrl('app_email_verified', [
 			'action' => $action,
 			'code' => $code,
@@ -113,7 +238,8 @@ class AccountController extends AbstractController
 	 * @param integer $status (1 - success, 0 - failure)
 	 * @return Response
 	 */
-	private function renderStatus(string $title, string $message, int $status = 1): Response {
+	private function renderStatus(string $title, string $message, int $status = 1): Response
+	{
 		$statusTemplate = $status === 1 ? 'confirm_success.html.twig' : 'confirm_fail.html.twig';
 		return $this->render('messages/' . $statusTemplate, [
 			'title' => $title,
@@ -131,7 +257,8 @@ class AccountController extends AbstractController
 	 *
 	 * @return void
 	 */
-	private function sendConfirmationLetter(string $userEmail, int $user_id, int $confirmType, string $userName = 'dear fellow user'): void {
+	private function sendConfirmationLetter(string $userEmail, int $user_id, int $confirmType, string $userName = 'dear fellow user'): void
+	{
 		$confirmationCode = $this->emailVerificationService->create($userEmail, $user_id, $confirmType);
 
 		$confirmationLink = $this->createConfirmationLink($confirmationCode, self::CONFIRMATION_ACTIONS_NAMES[$confirmType]);
@@ -153,22 +280,25 @@ class AccountController extends AbstractController
 	 * @return Response
 	 */
 	#[Route('/email_verified', name: 'app_email_verified')]
-	public function emailVerified(Request $request): Response {
+	public function emailVerified(Request $request): Response
+	{
 		$confirmationCode = $request->get('code');
 		$action = $request->get('action');
 
 		try {
-			if (!$confirmationCode || !$action) throw new \Exception('Verification link is invalid');
+			if (!$confirmationCode || !$action)
+				throw new \Exception('Verification link is invalid');
 
 			$verificationData = $this->emailVerificationService->confirm($confirmationCode);
 
-			if (empty($verificationData) || empty($verificationData['action'])) throw new \Exception('Verification code is invalid or has expired');
+			if (empty($verificationData) || empty($verificationData['action']))
+				throw new \Exception('Verification code is invalid or has expired');
 
 			if (!array_key_exists($verificationData['action'], self::CONFIRMATION_ACTIONS_NAMES)) {
 				throw new \Exception('Unknown action for verification code');
 			}
 
-			$actionToCall = self::CONFIRMATION_ACTIONS_NAMES[$verificationData['action']].'_confirmed';
+			$actionToCall = self::CONFIRMATION_ACTIONS_NAMES[$verificationData['action']] . '_confirmed';
 
 			if (!is_callable([$this, $actionToCall])) {
 				throw new \Exception('Action method not found: ' . $actionToCall);
@@ -187,7 +317,8 @@ class AccountController extends AbstractController
 	 * @param Request $request
 	 */
 	#[Route('/account/create_account', name: 'app_create_account')]
-	public function createAccount(Request $request) {
+	public function createAccount(Request $request)
+	{
 		$userEmail = $request->get('email');
 		$userId = $request->get('user_id');
 		$sUserName = $request->get('name');
@@ -208,7 +339,8 @@ class AccountController extends AbstractController
 	 * @return Response
 	 */
 	#[Route('/account/forgot_password', name: 'app_forgot_password')]
-	public function forgotPassword(Request $request): Response {
+	public function forgotPassword(Request $request): Response
+	{
 		$form = $this->createForm(ForgotPasswordType::class);
 		$form->handleRequest($request);
 
@@ -238,7 +370,8 @@ class AccountController extends AbstractController
 	 * @return Response|\Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	#[Route('/account/change_password', name: 'app_change_password')]
-	public function changePassword(Request $request) {
+	public function changePassword(Request $request)
+	{
 		$token = $request->get('token');
 		$bForgetPass = null !== $token;
 
@@ -287,7 +420,8 @@ class AccountController extends AbstractController
 	 * @return Response|\Symfony\Component\HttpFoundation\RedirectResponse
 	 */
 	#[Route('/account/change_email', name: 'app_change_email')]
-	public function changeEmail(Request $request) {
+	public function changeEmail(Request $request)
+	{
 		$token = $request->get('token');
 
 		// verified email change from email verification link
@@ -351,14 +485,15 @@ class AccountController extends AbstractController
 	 * @return JsonResponse
 	 */
 	#[Route('/account/edit_fullname', name: 'app_edit_fullname', methods: ['POST'])]
-	public function editFullname(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse {
+	public function editFullname(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
+	{
 		if (!$this->getUser()) {
 			throw $this->createAccessDeniedException();
 		}
 
 		$input = new FullnameInput();
-		$input->firstName = trim((string)$request->request->get('firstName', ''));
-		$input->lastName  = trim((string)$request->request->get('lastName', ''));
+		$input->firstName = trim((string) $request->request->get('firstName', ''));
+		$input->lastName = trim((string) $request->request->get('lastName', ''));
 
 		$violations = $validator->validate($input);
 
@@ -375,9 +510,9 @@ class AccountController extends AbstractController
 		$em->flush();
 
 		return $this->json([
-			'success'   => true,
+			'success' => true,
 			'firstName' => $user->getFirstName(),
-			'lastName'  => $user->getLastName(),
+			'lastName' => $user->getLastName(),
 		]);
 	}
 
@@ -390,21 +525,22 @@ class AccountController extends AbstractController
 	 * @return JsonResponse
 	 */
 	#[Route('/account/edit_phone', name: 'app_edit_phone', methods: ['POST'])]
-	public function editPhone(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse {
+	public function editPhone(Request $request, EntityManagerInterface $em, ValidatorInterface $validator): JsonResponse
+	{
 		if (!$this->getUser()) {
 			throw $this->createAccessDeniedException();
 		}
 
 		$input = new PhoneInput();
 		// Можно нормализовать пробелы: +44 7123 456 789 → +44 7123 456 789 (оставим как есть для читаемости)
-		$input->phone = preg_replace('/\s+/', ' ', trim((string)$request->request->get('phone', '')));
+		$input->phone = preg_replace('/\s+/', ' ', trim((string) $request->request->get('phone', '')));
 
 		$violations = $validator->validate($input);
 
 		if (count($violations) > 0) {
 			return $this->json([
 				'success' => false,
-				'errors'  => $this->violationsToArray($violations),
+				'errors' => $this->violationsToArray($violations),
 			], 422);
 		}
 
@@ -414,7 +550,7 @@ class AccountController extends AbstractController
 		if ($existingUser && $existingUser->getId() !== $user->getId()) {
 			return $this->json([
 				'success' => false,
-				'errors'  => ['phone' => 'This phone number is already in use.'],
+				'errors' => ['phone' => 'This phone number is already in use.'],
 			], 422);
 		}
 
@@ -423,7 +559,7 @@ class AccountController extends AbstractController
 
 		return $this->json([
 			'success' => true,
-			'phone'   => $user->getPhone(),
+			'phone' => $user->getPhone(),
 		]);
 	}
 
@@ -433,7 +569,8 @@ class AccountController extends AbstractController
 	 * @param integer $userId
 	 * @return Response
 	 */
-	private function app_create_account_confirmed(int $userId): Response {
+	private function app_create_account_confirmed(int $userId): Response
+	{
 		// get user by ID
 		$user = $this->entityManager->getRepository(User::class)->find($userId);
 
@@ -457,7 +594,8 @@ class AccountController extends AbstractController
 	 * @param integer $userId
 	 * @return void
 	 */
-	private function app_forgot_password_confirmed(int $userId) {
+	private function app_forgot_password_confirmed(int $userId)
+	{
 		$user = $this->entityManager->getRepository(User::class)->find($userId);
 
 		if (!$user) {
@@ -475,7 +613,8 @@ class AccountController extends AbstractController
 	 * @param integer $userId
 	 * @return void
 	 */
-	private function app_change_email_confirmed(int $userId) {
+	private function app_change_email_confirmed(int $userId)
+	{
 		$user = $this->entityManager->getRepository(User::class)->find($userId);
 
 		if (!$user) {

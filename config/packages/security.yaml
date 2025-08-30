@@ -2,6 +2,10 @@ security:
     password_hashers:
         App\Entity\User: 'auto'
 
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
     providers:
         app_user_provider:
             entity:
@@ -16,16 +20,10 @@ security:
         main:
             provider: app_user_provider
 
-            # Если используешь LoginFormAuthenticator
+            #LoginFormAuthenticator
             custom_authenticator:
                 - App\Security\LoginFormAuthenticator
             entry_point: App\Security\LoginFormAuthenticator
-
-            # Если хочешь оставить form_login, можно так:
-            # form_login:
-            #     login_path: app_login
-            #     check_path: app_login
-            # entry_point: form_login
 
             logout:
                 path: app_logout

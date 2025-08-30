@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
+{% import 'macros/roles.twig' as roles_macros %}
 
 {% block title %}Account
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css"/>
 {% endblock %}
 
 {% block body %}
@@ -8,25 +13,28 @@
 		<h2>My Account</h2>
 		<div class="page-wrap">
 			<div class="sidebar">
-				<div class="side-menu sidebar-fix">
-					<p>Welcome back
-						<span>{{ app.user.firstName }}</span>
-					</p>
-					<hr>
-					<ul class="side-menu">
-						<li class="active" data-target="personal-block">
-							<a href="#" nofollow>Personal Information</a>
+				<p>Welcome back,
+					<span>{{ app.user.firstName }}</span>
+				</p>
+				<hr>
+				<ul class="side-menu">
+					<li class="active" data-target="personal-block">
+						<a href="#" nofollow>Personal Information</a>
+					</li>
+					<li class="" data-target="history-block">
+						<a href="#" nofollow>Visit history</a>
+					</li>
+					{% if is_granted('ROLE_ADMIN') %}
+						<li data-target="users-block">
+							<a href="#" nofollow>Users</a>
 						</li>
-						<li class="" data-target="history-block">
-							<a href="#" nofollow>Visit history</a>
-						</li>
-					</ul>
-					<hr>
-					<a class="logout" href="{{ path('app_logout') }}">
-						<img class="icon" src="{{ asset('media/icons/logOut.svg') }}" alt="Log Out">
-						<span class="bottom_line_on_hover">Log Out</span>
-					</a>
-				</div>
+					{% endif %}
+				</ul>
+				<hr>
+				<a class="logout" href="{{ path('app_logout') }}">
+					<img class="icon" src="{{ asset('media/icons/logOut.svg') }}" alt="Log Out">
+					<span class="bottom_line_on_hover">Log Out</span>
+				</a>
 			</div>
 
 			<div class="account-content">
@@ -45,31 +53,11 @@
 					</p>
 					<form id="fullname-form" action="{{ path('app_edit_fullname') }}" method="post" class="hidden">
 						<div class="field">
-							<input
-								type="text"
-								name="firstName"
-								value="{{ app.user.firstName }}"
-								required
-								minlength="2"
-								maxlength="50"
-								pattern="^[\p{L}\p{M}][\p{L}\p{M}\s'\-]{1,49}$"
-								title="All allowed letters, spaces, apostrophes, and hyphens; from 2 to 50 characters"
-								autocomplete="given-name"
-							>
+							<input type="text" name="firstName" value="{{ app.user.firstName }}" required minlength="2" maxlength="50" pattern="^[\p{L}\p{M}][\p{L}\p{M}\s'\-]{1,49}$" title="All allowed letters, spaces, apostrophes, and hyphens; from 2 to 50 characters" autocomplete="given-name">
 							<span class="field-error" data-for="firstName" aria-live="polite"></span>
 						</div>
 						<div class="field">
-							<input
-								type="text"
-								name="lastName"
-								value="{{ app.user.lastName }}"
-								required
-								minlength="2"
-								maxlength="50"
-								pattern="^[\p{L}\p{M}][\p{L}\p{M}\s'\-]{1,49}$"
-								title="All allowed letters, spaces, apostrophes, and hyphens; from 2 to 50 characters"
-								autocomplete="family-name"
-							>
+							<input type="text" name="lastName" value="{{ app.user.lastName }}" required minlength="2" maxlength="50" pattern="^[\p{L}\p{M}][\p{L}\p{M}\s'\-]{1,49}$" title="All allowed letters, spaces, apostrophes, and hyphens; from 2 to 50 characters" autocomplete="family-name">
 							<span class="field-error" data-for="lastName" aria-live="polite"></span>
 						</div>
 						<button type="submit" class="edit_button done" data-loading="false">&#10003;</button>
@@ -91,17 +79,7 @@
 					</p>
 					<form id="phone-form" action="{{ path('app_edit_phone') }}" method="post" {% if app.user.phone %} class="hidden" {% endif %}>
 						<div class="field">
-							<input
-								type="tel"
-								name="phone"
-								value="{{ app.user.phone ?? '' }}"
-								placeholder="+44 7XXX XXX XXX"
-								required
-								inputmode="tel"
-								pattern="^\+44\s?7\d{3}\s?\d{3}\s?\d{3}$"
-								title="Enter your phone number in the format +44 7XXX XXX XXX"
-								autocomplete="tel"
-							>
+							<input type="tel" name="phone" value="{{ app.user.phone ?? '' }}" placeholder="+44 7XXX XXX XXX" required inputmode="tel" pattern="^\+44\s?7\d{3}\s?\d{3}\s?\d{3}$" title="Enter your phone number in the format +44 7XXX XXX XXX" autocomplete="tel">
 							<span class="field-error" data-for="phone" aria-live="polite"></span>
 						</div>
 						<button type="submit" class="edit_button done" data-loading="false">&#10003;</button>
@@ -116,11 +94,59 @@
 					<h3>Visit History</h3>
 					<p>Your visit history is empty...</p>
 				</div>
+				{% if is_granted('ROLE_ADMIN') %}
+					<div id="users-block" style="display:none;" class="account-block">
+						<h3>Users</h3>
+						<table id="users-table" class="display">
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Email</th>
+									<th>Full Name</th>
+									<th>Phone</th>
+									<th>Roles</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for user in users %}
+									<tr>
+										<td>{{ user.id }}</td>
+										<td>{{ user.email }}</td>
+										<td>{{ user.firstName }}
+											{{ user.lastName }}</td>
+										<td>{{ user.phone ?: 'Not set' }}</td>
+										<td>
+											{% if 'ROLE_SUPER_ADMIN' in app.user.roles %}
+												<select class="user-role-select" data-user-id="{{ user.id }}">
+													<option value="ROLE_USER" {{ 'ROLE_USER' in user.roles ? 'selected' : '' }}>User</option>
+													<option value="ROLE_ADMIN" {{ 'ROLE_ADMIN' in user.roles ? 'selected' : '' }}>Manager</option>
+													<option value="ROLE_SUPER_ADMIN" {{ 'ROLE_SUPER_ADMIN' in user.roles ? 'selected' : '' }}>Admin</option>
+												</select>
+											{% else %}
+												{{ roles_macros.main_role(user.roles) }}
+											{% endif %}
+										</td>
+										<td>
+											{% if 'ROLE_SUPER_ADMIN' in app.user.roles %}
+												<input data-user-id="{{ user.id }}" type="checkbox" class="user-active-checkbox" {% if user.isActive %} checked {% endif %} title="Toggle active">
+											{% else %}
+												{{ user.isActive ? 'Active' : 'Inactive' }}
+											{% endif %}
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 	</section>
 {% endblock %}
 
 {% block javascripts %}
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 	<script src="{{ asset('js/account.js') }}"></script>
 {% endblock %}

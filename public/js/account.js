@@ -147,4 +147,68 @@ document.addEventListener('DOMContentLoaded', function () {
 		textId: "phone-text",
 		formatText: (data) => data.phone
 	});
+
+	if (document.getElementById('users-table')) {
+		$('#users-table').DataTable();
+	}
+
+	// Смена роли
+	document.querySelectorAll('.user-role-select').forEach(select => {
+		select.addEventListener('change', function () {
+			const userId = this.dataset.userId || null;
+			if (!userId) {
+				AlertService.error('Something went wrong. Call Demyd');
+				return;
+			}
+			const newRole = this.value;
+
+			fetch(`/account/user/${userId}/change-role`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+				},
+				body: JSON.stringify({ role: newRole })
+			})
+				.then(r => r.json())
+				.then(data => {
+					if (!data.success) {
+						AlertService.error(data.message || 'Failed to change role');
+						console.error(data.error);
+					} else {
+						AlertService.success('Role changed');
+					}
+				});
+		});
+	});
+
+	// Смена активности
+	document.querySelectorAll('.user-active-checkbox').forEach(checkbox => {
+		checkbox.addEventListener('change', function () {
+			const userId = this.dataset.userId || null;
+			if (!userId) {
+				AlertService.error('Something went wrong. Call Demyd');
+				return;
+			}
+			const isActive = this.checked;
+
+			fetch(`/account/user/${userId}/toggle-active`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+				},
+				body: JSON.stringify({ isActive })
+			})
+				.then(r => r.json())
+				.then(data => {
+					if (!data.success) {
+						AlertService.error(data.message || 'Failed to change status');
+						console.error(data.error);
+					} else {
+						AlertService.success(data.isActive ? 'User activated' : 'User deactivated');
+					}
+				});
+		});
+	});
 });
