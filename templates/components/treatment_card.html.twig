@@ -1,0 +1,23 @@
+<div class="treatment_card {{ additionalClass is not empty ? additionalClass : '' }}">
+	<div class="back_full_picture">
+		<img src="{{ asset(treatment_card_img_base_dir ~ treatment.imageName) }}" alt="{{ treatment.imageName }}">
+	</div>
+	<div class="content">
+		<div class="top">
+			<h4>{{ treatment.name }}</h4>
+			<p>
+				{% for sentence in treatment.title|split('.') %}
+					{% if sentence|trim is not empty %}
+						{{ sentence|trim }}.<br>
+					{% endif %}
+				{% endfor %}
+			</p>
+		</div>
+		<div class="bottom">
+			<p>{{ treatment.description }}</p>
+			<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">
+				<button class="transparent_white_button">Learn more</button>
+			</a>
+		</div>
+	</div>
+</div>

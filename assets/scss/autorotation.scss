@@ -1,0 +1,98 @@
+@use "variables" as *;
+
+.registration-section {
+	padding: 0;
+	margin: 0;
+
+	display: flex;
+	align-items: stretch;
+
+	img {
+		max-width: 50%;
+	}
+}
+
+.registration-form {
+	max-width: 500px;
+	width: 100%;
+	margin: 2rem auto;
+
+	h1 {
+		font-size: 2rem;
+		margin-bottom: 1.8rem;
+		text-transform: uppercase;
+		letter-spacing: 4px;
+		font-weight: 600;
+	}
+
+	p {
+		width: 80%;
+		color: #333232;
+
+		a {
+			font-size: large;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			color: #000;
+		}
+	}
+
+	form {
+		margin: 20px 0;
+	}
+
+	.half {
+		width: 49%;
+		display: inline-block;
+
+		input {
+			width: 100%;
+		}
+
+		&:first-child {
+			margin-right: 1%;
+		}
+	}
+
+	.full {
+		width: 100%;
+
+		input,
+		button {
+			width: 100%;
+		}
+	}
+
+	button[type="submit"] {
+		margin: 0;
+	}
+
+	ul {
+		list-style-type: none;
+		font-size: small;
+		font-style: italic;
+	}
+}
+
+.form-control.error {
+	border: 2px solid #dc3545;
+	/* красная рамка */
+	background-color: #fce4e4;
+	/* нежно-розовый фон */
+}
+
+.alert.alert-danger {
+	border-radius: 8px;
+	padding: 0.75rem 1rem;
+	font-size: 0.95rem;
+	color: #721c24;
+	background-color: #f8d7da;
+	border: 1px solid #f5c6cb;
+	margin-bottom: 20px;
+}
+
+@media (min-width: 1440px) {
+	.registration-form {
+		margin: auto;
+	}
+}

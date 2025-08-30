@@ -1,0 +1,9 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        treatment_card_img_base_dir: 'media/treatments/card/'
+        treatment_page_img_base_dir: 'media/treatments/page/'
+
+when@test:
+    twig:
+        strict_variables: true

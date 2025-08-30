@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Account
+{% endblock %}
+
+{% block body %}
+	<section class="account-page">
+		<h2>My Account</h2>
+		<div class="page-wrap">
+			<div class="sidebar">
+				<div class="side-menu sidebar-fix">
+					<p>Welcome back
+						<span>{{ app.user.firstName }}</span>
+					</p>
+					<hr>
+					<ul class="side-menu">
+						<li class="active" data-target="personal-block">
+							<a href="#" nofollow>Personal Information</a>
+						</li>
+						<li class="" data-target="history-block">
+							<a href="#" nofollow>Visit history</a>
+						</li>
+					</ul>
+					<hr>
+					<a class="logout" href="{{ path('app_logout') }}">
+						<img class="icon" src="{{ asset('media/icons/logOut.svg') }}" alt="Log Out">
+						<span class="bottom_line_on_hover">Log Out</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="account-content">
+				<div id="personal-block" class="account-block">
+					<h3>Personal Information</h3>
+
+					<p>
+						Full name:
+						<span id="fullname-container">
+							<span id="fullname-text">{{ app.user.firstName }}
+								{{ app.user.lastName }}</span>
+							<button class="edit_button" id="edit-fullname-btn" type="button">
+								<img class="icon" src="{{ asset('media/icons/edit.svg') }}" alt="Edit">
+							</button>
+						</span>
+					</p>
+					<form id="fullname-form" action="{{ path('app_edit_fullname') }}" method="post" class="hidden">
+						<div class="field">
+							<input
+								type="text"
+								name="firstName"
+								value="{{ app.user.firstName }}"
+								required
+								minlength="2"
+								maxlength="50"
+								pattern="^[\p{L}\p{M}][\p{L}\p{M}\s'\-]{1,49}$"
+								title="All allowed letters, spaces, apostrophes, and hyphens; from 2 to 50 characters"
+								autocomplete="given-name"
+							>
+							<span class="field-error" data-for="firstName" aria-live="polite"></span>
+						</div>
+						<div class="field">
+							<input
+								type="text"
+								name="lastName"
+								value="{{ app.user.lastName }}"
+								required
+								minlength="2"
+								maxlength="50"
+								pattern="^[\p{L}\p{M}][\p{L}\p{M}\s'\-]{1,49}$"
+								title="All allowed letters, spaces, apostrophes, and hyphens; from 2 to 50 characters"
+								autocomplete="family-name"
+							>
+							<span class="field-error" data-for="lastName" aria-live="polite"></span>
+						</div>
+						<button type="submit" class="edit_button done" data-loading="false">&#10003;</button>
+					</form>
+
+					<p>Email:
+						{{ app.user.email }}
+						<a href="{{ path('app_change_email') }}">Change email</a>
+					</p>
+
+					<p>
+						Phone number:
+						<span id="phone-container" {% if not app.user.phone %} style="display:none;" {% endif %}>
+							<span id="phone-text">{{ app.user.phone ?? '' }}</span>
+							<button class="edit_button" id="edit-phone-btn" type="button">
+								<img class="icon" src="{{ asset('media/icons/edit.svg') }}" alt="Edit">
+							</button>
+						</span>
+					</p>
+					<form id="phone-form" action="{{ path('app_edit_phone') }}" method="post" {% if app.user.phone %} class="hidden" {% endif %}>
+						<div class="field">
+							<input
+								type="tel"
+								name="phone"
+								value="{{ app.user.phone ?? '' }}"
+								placeholder="+44 7XXX XXX XXX"
+								required
+								inputmode="tel"
+								pattern="^\+44\s?7\d{3}\s?\d{3}\s?\d{3}$"
+								title="Enter your phone number in the format +44 7XXX XXX XXX"
+								autocomplete="tel"
+							>
+							<span class="field-error" data-for="phone" aria-live="polite"></span>
+						</div>
+						<button type="submit" class="edit_button done" data-loading="false">&#10003;</button>
+					</form>
+
+					<p>
+						<a href="{{ path('app_change_password') }}">Change password</a>
+					</p>
+				</div>
+
+				<div id="history-block" style="display:none;" class="account-block">
+					<h3>Visit History</h3>
+					<p>Your visit history is empty...</p>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/account.js') }}"></script>
+{% endblock %}

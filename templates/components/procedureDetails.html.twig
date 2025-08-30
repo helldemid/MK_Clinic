@@ -1,0 +1,11 @@
+<div class="details_wrap">
+	{% for point in points %}
+		<div class="point">
+			<div class="point_icon">
+				<img src="{{ asset('media/icons/' ~ point.icon) }}">
+			</div>
+			<h4>{{ point.name }}</h4>
+			<p>{{ point.description }}</p>
+		</div>
+	{% endfor %}
+</div>

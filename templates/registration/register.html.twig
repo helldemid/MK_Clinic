@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	<section class="gray_back registration-section">
+		<img src="{{ asset('media/registration_banner.jpg') }}" alt="Registration Banner" class="registration-banner">
+		<div class="registration-form">
+			<h1>Sign up</h1>
+			<p>Create an account to quickly schedule treatments, view your visit history, and more...</p>
+
+			{{ form_start(registrationForm) }}
+
+				{{ form_row(registrationForm.firstName, {
+					'label': false,
+					'row_attr': {'class': 'half'},
+					'attr': {'class': 'form-control' ~ (registrationForm.firstName.vars.errors|length > 0 ? ' error' : '')}
+				}) }}
+
+				{{ form_row(registrationForm.lastName, {
+					'label': false,
+					'row_attr': {'class': 'half'},
+					'attr': {'class': 'form-control' ~ (registrationForm.lastName.vars.errors|length > 0 ? ' error' : '')}
+				}) }}
+
+				{{ form_row(registrationForm.email, {
+					'label': false,
+					'row_attr': {'class': 'full'},
+					'attr': {'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' error' : '')}
+				}) }}
+
+				{{ form_row(registrationForm.password, {
+					'label': false,
+					'row_attr': {'class': 'full'},
+					'attr': {'class': 'form-control' ~ (registrationForm.password.vars.errors|length > 0 ? ' error' : '')}
+				}) }}
+
+				{{ form_row(registrationForm.register, {'row_attr': {'class': 'full'}}) }}
+
+			{{ form_end(registrationForm) }}
+
+			<p class="small_text">Already have an account?
+				<span>
+					<a href="{{ path('app_login') }}">Log in</a>
+				</span>
+			</p>
+		</div>
+	</section>
+{% endblock %}

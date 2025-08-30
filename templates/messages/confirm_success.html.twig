@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ title|default('Success!') }}
+{% endblock %}
+
+{% block body %}
+	<div class="message-box">
+		<div class="row justify-content-center">
+			<div class="col-md-5">
+				<div class="message-box _success">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<h2>
+						{{ title|default('Success!') }}
+					</h2>
+					<p>
+						{{ message|default('Your account was successfully confirmed.') }}
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

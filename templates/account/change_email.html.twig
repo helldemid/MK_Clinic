@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Change Email
+{% endblock %}
+
+{% block body %}
+	<section class="gray_back registration-section">
+		<img src="{{ asset('media/registration_banner.jpg') }}" alt="Registration Banner" class="registration-banner">
+		<div class="registration-form">
+			<h1>Change email</h1>
+			<p>Please enter a new email address.</p>
+			{{ form_start(form) }}
+			<div class="full">
+				{{ form_row(form.email, {
+					'attr': {
+						'class': 'form-control' ~ (form.email.vars.errors|length > 0 ? ' error' : ''),
+						'placeholder': 'Enter new email',
+						'required': 'required'
+					}
+				}) }}
+			</div>
+
+			<div class="full">
+				{{ form_row(form.confirmEmail, {
+					'attr': {
+						'class': 'form-control' ~ (form.confirmEmail.vars.errors|length > 0 ? ' error' : ''),
+						'placeholder': 'Repeat new email',
+						'required': 'required'
+					}
+				}) }}
+			</div>
+
+			<div class="full">
+				<button type="submit" class="btn btn-primary mt-4">Change email</button>
+			</div>
+			{{ form_end(form) }}
+		</div>
+	</section>
+{% endblock %}

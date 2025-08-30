@@ -1,0 +1,11 @@
+<div class="benefits">
+	{% for benefit in benefits %}
+		<div class="benefit">
+			<h4>{{ benefit.title }}</h4>
+			<p>{{ benefit.description }}</p>
+			<div class="benefit_icon">
+				<img src="{{ asset('media/icons/' ~ benefit.icon) }}">
+			</div>
+		</div>
+	{% endfor %}
+</div>

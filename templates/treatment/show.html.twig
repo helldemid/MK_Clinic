@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ treatment.name }}{% endblock %}
+
+{% block body %}
+	<section class="gray_back treatment_banner">
+		<div class="treatment_main_info">
+			<span>{{ treatment.categoryName }}</span>
+			<h1>{{ treatment.name }}</h1>
+			<span>{{ treatment.isFixed ? '£' ~ treatment.price : 'From ' ~ '£' ~ treatment.price ~ ' per ' ~ treatment.priceType }}</span>
+			<p>{{ treatment.fullDescription }}</p>
+			<div class="button_container">
+				{% if additionalInformation %}<button class="transparent_white_button learn_more">Learn more</button>{% endif %}
+				<button class="transparent_white_button book book_now" >Book now</button>
+			</div>
+		</div>
+		<div class="treatment_main_photo">
+			<img src="{{ asset(treatment_page_img_base_dir ~ treatment.imageName) }}" alt="{{ treatment.imageName }}">
+		</div>
+	</section>
+	<section class="key_details">
+		<div class="back_full_picture">
+			<img src="{{ asset('media/key_details_back.png') }}" alt="back">
+		</div>
+		<div class="content">
+			<h2 class="white_header centered_header">Procedure key details</h2>
+			{{ render_procedure_details(treatment) }}
+		</div>
+	</section>
+	{% if additionalInformation %}
+		<section class="additional_information" id="additional_information">
+			<h2 class="centered_header">Additional information</h2>
+			<div class="questions_block_wrap">
+				{% for data in additionalInformation %}
+					<div class="question_block">
+						<h3>
+							<span class="accordion-title-text">{{ data.question }}</span>
+							<span class="accordion-icon" data-accordion-icon="">
+								<svg class="accordion-icon-svg" viewbox="0 0 17 8.85">
+									<polyline data-accordion-icon-shape="" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" fill-rule="evenodd" points="15 7.72 8.5 1.13 2 7.72">
+										<animate data-accordion-animate="expand" attributename="points" values="15 1.13 8.5 7.72 2 1.13;
+																																	15.85 4.42 8.5 4.42 1.15 4.42;
+																																	15 7.72 8.5 1.13 2 7.72" dur="320ms" begin="indefinite" fill="freeze" keytimes="0;
+																																	0.5;
+																																	1" calcmode="spline" keysplines="0.12, 0, 0.38, 0;
+																																	0.2, 1, 0.68, 1"></animate>
+										<animate data-accordion-animate="collapse" attributename="points" values="15 7.72 8.5 1.13 2 7.72;
+																																	15.85 4.42 8.5 4.42 1.15 4.42;
+																																	15 1.13 8.5 7.72 2 1.13" dur="320ms" begin="indefinite" fill="freeze" keytimes="0;
+																																	0.5;
+																																	1" calcmode="spline" keysplines="0.2, 0, 0.68, 0;
+																																	0.2, 1, 0.68, 1"></animate>
+									</polyline>
+								</svg>
+							</span>
+						</h3>
+						<p>{{ data.answer }}</p>
+						<hr>
+					</div>
+				{% endfor %}
+			</div>
+		</section>
+	{% endif %}
+
+	<section class="gray_back book_form" id="book_now">
+		<h2>Book now</h2>
+		<div class="book_form_wrap">
+			<form>
+				<h3>Your beauty journey starts here</h3>
+				<span>Leave your data and we will call you back</span>
+				<input type='text' placeholder="Name...">
+				<input type='email' placeholder="Email...">
+				<input type='tel' placeholder="+44 7XXX XXX XXX">
+				<select>
+					<option>{{treatment.name}}</option>
+				</select>
+				<div class="data_processing_agreement">
+					<input type="checkbox">
+					<p>I agree to the
+						<span>processing of my data</span>
+					</p>
+				</div>
+				<button type="submit">Send</button>
+			</form>
+			<div class="book_pic">
+				<div class="back_full_picture">
+					<img src="{{ asset('media/book_pic_1.png') }}">
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

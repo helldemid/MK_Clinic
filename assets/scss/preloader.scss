@@ -1,0 +1,75 @@
+@use "variables" as *;
+#preloader {
+	position: fixed;
+	inset: 0;
+	background: rgb(0, 0, 0);
+	display: none; // temporary disabled
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+
+	.logo_el_wrap {
+		display: flex;
+		align-items: center;
+
+		.logo-container {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+
+			.logo {
+				width: 200px;
+				height: 200px;
+				transform: scale(0);
+				animation: logoMove 2s ease forwards;
+			}
+		}
+	}
+
+	.clinic-name {
+		font-size: 3em;
+		font-weight: 400;
+		color: white;
+		letter-spacing: 5px;
+		white-space: nowrap;
+		max-width: 0;
+		overflow: hidden;
+		transform: translateX(20px);
+		animation: showName 1.5s ease forwards;
+		animation-delay: 1.5s;
+		position: relative;
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 2px;
+			width: 100%;
+			background-color: #ffffff;
+			transition: width 0.3s ease;
+		}
+	}
+}
+
+// Анимации лучше оставить глобальными
+@keyframes logoMove {
+	0% {
+		transform: scale(0) translateX(0);
+	}
+
+	50% {
+		transform: scale(1) translateX(0);
+	}
+
+	100% {
+		transform: scale(1) translateX(-20px);
+	}
+}
+
+@keyframes showName {
+	to {
+		max-width: 1000px;
+		transform: translateX(0);
+	}
+}

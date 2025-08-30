@@ -1,0 +1,44 @@
+@use "variables" as *;
+.message-box {
+	padding: var(--big-padding) 0;
+	width: 50%;
+	margin: auto;
+}
+
+._failed {
+	border-bottom: solid 4px red !important;
+}
+
+._failed i {
+	color: red !important;
+}
+
+._success {
+	box-shadow: 0 15px 25px #00000019;
+	padding: 45px;
+	width: 100%;
+	text-align: center;
+	margin: 40px auto;
+	border-bottom: solid 4px #28a745;
+	box-sizing: border-box;
+}
+
+._success i {
+	font-size: 3rem;
+	color: #28a745;
+}
+
+._success h2 {
+	margin-bottom: 0.75rem;
+	font-size: 2.5rem;
+	font-weight: 500;
+	line-height: 1.2;
+	margin-top: 10px;
+}
+
+._success p {
+	margin-bottom: 0px;
+	font-size: 1.125rem;
+	color: #495057;
+	font-weight: 500;
+}

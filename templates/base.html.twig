@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}{% endblock %}
+		</title>
+		{% block stylesheets %}{% endblock %}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+		{{ encore_entry_link_tags('app') }}
+	</head>
+	<body>
+		<div id="preloader">
+			<div class="logo_el_wrap">
+				<div class="logo-container">
+					<img src="{{ asset('media/footer_logo.svg') }}" alt="Logo" class="logo">
+				</div>
+				<div class="clinic-name">
+					<span>M.K. Aesthetic Clinic</span>
+				</div>
+			</div>
+		</div>
+		<header>
+			<div class="promo">
+				<p>SING UP and receive 50 rewards points</p>
+			</div>
+			<nav>
+				<div class="menu-btn" id="menuBtn">
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+				<div class="mobile-menu nav-links" id="mobileMenu">
+					<a href="{{ path('homepage') }}">CLINIC</a>
+					<a href="{{ path('treatments') }}">TREATMENTS</a>
+					<a href="{{ path('contacts') }}">CONTACT US</a>
+					<a href="{{ path('contacts') }}">BOOK NOW</a>
+				</div>
+
+				<div class="links desktop-menu nav-links">
+					<a href="{{ path('homepage') }}">CLINIC</a>
+					<a href="{{ path('treatments') }}">TREATMENTS</a>
+					<a href="{{ path('contacts') }}">CONTACT US</a>
+				</div>
+				<div class="logo_nav" id="logo_nav">
+					<img src="{{ asset('media/navigation_logo.svg') }}">
+					<p class="active">M.K. AESTHETIC CLINIC</p>
+				</div>
+				<div class="header_interactive">
+					<button class="header_book book_now">BOOK NOW</button>
+					<div class="account_icon">
+						{% if not app.user %}
+						<a href="{{ path('app_login') }}">
+							<img src="{{ asset('media/icons/account.svg') }}">
+						</a>
+						{% else %}
+						<a href="{{ path('app_account') }}">
+							<img src="{{ asset('media/icons/profile.svg') }}">
+						</a>
+						{% endif %}
+					</div>
+				</div>
+			</nav>
+		</header>
+
+		<main>
+			{% block body %}{% endblock %}
+		</main>
+
+		<footer>
+			<div class="logo_wrap">
+				<img src="{{ asset('media/footer_logo.svg') }}">
+				<h3>M.K. Aesthetic Clinic</h3>
+			</div>
+			<div class="content">
+				<div id="map" style="width:650px; height:450px;"></div>
+				<div class="links">
+					<h3>Treatments</h3>
+					{% for category in treatmentsCategories %}
+						<a href="{{ path('treatments', { category: category.id }) }}">{{ category.name }}</a>
+					{% endfor %}
+				</div>
+				<div class="links">
+					<h3>Customer care</h3>
+					<a>Promotions & discounts</a>
+					<a>Delivery & returns</a>
+					<a href="{{ path('contacts') }}">Contact us</a>
+					<a>Certificates</a>
+					<a>Payments</a>
+				</div>
+				<div class="links">
+					<h3>Social media</h3>
+					<a href="https://instagram.com/yourpage">Instagram</a>
+					<a href="https://facebook.com/yourpage">Facebook</a>
+					<a href="https://wa.me/442011234567">WhatsApp</a>
+				</div>
+			</div>
+			<div class="extra_info">
+				<p>Designed and created by
+					<a href="https://www.instagram.com/helldemid">helldemid</a>
+				</p>
+				<p>©{{ "now"|date("Y") }}M.K. Aesthetic Clinic</p>
+			</div>
+		</footer>
+
+		<script src="{{ asset('js/main.js') }}"></script>
+		<script src="{{ asset('js/maps.js') }}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+		<script src="{{ asset('js/alertService.js') }}"></script>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8iaoY6ZYdXVXs3IPAmtescG6JoJh-Qio&callback=initMap"></script>
+
+		{% block javascripts %}{% endblock %}
+		{{ encore_entry_script_tags('app') }}
+	</body>
+</html>

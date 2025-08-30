@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block body %}
+
+	<section class="contacts">
+		<h2>Clinic contacts</h2>
+		<div class="content">
+			<div class="contacts_wrap">
+				<div class="contact_block">
+					<h3>Our phone number:</h3>
+					<div class="contact_with_icon">
+						<img src="{{ asset('media/icons/res1.svg') }}" class="phone_icon">
+						<span><a href="tel:02011234567">0201-123-4567</a></span>
+					</div>
+					<div class="contact_with_icon">
+						<img src="{{ asset('media/icons/res1.svg') }}" class="phone_icon">
+						<span><a href="tel:02094221156">0209-422-1156</a></span>
+					</div>
+					<span class="extra_info">Daily from 10:00 to 22:00</span>
+				</div>
+				<div class="contact_block">
+					<h3>Email:</h3>
+					<div class="contact_with_icon">
+						<img src="{{ asset('media/icons/email.svg') }}">
+						<span><a href="mailto:mkaestheticclinics@gmail.com">mkaestheticclinics@gmail.com</a></span>
+					</div>
+				</div>
+				<div class="contact_block">
+					<h3>We in social networks:</h3>
+					<div class="contact_with_icon">
+						<a href="https://instagram.com/yourpage" target="_blank" rel="noopener noreferrer" class="social_media">
+							<img src="{{ asset('media/icons/instagram.svg') }}">
+						</a>
+						<a href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" class="social_media">
+							<img src="{{ asset('media/icons/facebook.svg') }}">
+						</a>
+						<a href="https://wa.me/442011234567" target="_blank" rel="noopener noreferrer" class="social_media">
+							<img src="{{ asset('media/icons/whatsapp.svg') }}">
+						</a>
+					</div>
+				</div>
+				<div class="contact_block">
+					<h3>Address:</h3>
+					<div class="contact_with_icon">
+						<img src="{{ asset('media/icons/location_grey.svg') }}">
+						<span>
+							<address>
+								135 Broadway, Southend-on-Sea
+							</address>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div id="contactsMap"></div>
+		</div>
+	</section>
+	<section class="gray_back book_form" id="book_now">
+		<h2>Do you have some questions?</h2>
+		<div class="book_form_wrap">
+			<form>
+				<h3>Write them to us</h3>
+				<span>Leave your data and we will call you back</span>
+				<input type='text' placeholder="Name...">
+				<input type='tel' placeholder="+44 7XXX XXX XXX">
+				<textarea type='email' placeholder="Your question...."></textarea>
+				<div class="data_processing_agreement">
+					<input type="checkbox">
+					<p>I agree to the <span>processing of my data</span></p>
+				</div>
+				<button type="submit">Send</button>
+			</form>
+			<div class="book_pic">
+				<div class="back_full_picture">
+					<img src="{{ asset('media/book_pic_2.png') }}">
+				</div>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

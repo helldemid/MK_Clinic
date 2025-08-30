@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Not Found{% endblock %}
+
+{% block body %}
+<h1>Oops! Page not found (404)</h1>
+<p>Сожалеем, но запрашиваемая страница не существует.</p>
+<a href="{{ path('homepage') }}">Вернуться на главную</a>
+{% endblock %}

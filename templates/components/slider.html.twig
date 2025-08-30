@@ -1,0 +1,15 @@
+<div class="swiper mySwiper">
+	<div class="swiper-wrapper">
+		{% for slide in slides %}
+			<div class="swiper-slide">
+				{% include 'components/treatment_card.html.twig' with {'treatment': slide, 'additionalClass': ''} %}
+			</div>
+		{% else %}
+			<p>No treatments yet</p>
+		{% endfor %}
+	</div>
+</div>
+<div class="slider_navigation">
+	<div class="swiper-button-prev"></div>
+	<div class="swiper-button-next"></div>
+</div>

@@ -1,0 +1,133 @@
+.welcome {
+	width: 100%;
+	height: 80vh;
+	position: relative;
+}
+.banner_info_wrap {
+	height: 90%;
+	display: flex;
+	align-items: flex-end;
+}
+
+.header_banner_info {
+	position: relative;
+	z-index: 2;
+	padding: 42px 36px;
+	max-width: 415px;
+	width: 100%;
+
+	color: white;
+}
+
+.header_banner_info p,
+.header_banner_info h3 {
+	font-size: 18px;
+	line-height: 32px;
+	font-weight: 300;
+	color: #ffffffef;
+}
+
+.header_banner_info h3 {
+	letter-spacing: 1px;
+	padding-bottom: 25px;
+}
+
+.header_banner_info p {
+	padding: 25px 0;
+	text-align: justify;
+}
+
+.header_banner_info h1 {
+	font-size: 32px;
+	font-weight: 500;
+	letter-spacing: 3px;
+	position: relative;
+	margin: 0;
+}
+
+.header_banner_info h1::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	height: 2px;
+	width: 100%;
+	background-color: #ffffff;
+}
+
+.about_us {
+	display: flex;
+	justify-content: space-between;
+	padding: 0 0 0 60px;
+}
+
+.about_us img {
+	height: 100%;
+}
+
+.clinic_info {
+	max-width: 600px;
+	margin-top: 60px;
+	text-align: justify;
+}
+
+.why_us {
+	position: relative;
+	padding: 60px;
+}
+
+.why_us .content {
+	position: relative;
+	z-index: 2;
+}
+
+.benefits {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.benefit {
+	box-sizing: border-box;
+	padding: 26px 18px;
+	width: 260px;
+	height: 310px;
+	border-radius: 20px;
+	background: white;
+	color: black;
+	position: relative;
+}
+
+.benefit h4 {
+	font-size: 20px;
+	font-weight: 600;
+	margin-bottom: 20px;
+}
+
+.benefit p {
+	font-size: 18px;
+	font-weight: 400;
+}
+
+.benefit_icon {
+	position: absolute;
+	bottom: 26px;
+	right: 18px;
+
+	width: 48px;
+	height: 48px;
+	border-radius: 100%;
+
+	background: #FFE2E2;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+@media (min-width: 1440px) {
+	.about_us {
+		justify-content: space-evenly;
+	}
+}

@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Treatments{% endblock %}
+
+{% block body %}
+	<section class="treatments_banner">
+		<div class="back_full_picture">
+			<picture>
+				<source media="(orientation: portrait)" srcset="{{ asset('media/treatments_mobile.png') }}">
+				<source media="(orientation: landscape)" srcset="{{ asset('media/treatments_banner_back.png') }}">
+				<img src="{{ asset('media/treatments_banner_back.png') }}" alt="welcome image">
+			</picture>
+		</div>
+		<div class="banner_info_wrap">
+			<div class="header_banner_info">
+				<h2>M.K. AESTHETIC CLINIC</h2>
+				<h1>Treatments</h1>
+				<p>From rejuvenating facials to advanced skin procedures,
+					or treatments are tailored to your unique needs — performed by certified professionals
+					using the latest technology.
+				</p>
+			</div>
+			<div>
+	</section>
+	<div class="filters" data-controller="treatments">
+		<span>Choose category</span>
+		<select data-action="change->treatments#filter">
+			<option value="" {{ selectedCategory == 0 ? 'selected' }}>All Categories</option>
+			{% for category in categories %}
+				<option value="{{ category.id }}" {{ selectedCategory == category.id ? 'selected' }}>
+					{{ category.name }}
+				</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<section class="treatments_box">
+		<div id="treatments_container">
+			{% include 'treatments/_treatment_cards.html.twig' with {'treatments': treatments} %}
+		</div>
+	</section>
+
+	<section class="gray_back book_form" id="book_now">
+		<h2>Need a consultation?</h2>
+		<div class="book_form_wrap">
+			<form>
+				<h3>We will help you</h3>
+				<span>Leave your data and we will call you back</span>
+				<input type='text' placeholder="Name...">
+				<input type='tel' placeholder="+44 7XXX XXX XXX">
+				<textarea type='email' placeholder="Your question...."></textarea>
+				<div class="data_processing_agreement">
+					<input type="checkbox">
+					<p>I agree to the <span>processing of my data</span></p>
+				</div>
+				<button type="submit">Send</button>
+			</form>
+			<div class="book_pic">
+				<div class="back_full_picture">
+					<img src="{{ asset('media/book_pic_2.png') }}">
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+{% endblock %}
