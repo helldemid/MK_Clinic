@@ -99,7 +99,7 @@ h2 {
 	text-align: center;
 }
 
-.transparent_white_button {
+.transparent_white_button, .transparent_black_button, .create_button {
 	background: transparent;
 	cursor: pointer;
 	padding: 8px 20px;
@@ -113,6 +113,26 @@ h2 {
 	&:hover {
 		background: $white;
 		color: black;
+	}
+}
+
+.transparent_black_button {
+	border: solid 1px $black;
+	color: $black;
+
+	&:hover {
+		background: $black;
+		color: $white;
+	}
+}
+
+.create_button {
+	background: rgb(0, 117, 0);
+	color: $white;
+
+	&:hover {
+		background: darken(rgb(0, 117, 0), 10%);
+		color: $white;
 	}
 }
 

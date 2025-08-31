@@ -151,6 +151,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (document.getElementById('users-table')) {
 		$('#users-table').DataTable();
 	}
+	if (document.getElementById('categories-table')) {
+		$('#categories-table').DataTable();
+	}
 
 	// Смена роли
 	document.querySelectorAll('.user-role-select').forEach(select => {
@@ -209,6 +212,73 @@ document.addEventListener('DOMContentLoaded', function () {
 						AlertService.success(data.isActive ? 'User activated' : 'User deactivated');
 					}
 				});
+		});
+	});
+
+
+	// Delete category
+	document.querySelectorAll("#categories-table .delete-button").forEach(button => {
+		button.addEventListener("click", async (e) => {
+			const categoryId = e.target.parentElement.dataset.categoryId || null;
+			const row = e.target.closest("tr");
+			if (!categoryId) {
+				AlertService.error('Something went wrong. Call Demyd');
+				return;
+			}
+
+			const result = await AlertService.confirm("Treatments for this category will be deleted");
+
+			if (result.isConfirmed) {
+				fetch(`/treatments/category/${categoryId}/delete`, {
+					method: "DELETE",
+					headers: {
+						"X-Requested-With": "XMLHttpRequest"
+					}
+				})
+					.then(res => res.json())
+					.then(data => {
+						console.log(data);
+						if (data.success) {
+							row.remove();
+							AlertService.success("The category has been deleted.");
+						} else {
+							AlertService.error(data.error || "Something went wrong.");
+						}
+					})
+					.catch(() => AlertService.error("Server error."));
+			}
+		});
+	});
+
+	// Edit category
+	document.querySelectorAll("#categories-table .category-name").forEach(input => {
+		input.addEventListener("change", () => {
+			const categoryId = input.dataset.categoryId;
+			const newName = input.value.trim();
+
+			if (newName.length === 0) {
+				AlertService.error("Name cannot be empty");
+				return;
+			}
+
+			fetch(`/treatments/category/${categoryId}/edit`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"X-Requested-With": "XMLHttpRequest"
+				},
+				body: JSON.stringify({ name: newName })
+			})
+				.then(res => res.json())
+				.then(data => {
+					if (data.success) {
+						AlertService.success("Category updated successfully");
+					} else {
+						AlertService.error(data.message || "Validation failed.");
+						console.error(data.errors || "Unknown error");
+					}
+				})
+				.catch(() => AlertService.error("Server error"));
 		});
 	});
 });

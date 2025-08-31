@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Treatments{% endblock %}
+{% block title %}Treatments
+{% endblock %}
 
 {% block body %}
 	<section class="treatments_banner">
@@ -20,7 +21,7 @@
 					using the latest technology.
 				</p>
 			</div>
-			<div>
+		</div>
 	</section>
 	<div class="filters" data-controller="treatments">
 		<span>Choose category</span>
@@ -32,6 +33,11 @@
 				</option>
 			{% endfor %}
 		</select>
+		{% if is_granted('ROLE_SUPER_ADMIN') %}
+			<button type="button" class="transparent_black_button" id="create-treatment-btn">
+				Create Treatment +
+			</button>
+		{% endif %}
 	</div>
 
 	<section class="treatments_box">
@@ -51,7 +57,9 @@
 				<textarea type='email' placeholder="Your question...."></textarea>
 				<div class="data_processing_agreement">
 					<input type="checkbox">
-					<p>I agree to the <span>processing of my data</span></p>
+					<p>I agree to the
+						<span>processing of my data</span>
+					</p>
 				</div>
 				<button type="submit">Send</button>
 			</form>

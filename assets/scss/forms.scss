@@ -41,6 +41,15 @@ section.book_form {
 				border-radius: 20px;
 			}
 		}
+
+		input[type="text"],
+		input[type="email"],
+		input[type="tel"],
+		input[type="password"],
+		select,
+		textarea {
+			margin-bottom: 1.75rem;
+		}
 	}
 }
 
@@ -58,7 +67,6 @@ textarea {
 	font-size: 1rem;
 	font-weight: 300;
 	color: #0000007a;
-	margin-bottom: 1.75rem;
 	box-sizing: border-box;
 }
 
@@ -126,7 +134,9 @@ button[type="submit"] {
 @media (max-width: 480px) {
 	section.book_form {
 		.book_form_wrap form {
-			h3 { font-size: 1.25rem;}
+			h3 {
+				font-size: 1.25rem;
+			}
 		}
 	}
 }

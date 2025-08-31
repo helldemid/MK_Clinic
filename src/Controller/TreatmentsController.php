@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\CategoriesRepository;
 use App\Repository\TreatmentsRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Categories;
 
 class TreatmentsController extends AbstractController
 {
@@ -40,4 +42,53 @@ class TreatmentsController extends AbstractController
 
 		return new JsonResponse(['html' => $html]);
 	}
+
+	#[Route('/treatments/category/{id}/delete', name: 'category_delete', methods: ['DELETE'])]
+	public function deleteCategory(int $id, EntityManagerInterface $em): JsonResponse
+	{
+		try {
+			$category = $em->getRepository(Categories::class)->find($id);
+
+			if (!$category) {
+				return $this->json(['success' => false, 'error' => 'Category not found', 'message' => 'Category not found'], 404);
+			}
+
+			$em->remove($category);
+			$em->flush();
+
+			return $this->json(['success' => true]);
+		} catch (\Exception $e) {
+			return $this->json(['success' => false, 'error' => $e->getMessage(), 'message' => 'Server error'], 500);
+		}
+	}
+
+	#[Route('/treatments/category/{id}/edit', name: 'category_edit', methods: ['POST'])]
+	public function editCategory(
+		int $id,
+		Request $request,
+		EntityManagerInterface $em
+	): JsonResponse {
+		try {
+			$category = $em->getRepository(Categories::class)->find($id);
+
+			if (!$category) {
+				return $this->json(['success' => false, 'error' => 'Category not found', 'message' => 'Category not found'], 404);
+			}
+
+			$data = json_decode($request->getContent(), true);
+			$name = trim($data['name'] ?? '');
+
+			if (empty($name)) {
+				return $this->json(['success' => false, 'error' => 'Name cannot be empty', 'message' => 'Name cannot be empty'], 400);
+			}
+
+			$category->setName($name);
+			$em->flush();
+
+			return $this->json(['success' => true]);
+		} catch (\Exception $e) {
+			return $this->json(['success' => false, 'error' => $e->getMessage(), 'message' => 'Server error'], 500);
+		}
+	}
+
 }
