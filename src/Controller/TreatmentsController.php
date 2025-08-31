@@ -47,6 +47,9 @@ class TreatmentsController extends AbstractController
 	public function deleteCategory(int $id, EntityManagerInterface $em): JsonResponse
 	{
 		try {
+			// Deny access if the current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
 			$category = $em->getRepository(Categories::class)->find($id);
 
 			if (!$category) {
@@ -69,6 +72,9 @@ class TreatmentsController extends AbstractController
 		EntityManagerInterface $em
 	): JsonResponse {
 		try {
+			// Deny access if the current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
 			$category = $em->getRepository(Categories::class)->find($id);
 
 			if (!$category) {
@@ -88,6 +94,59 @@ class TreatmentsController extends AbstractController
 			return $this->json(['success' => true]);
 		} catch (\Exception $e) {
 			return $this->json(['success' => false, 'error' => $e->getMessage(), 'message' => 'Server error'], 500);
+		}
+	}
+
+	#[Route('/treatments/category/create', name: 'treatment_category_create', methods: ['POST'])]
+	public function create(
+		Request $request,
+		EntityManagerInterface $em,
+		CategoriesRepository $repo
+	): JsonResponse {
+		try {
+			// Deny access if the current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
+			$data = json_decode($request->getContent(), true);
+			$name = trim($data['name'] ?? '');
+
+			if (empty($name)) {
+				return $this->json([
+					'success' => false,
+					'error' => 'Validation failed',
+					'message' => 'Name cannot be empty'
+				], 400);
+			}
+
+			// Проверяем уникальность
+			$existing = $repo->findOneBy(['name' => $name]);
+			if ($existing) {
+				return $this->json([
+					'success' => false,
+					'error' => 'Validation failed',
+					'message' => 'Category with this name already exists'
+				], 400);
+			}
+
+			$category = new Categories();
+			$category->setName($name);
+
+			$em->persist($category);
+			$em->flush();
+
+			return $this->json([
+				'success' => true,
+				'category' => [
+					'id' => $category->getId(),
+					'name' => $category->getName()
+				]
+			]);
+		} catch (\Throwable $e) {
+			return $this->json([
+				'success' => false,
+				'message' => 'Server error',
+				'errors' => [$e->getMessage()]
+			], 500);
 		}
 	}
 

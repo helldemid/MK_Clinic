@@ -217,40 +217,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 	// Delete category
+	// ================== DELETE CATEGORY ==================
 	document.querySelectorAll("#categories-table .delete-button").forEach(button => {
 		button.addEventListener("click", async (e) => {
 			const categoryId = e.target.parentElement.dataset.categoryId || null;
 			const row = e.target.closest("tr");
+
 			if (!categoryId) {
-				AlertService.error('Something went wrong. Call Demyd');
+				AlertService.error("Something went wrong. Call Demyd");
 				return;
 			}
 
 			const result = await AlertService.confirm("Treatments for this category will be deleted");
 
 			if (result.isConfirmed) {
-				fetch(`/treatments/category/${categoryId}/delete`, {
-					method: "DELETE",
-					headers: {
-						"X-Requested-With": "XMLHttpRequest"
-					}
-				})
-					.then(res => res.json())
-					.then(data => {
-						console.log(data);
-						if (data.success) {
-							row.remove();
-							AlertService.success("The category has been deleted.");
-						} else {
-							AlertService.error(data.error || "Something went wrong.");
-						}
-					})
-					.catch(() => AlertService.error("Server error."));
+				handleApiResponse(
+					ApiService.delete(`/treatments/category/${categoryId}/delete`),
+					"The category has been deleted."
+				).then(data => {
+					if (data.success) row.remove();
+				});
 			}
 		});
 	});
 
-	// Edit category
+
+	// ================== EDIT CATEGORY ==================
 	document.querySelectorAll("#categories-table .category-name").forEach(input => {
 		input.addEventListener("change", () => {
 			const categoryId = input.dataset.categoryId;
@@ -261,24 +253,54 @@ document.addEventListener('DOMContentLoaded', function () {
 				return;
 			}
 
-			fetch(`/treatments/category/${categoryId}/edit`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"X-Requested-With": "XMLHttpRequest"
-				},
-				body: JSON.stringify({ name: newName })
-			})
-				.then(res => res.json())
-				.then(data => {
-					if (data.success) {
-						AlertService.success("Category updated successfully");
-					} else {
-						AlertService.error(data.message || "Validation failed.");
-						console.error(data.errors || "Unknown error");
-					}
-				})
-				.catch(() => AlertService.error("Server error"));
+			handleApiResponse(
+				ApiService.post(`/treatments/category/${categoryId}/edit`, { name: newName }),
+				"Category updated successfully"
+			).then(data => {
+				if (!data.success) {
+					// если ошибка — вернем старое имя (для UX)
+					input.value = input.dataset.oldName || input.value;
+				} else {
+					// сохраним актуальное имя для будущего отката
+					input.dataset.oldName = newName;
+				}
+			});
 		});
 	});
+
+
+	// ================== CREATE CATEGORY ==================
+	document.getElementById("create-category-btn").addEventListener("click", () => {
+		AlertService.htmlFromTemplate("#category-form-template", "Create Category")
+			.then(result => {
+				if (result.isConfirmed && result.value) {
+					handleApiResponse(
+						ApiService.post("/treatments/category/create", result.value),
+						"Category created successfully!"
+					).then(data => {
+						if (data.success) {
+							const table = document.getElementById('categories-table').querySelector('tbody');
+							// Создай строку
+							const tr = document.createElement('tr');
+							tr.innerHTML = `
+								<td>
+									${data.category.name}
+								</td>
+								<td>
+									Will be available after reload
+								</td>
+							`;
+							table.appendChild(tr);
+						} else {
+							const alert = document.querySelector('#swal-category-form .alert');
+							if (alert) {
+								alert.textContent = data.message || "Error creating category";
+								alert.style.display = '';
+							}
+						}
+					});
+				}
+			});
+	});
+
 });
