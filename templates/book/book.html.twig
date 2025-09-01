@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Book now
+{% endblock %}
+
+{% block body %}
+	<section class="gray_back registration-section">
+		<img src="{{ asset('media/registration_banner.jpg') }}" alt="Registration Banner" class="registration-banner">
+		<div class="registration-form">
+			<h1>Book now</h1>
+			{% include 'components/book_form.html.twig' %}
+		</div>
+	</section>
+{% endblock %}

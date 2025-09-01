@@ -11,7 +11,8 @@
 	<script src="{{ asset('js/slider.js') }}" defer></script>
 {% endblock %}
 
-{% block title %}M.K. Aesthetic Clinic{% endblock %}
+{% block title %}M.K. Aesthetic Clinic
+{% endblock %}
 
 {% block body %}
 	<section class="welcome">
@@ -29,74 +30,56 @@
 				<p>Discover a place where innovation meets artistry — and your beauty journey is guided with precision and care</p>
 				<button class="transparent_white_button book_now">Book now</button>
 			</div>
-		<div>
-	</section>
-	<section>
-		<h2>Our most popular treatments</h2>
-		{{ render_slider() }}
-	</section>
-	<section class="gray_back about_us">
-		<div class="clinic_info">
-			<span>About clinic & our work</span>
-			<h2>Get to know about us</h2>
-			<div class="about_us_text_block">
-				<div>
-					<p>
-						Welcome to our beauty clinic in central London!
-						We specialize in modern skin care and anti-ageing treatments, combining the latest technology with an individual approach to each client. Our mission is to highlight your natural beauty and give you self-confidence.
-					</p>
-					<br>
-					<p>
-						Our team consists of certified specialists with international experience.
-						We use only proven methods and premium cosmetics to guarantee safety and visible results. From classic cleaning to injection procedures, you are in good hands.
-					</p>
-					<br>
-					<p>
-						Our specialists are certified professionals with international experience.
-						We use only proven methods and premium cosmetics to guarantee your safety and noticeable results.
-						From classic cleaning to injection procedures, you are in good hands.
-					</p>
+			<div></section>
+			<section>
+				<h2>Our most popular treatments</h2>
+				{{ render_slider() }}
+			</section>
+			<section class="gray_back about_us">
+				<div class="clinic_info">
+					<span>About clinic & our work</span>
+					<h2>Get to know about us</h2>
+					<div class="about_us_text_block">
+						<div>
+							<p>
+								Welcome to our beauty clinic in central London!
+																																														We specialize in modern skin care and anti-ageing treatments, combining the latest technology with an individual approach to each client. Our mission is to highlight your natural beauty and give you self-confidence.
+							</p>
+							<br>
+							<p>
+								Our team consists of certified specialists with international experience.
+																																														We use only proven methods and premium cosmetics to guarantee safety and visible results. From classic cleaning to injection procedures, you are in good hands.
+							</p>
+							<br>
+							<p>
+								Our specialists are certified professionals with international experience.
+																																														We use only proven methods and premium cosmetics to guarantee your safety and noticeable results.
+																																														From classic cleaning to injection procedures, you are in good hands.
+							</p>
+						</div>
+						<div class="about_us_image">
+							<img src="{{ asset('media/about_us.png') }}" alt="clinic photo" class="narrow_res">
+						</div>
+					</div>
 				</div>
-				<div class="about_us_image">
-					<img src="{{ asset('media/about_us.png') }}" alt="clinic photo" class="narrow_res">
+				<img src="{{ asset('media/about_us.png') }}" alt="clinic photo" class="wide_res">
+			</section>
+			<section class="why_us">
+				<div class="back_full_picture">
+					<img src="{{ asset('media/why_us.png') }}" alt="back">
 				</div>
-			</div>
-		</div>
-		<img src="{{ asset('media/about_us.png') }}" alt="clinic photo" class="wide_res">
-	</section>
-	<section class="why_us">
-		<div class="back_full_picture">
-			<img src="{{ asset('media/why_us.png') }}" alt="back">
-		</div>
-		<div class="content">
-			<h2 class="white_header ">Why people choose us</h2>
-			{{ render_benefits() }}
-		</div>
-	</section>
-	<section class="gray_back book_form" id="book_now">
-		<h2>Book now</h2>
-		<div class="book_form_wrap">
-			<form>
-				<h3>Your beauty journey starts here</h3>
-				<span>Leave your data and we will call you back</span>
-				<input type='text' placeholder="Name...">
-				<input type='email' placeholder="Email...">
-				<input type='tel' placeholder="+44 7XXX XXX XXX">
-				<select>
-					<option>Treatment...</option>
-					{% for treatment in treatments %}
-						<option>{{treatment.name}}</option>
-					{% endfor %}
-				</select>
-				<div class="data_processing_agreement">
-					<input type="checkbox">
-					<p>I agree to the <span>processing of my data</span></p>
+				<div class="content">
+					<h2 class="white_header ">Why people choose us</h2>
+					{{ render_benefits() }}
 				</div>
-				<button type="submit">Send</button>
-			</form>
-			<div class="book_pic">
-				<img src="{{ asset('media/book_pic_1.png') }}">
-			</div>
-		</div>
-	</section>
-{% endblock %}
+			</section>
+			<section class="gray_back book_form" id="book_now">
+				<h2>Book now</h2>
+				<div class="book_form_wrap">
+					{% include 'components/book_form.html.twig' %}
+					<div class="book_pic">
+						<img src="{{ asset('media/book_pic_1.png') }}">
+					</div>
+				</div>
+			</section>
+		{% endblock %}

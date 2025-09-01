@@ -35,7 +35,7 @@
 					<a href="{{ path('homepage') }}">CLINIC</a>
 					<a href="{{ path('treatments') }}">TREATMENTS</a>
 					<a href="{{ path('contacts') }}">CONTACT US</a>
-					<a href="{{ path('contacts') }}">BOOK NOW</a>
+					<a href="{{ path('book_now') }}">BOOK NOW</a>
 				</div>
 
 				<div class="links desktop-menu nav-links">
@@ -83,8 +83,6 @@
 				</div>
 				<div class="links">
 					<h3>Customer care</h3>
-					<a>Promotions & discounts</a>
-					<a>Delivery & returns</a>
 					<a href="{{ path('contacts') }}">Contact us</a>
 					<a>Certificates</a>
 					<a>Payments</a>
@@ -93,7 +91,7 @@
 					<h3>Social media</h3>
 					<a href="https://instagram.com/yourpage">Instagram</a>
 					<a href="https://facebook.com/yourpage">Facebook</a>
-					<a href="https://wa.me/442011234567">WhatsApp</a>
+					<a href="https://wa.me/447463633467">WhatsApp</a>
 				</div>
 			</div>
 			<div class="extra_info">
@@ -109,6 +107,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script src="{{ asset('js/alertService.js') }}"></script>
 		<script src="{{ asset('js/apiService.js') }}"></script>
+		<script src="{{ asset('js/appointments.js') }}"></script>
 		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8iaoY6ZYdXVXs3IPAmtescG6JoJh-Qio&callback=initMap"></script>
 
 		{% block javascripts %}{% endblock %}

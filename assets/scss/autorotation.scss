@@ -59,6 +59,7 @@
 
 	.full {
 		width: 100%;
+		margin-bottom: 1rem;
 
 		input,
 		button {
@@ -74,6 +75,12 @@
 		list-style-type: none;
 		font-size: small;
 		font-style: italic;
+	}
+
+	#appointment-form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 }
 

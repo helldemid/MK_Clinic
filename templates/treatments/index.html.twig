@@ -17,8 +17,8 @@
 				<h2>M.K. AESTHETIC CLINIC</h2>
 				<h1>Treatments</h1>
 				<p>From rejuvenating facials to advanced skin procedures,
-					or treatments are tailored to your unique needs — performed by certified professionals
-					using the latest technology.
+															or treatments are tailored to your unique needs — performed by certified professionals
+															using the latest technology.
 				</p>
 			</div>
 		</div>
@@ -34,9 +34,9 @@
 			{% endfor %}
 		</select>
 		{% if is_granted('ROLE_SUPER_ADMIN') %}
-			<button type="button" class="transparent_black_button" id="create-treatment-btn">
-				Create Treatment +
-			</button>
+			{# <button type="button" class="transparent_black_button" id="create-treatment-btn">
+										Create Treatment +
+									</button> #}
 		{% endif %}
 	</div>
 
@@ -49,20 +49,7 @@
 	<section class="gray_back book_form" id="book_now">
 		<h2>Need a consultation?</h2>
 		<div class="book_form_wrap">
-			<form>
-				<h3>We will help you</h3>
-				<span>Leave your data and we will call you back</span>
-				<input type='text' placeholder="Name...">
-				<input type='tel' placeholder="+44 7XXX XXX XXX">
-				<textarea type='email' placeholder="Your question...."></textarea>
-				<div class="data_processing_agreement">
-					<input type="checkbox">
-					<p>I agree to the
-						<span>processing of my data</span>
-					</p>
-				</div>
-				<button type="submit">Send</button>
-			</form>
+			{% include 'components/consultation_form.html.twig' %}
 			<div class="book_pic">
 				<div class="back_full_picture">
 					<img src="{{ asset('media/book_pic_2.png') }}">

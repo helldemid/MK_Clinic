@@ -24,6 +24,27 @@ class MailerService
 		'twig_path' => 'emails/change_email.html.twig',
 	];
 
+	public const TEMPLATE_APPOINTMENT_REQUEST_TO_US = [
+		'subject' => "New appointment request on M.K. Aesthetic Clinic",
+		'twig_path' => 'emails/appointment_request_to_us.html.twig',
+	];
+
+	public const TEMPLATE_APPOINTMENT_REQUEST_TO_CLIENT = [
+		'subject' => "You have requested an appointment on M.K. Aesthetic Clinic",
+		'twig_path' => 'emails/appointment_request_to_client.html.twig',
+	];
+
+	public const TEMPLATE_CONSULTATION_REQUEST_TO_US = [
+		'subject' => "New consultation request on M.K. Aesthetic Clinic",
+		'twig_path' => 'emails/consultation_request_to_us.html.twig',
+	];
+
+	public const TEMPLATE_CONSULTATION_REQUEST_TO_CLIENT = [
+		'subject' => "You have requested a consultation on M.K. Aesthetic Clinic",
+		'twig_path' => 'emails/consultation_request_to_client.html.twig',
+	];
+
+
 
 	private MailerInterface $mailer;
 	private Environment $twig;
@@ -35,7 +56,11 @@ class MailerService
 	}
 
 	/**
-	 * Отправка простого письма
+	 * Summary of sendEmail
+	 * @param string $to
+	 * @param string $subject
+	 * @param string $htmlContent
+	 * @return void
 	 */
 	public function sendEmail(string $to, string $subject, string $htmlContent): void
 	{
@@ -48,6 +73,13 @@ class MailerService
 		$this->mailer->send($email);
 	}
 
+	/**
+	 * Summary of sendTemplateEmail
+	 * @param string $to
+	 * @param array $template
+	 * @param array $context
+	 * @return void
+	 */
 	public function sendTemplateEmail(string $to, array $template, array $context = []): void
 	{
 		$htmlContent = $this->twig->render($template['twig_path'], $context);

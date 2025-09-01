@@ -1,0 +1,27 @@
+<form action="{{ path('appointment_request') }}" id="appointment-form" method="POST" data-book-type="appointment">
+	<h3>Your beauty journey starts here</h3>
+	<span>Leave your data and we will call you back</span>
+	<div class="alert alert-danger" style="display: none;" id="booking-form-errors"></div>
+	<input type='text' placeholder="Name..." name="name" required value="{{ app.user ? app.user.firstName ~ ' ' ~ app.user.lastName : '' }}">
+	<input type='email' placeholder="Email..." name="email" required value="{{ app.user ? app.user.email : '' }}">
+	<input type='tel' placeholder="+44 7XXX XXX XXX" name="phone" required value="{{ app.user and app.user.phone ? app.user.phone : '' }}">
+	<select name="treatment_id">
+		{% if treatments|length > 1 %}
+			<option value="-1">Treatment...</option>
+			{% for treatment in treatments %}
+				<option value="{{ treatment.id }}">{{ treatment.name }}</option>
+			{% endfor %}
+		{% elseif treatments|length == 1 %}
+			<option value="{{ treatments[0].id }}">{{ treatments[0].name }}</option>
+		{% else %}
+			<option disabled>No treatments available</option>
+		{% endif %}
+	</select>
+	<div class="data_processing_agreement">
+		<input type="checkbox" name="agreement" required>
+		<p>I agree to the
+			<span>processing of my data</span>
+		</p>
+	</div>
+	<button type="submit">Send</button>
+</form>
