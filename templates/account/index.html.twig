@@ -25,6 +25,9 @@
 						<a href="#" nofollow>Visit history</a>
 					</li>
 					{% if is_granted('ROLE_ADMIN') %}
+						<li data-target="requests-block">
+							<a href="#" nofollow>Requests</a>
+						</li>
 						<li data-target="users-block">
 							<a href="#" nofollow>Users</a>
 						</li>
@@ -100,6 +103,51 @@
 					<p>Your visit history is empty...</p>
 				</div>
 				{% if is_granted('ROLE_ADMIN') %}
+					<div id="requests-block" style="display:none;" class="account-block">
+						<h3>Appointment & Consultation requests</h3>
+						<table id="requests-table" class="display">
+							<thead>
+								<tr>
+									<th>Date</th>
+									<th>Type</th>
+									<th>User id</th>
+									<th>Full Name</th>
+									<th>Phone</th>
+									<th>Treatment</th>
+									<th>Status</th>
+									<th>Info</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for request in appointmentRequests %}
+									<tr>
+										<td>{{ request.createdAt ? request.createdAt|date('Y-m-d') : '' }}</td>
+										<td>{{ request.question ? 'Consultation' : 'Appointment' }}</td>
+										<td>{{ request.user ? request.user.id : 'Guest' }}</td>
+										<td>{{ request.name }}
+										</td>
+										<td>{{ request.phone ?: 'Not set' }}</td>
+										<td>{{ request.treatment ? request.treatment.name : 'Not set' }}</td>
+										<td>
+											<select class="request-status-select colored-select {{ request.status }}" data-request-id="{{ request.id }}">
+												<option class="created" value="created" {{ 'created' in request.status ? 'selected' : '' }}>Created</option>
+												<option class="in_progress" value="in_progress" {{ 'in_progress' in request.status ? 'selected' : '' }}>In Progress</option>
+												<option class="confirmed" value="confirmed" {{ 'confirmed' in request.status ? 'selected' : '' }}>Confirmed</option>
+												<option class="no_answer" value="no_answer" {{ 'no_answer' in request.status ? 'selected' : '' }}>No Answer</option>
+												<option class="cancelled" value="cancelled" {{ 'cancelled' in request.status ? 'selected' : '' }}>Cancelled</option>
+												<option class="processed" value="processed" {{ 'processed' in request.status ? 'selected' : '' }}>Processed</option>
+											</select>
+										</td>
+										<td>
+											<button class="transparent_black_button" data-controller="request-details" data-action="click->request-details#show" data-request-id="{{ request.id }}">
+												Details
+											</button>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
 					<div id="users-block" style="display:none;" class="account-block">
 						<h3>Users</h3>
 						<table id="users-table" class="display">

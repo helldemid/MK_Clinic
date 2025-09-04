@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\AppointmentRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -100,11 +101,18 @@ class AccountController extends AbstractController
 			$users = $this->userRepository->createQueryBuilder('u')
 				->where('u.id != :currentId')
 				->setParameter('currentId', $user->getId())
+				->orderBy('u.id', 'DESC')
+				->getQuery()
+				->getResult();
+
+			$appointmentRequests = $this->entityManager->getRepository(AppointmentRequest::class)
+				->createQueryBuilder('ar')
+				->orderBy('ar.createdAt', 'DESC')
 				->getQuery()
 				->getResult();
 		}
 
-		return $this->render('account/index.html.twig', ['user' => $user, 'users' => $users ?? []]);
+		return $this->render('account/index.html.twig', ['user' => $user, 'users' => $users ?? [], 'appointmentRequests' => $appointmentRequests ?? []]);
 	}
 
 	#[Route('/account/user/{id}/change-role', name: 'admin_change_role', methods: ['POST'])]

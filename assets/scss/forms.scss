@@ -113,6 +113,34 @@ button[type="submit"] {
 	}
 }
 
+
+.colored-select {
+    appearance: none;        /* убираем системную стрелку */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 24px;
+    padding: 6px 32px 6px 12px;
+
+    border: none;
+	height: 2rem;
+	font-size: inherit;
+    color: #fff;
+    cursor: pointer;
+
+	background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+
+	& .created, &.created     { background-color: #4b4b4b; } /* серый */
+	& .in_progress, &.in_progress { background-color: #1961a8; } /* синий */
+	& .confirmed, &.confirmed   { background-color: #145a32; } /* зелёный */
+	& .no_answer, &.no_answer   { background-color: #b7950b; } /* жёлтый */
+	& .cancelled, &.cancelled   { background-color: #7b241c; } /* красный */
+	& .processed, &.processed   { background-color: #117864; } /* бирюзовый */
+}
+
+
 @media (min-width: 1440px) {
 	.book_pic {
 		height: 700px;

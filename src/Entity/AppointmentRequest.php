@@ -53,7 +53,7 @@ class AppointmentRequest
 	private ?User $user = null;
 
 	#[ORM\Column(type: 'string', length: 32, options: ['default' => 'created'])]
-	#[Assert\Choice(choices: ['created', 'in_progress', 'confirmed', 'no_answer', 'cancelled', 'done'], message: 'Invalid status.')]
+	#[Assert\Choice(choices: ['created', 'in_progress', 'confirmed', 'no_answer', 'cancelled', 'processed'], message: 'Invalid status.')]
 	private string $status = 'created';
 
 	public function __construct()
@@ -134,6 +134,16 @@ class AppointmentRequest
 	public function setStatus(string $status): self
 	{
 		$this->status = $status;
+		return $this;
+	}
+
+	public function getId(): int
+	{
+		return $this->id;
+	}
+	public function setId(int $id): self
+	{
+		$this->id = $id;
 		return $this;
 	}
 }

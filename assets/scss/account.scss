@@ -166,6 +166,13 @@ input[aria-invalid="true"] {
 	outline: 2px solid #d32f2f;
 }
 
+#requests-table {
+	font-size: calc(1rem - 2px);
+	button {
+		font-size: calc(1rem - 2px);
+	}
+}
+
 
 @media (max-width: 780px) {
 	.account-page {

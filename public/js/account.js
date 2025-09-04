@@ -149,11 +149,27 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 	if (document.getElementById('users-table')) {
-		$('#users-table').DataTable();
+		$('#users-table').DataTable({
+			order: [[0, 'desc']]
+		});
 	}
 	if (document.getElementById('categories-table')) {
-		$('#categories-table').DataTable();
+		$('#categories-table').DataTable({
+			order: [[0, 'desc']]
+		});
 	}
+	if (document.getElementById('requests-table')) {
+		$('#requests-table').DataTable({
+			order: [[0, 'desc']]
+		});
+	}
+
+	document.querySelectorAll('.colored-select').forEach(select => {
+		select.addEventListener('change', () => {
+			select.className = 'colored-select ' + select.value;
+		});
+	});
+
 
 	// Смена роли
 	document.querySelectorAll('.user-role-select').forEach(select => {
@@ -301,6 +317,37 @@ document.addEventListener('DOMContentLoaded', function () {
 					});
 				}
 			});
+	});
+
+
+	// change appointment request status
+	document.querySelectorAll('.request-status-select').forEach(select => {
+		select.addEventListener('change', function () {
+			const requestId = this.dataset.requestId || null;
+			if (!requestId) {
+				AlertService.error('Something went wrong. Call Demyd');
+				return;
+			}
+			const newStatus = this.value;
+
+			fetch(`/appointment/request/${requestId}/change-status`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+				},
+				body: JSON.stringify({ status: newStatus })
+			})
+				.then(r => r.json())
+				.then(data => {
+					if (!data.success) {
+						AlertService.error(data.message || 'Failed to change status');
+						console.error(data.error);
+					} else {
+						AlertService.success('Status changed');
+					}
+				});
+		});
 	});
 
 });

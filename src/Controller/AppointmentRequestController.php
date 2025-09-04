@@ -155,4 +155,52 @@ class AppointmentRequestController extends AbstractController
 			'treatments' => $treatments
 		]);
 	}
+
+	#[Route('/appointment/request/{id}/change-status', name: 'request_change_status', methods: ['POST'])]
+	/**
+	 * Change the status of an appointment request.
+	 *
+	 * This endpoint allows a SUPER_ADMIN to change the status of an appointment request.
+	 *
+	 * @param Request $request
+	 * @param AppointmentRequest $appointmentRequest The appointment request entity resolved by ParamConverter
+	 * @param EntityManagerInterface $em
+	 * @return JsonResponse
+	 */
+	public function changeStatus(Request $request, AppointmentRequest $appointmentRequest, EntityManagerInterface $em): JsonResponse
+	{
+		try {
+			// Deny access if current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+			// Decode JSON payload
+			$data = json_decode($request->getContent(), true);
+			$status = $data['status'] ?? null;
+
+			// Update appointment request status
+			$appointmentRequest->setStatus($status);
+			$em->flush();
+
+			return $this->json(['success' => true, 'status' => $status]);
+		} catch (\Throwable $e) {
+			// Catch any unexpected errors
+			return $this->json([
+				'success' => false,
+				'message' => 'An unexpected error occurred',
+				'error' => $e->getMessage() // optional for debug
+			], 500);
+		}
+	}
+
+	#[Route('/admin/request/{id}/details', name: 'admin_request_details', methods: ['GET'])]
+	public function requestDetails(AppointmentRequest $request): JsonResponse
+	{
+		$html = $this->renderView('components/request_details.html.twig', [
+			'request' => $request,
+		]);
+		return $this->json([
+			'success' => true,
+			'html' => $html,
+		]);
+	}
 }

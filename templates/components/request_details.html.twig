@@ -1,0 +1,55 @@
+<div class="request-modal" style="text-align: left;">
+	{% if request.user %}
+		<div class="section">
+			<h3>User info</h3>
+			<p>
+				<b>Name:</b>
+				{{ request.user.firstName }}
+				{{ request.user.lastName }}</p>
+			<p>
+				<b>Email:</b>
+				{{ request.user.email }}</p>
+			<p>
+				<b>Phone:</b>
+				{{ request.user.phone ?: '-' }}</p>
+		</div>
+		<br>
+		<hr>
+		<br>
+	{% endif %}
+
+	<div class="section" style="text-align: left;">
+		<h3>{{request.question ? 'Consultation' : 'Appointment'}} details</h3>
+		<p>
+			<b>Name:</b>
+			{{ request.name }}</p>
+		<p>
+			<b>Email:</b>
+			{{ request.email }}</p>
+		<p>
+			<b>Phone:</b>
+			{{ request.phone }}</p>
+		<p>
+			<b>Treatment:</b>
+			{{ request.treatment ? request.treatment.name : '-' }}</p>
+		<p>
+			<b>Status:</b>
+			<span class="status">{{ request.status|capitalize }}</span>
+		</p>
+		<br>
+		<hr>
+		<br>
+	</div>
+
+	{% if request.question %}
+		<div class="section" style="text-align: left;">
+			<h3>Details</h3>
+			<p>
+				<b>Question:</b>
+			</p>
+			<div class="question-box">
+				{{ request.question }}
+			</div>
+		</div>
+	{% endif %}
+</div>

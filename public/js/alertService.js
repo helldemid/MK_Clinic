@@ -52,5 +52,22 @@ const AlertService = {
 				}
 			}
 		});
+	},
+	htmlModalTemplate(content, title = 'Form', showButtons = true) {
+		return Swal.fire({
+			title: title,
+			html: content,
+			showCancelButton: showButtons,
+			confirmButtonColor: '#222',
+			focusConfirm: false,
+			customClass: { popup: 'my-popup-class' },
+			preConfirm: () => {
+				const form = Swal.getPopup().querySelector("form");
+				if (form) {
+					const formData = new FormData(form);
+					return Object.fromEntries(formData.entries());
+				}
+			}
+		});
 	}
 };
