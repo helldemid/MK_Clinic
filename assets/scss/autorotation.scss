@@ -47,6 +47,7 @@
 	.half {
 		width: 49%;
 		display: inline-block;
+		margin-bottom: 1rem;
 
 		input {
 			width: 100%;
@@ -62,8 +63,17 @@
 		margin-bottom: 1rem;
 
 		input,
-		button {
+		button,
+		select,
+		span {
 			width: 100%;
+		}
+		&.flex-column {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+
 		}
 	}
 
@@ -84,7 +94,8 @@
 	}
 }
 
-.form-control.error {
+.form-control.error,
+.form-select.error {
 	border: 2px solid #dc3545;
 	background-color: #fce4e4;
 }
@@ -98,6 +109,41 @@
 	border: 1px solid #f5c6cb;
 	margin-bottom: 20px;
 }
+
+#appointment_patientType {
+	display: grid;
+	grid-template-columns: 2fr 1fr; // колонка для label, колонка для input
+	gap: 8px 16px;
+	max-width: 300px;
+	align-items: center;
+	input {
+		cursor: pointer;
+	}
+
+	// для первой пары
+	input:nth-of-type(1) {
+		grid-column: 2;
+		grid-row: 1;
+	}
+
+	label[for="appointment_patientType_0"] {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	// для второй пары
+	input:nth-of-type(2) {
+		grid-column: 2;
+		grid-row: 2;
+	}
+
+	label[for="appointment_patientType_1"] {
+		grid-column: 1;
+		grid-row: 2;
+	}
+}
+
+
 
 @media (min-width: 1440px) {
 	.registration-form {

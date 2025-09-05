@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New appointment
+{% endblock %}
+{% block stylesheets %}
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+
+{% block body %}
+	<section class="gray_back registration-section">
+		<img src="{{ asset('media/registration_banner.jpg') }}" alt="Registration Banner" class="registration-banner">
+		<div class="registration-form">
+			<h1>New appointment</h1>
+			{{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+			{{ form_row(form.patientType, {
+                'label': false,
+                'row_attr': {'class': 'full'},
+                'attr': {'class': 'form-control' ~ (form.patientType.vars.errors|length > 0 ? ' error' : '')}
+            }) }}
+
+			{{ form_row(form.treatment, {
+                'label': 'Treatment',
+                'row_attr': {'class': 'half'},
+                'attr': {'class': 'form-select' ~ (form.treatment.vars.errors|length > 0 ? ' error' : '')}
+            }) }}
+
+			{{ form_row(form.appointmentDate, {
+                'label': 'Date and time',
+                'row_attr': {'class': 'half'},
+                'attr': {'class': 'form-control' ~ (form.appointmentDate.vars.errors|length > 0 ? ' error' : '')}
+            }) }}
+
+			{{ form_row(form.doctor, {
+                'label': 'Doctor',
+                'row_attr': {'class': 'full'},
+                'attr': {'class': 'form-control' ~ (form.doctor.vars.errors|length > 0 ? ' error' : ''), 'placeholder': 'Enter doctor name'}
+            }) }}
+
+			<div class="user-field">
+				{{ form_row(form.user, {
+                    'label': 'Select user',
+                    'row_attr': {'class': 'full flex-column'},
+                    'attr': {'class': 'form-select autocomplete-user' ~ (form.user.vars.errors|length > 0 ? ' error' : ''), 'placeholder': 'Select user'}
+                }) }}
+			</div>
+
+			<div class="guest-fields">
+				{{ form_row(form.guestName, {
+                    'label': 'Guest name',
+                    'row_attr': {'class': 'full'},
+                    'attr': {'class': 'form-control' ~ (form.guestName.vars.errors|length > 0 ? ' error' : ''), 'placeholder': 'Enter name'}
+                }) }}
+				{{ form_row(form.guestEmail, {
+                    'label': 'Guest email',
+                    'row_attr': {'class': 'full'},
+                    'attr': {'class': 'form-control' ~ (form.guestEmail.vars.errors|length > 0 ? ' error' : ''), 'placeholder': 'Enter email'}
+                }) }}
+				{{ form_row(form.guestPhone, {
+                    'label': 'Guest phone',
+                    'row_attr': {'class': 'full'},
+                    'attr': {'class': 'form-control' ~ (form.guestPhone.vars.errors|length > 0 ? ' error' : ''), 'placeholder': '+44 7XXX XXX XXX'}
+                }) }}
+			</div>
+
+			<div class="full">
+				<button type="submit" class="btn btn-primary">Create</button>
+			</div>
+
+			{{ form_end(form) }}
+		</div>
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/appointment.js') }}"></script>
+{% endblock %}

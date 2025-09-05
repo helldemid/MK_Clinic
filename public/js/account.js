@@ -344,7 +344,19 @@ document.addEventListener('DOMContentLoaded', function () {
 						AlertService.error(data.message || 'Failed to change status');
 						console.error(data.error);
 					} else {
-						AlertService.success('Status changed');
+						if (data.status !== 'confirmed') {
+							AlertService.success('Status changed');
+						} else {
+							AlertService.confirm('Do you want to create an appointment for this request now?', 'Request confirmed', { confirm: 'Yes', cancel: 'No' })
+								.then(result => {
+									if (result.isConfirmed) {
+										window.open(`/appointment/new?request_id=${requestId}`, '_blank');
+									} else {
+										AlertService.success('Status changed');
+									}
+								});
+						}
+
 					}
 				});
 		});

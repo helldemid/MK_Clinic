@@ -2,21 +2,30 @@
 namespace App\Controller;
 
 use App\Entity\AppointmentRequest;
+use App\Entity\Appointment;
+use App\Entity\AppointmentGuestContact;
 use App\Entity\Treatments;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+use App\Form\AppointmentType;
 use App\Service\MailerService;
 
 use App\Repository\TreatmentsRepository;
 
+use App\Controller\Traits\StatusRenderTrait;
+
+
 class AppointmentRequestController extends AbstractController
 {
+
+	use StatusRenderTrait;
 
 	private const CLINIC_EMAIL = 'mkaestheticclinics@gmail.com';
 	private const TEST_EMAIL = 'hellboy08090@gmail.com';
@@ -132,19 +141,13 @@ class AppointmentRequestController extends AbstractController
 	#[Route('/appointment/success', name: 'appointment_success', methods: ['GET'])]
 	public function successAppointment()
 	{
-		return $this->render('messages/confirm_success.html.twig', [
-			'title' => 'Success',
-			'message' => 'Your appointment request has been successfully submitted. We will get back to you shortly.',
-		]);
+		return $this->renderStatus('Success', 'Your appointment request has been successfully submitted. We will get back to you shortly.', 1);
 	}
 
 	#[Route('/consultation/success', name: 'consultation_success', methods: ['GET'])]
 	public function successConsultation()
 	{
-		return $this->render('messages/confirm_success.html.twig', [
-			'title' => 'Success',
-			'message' => 'Your consultation request has been successfully submitted. We will get back to you shortly.',
-		]);
+		return $this->renderStatus('Success', 'Your consultation request has been successfully submitted. We will get back to you shortly.', 1);
 	}
 
 	#[Route('/book_now', name: 'book_now')]
@@ -201,6 +204,55 @@ class AppointmentRequestController extends AbstractController
 		return $this->json([
 			'success' => true,
 			'html' => $html,
+		]);
+	}
+
+	#[Route('/appointment/new', name: 'appointment_new')]
+	public function new(Request $request, EntityManagerInterface $em): Response
+	{
+		// Deny access if current user is not a SUPER_ADMIN
+		$this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+		$appointment = new Appointment();
+
+		// Check if we come from appointment request
+		$requestId = $request->query->get('request_id');
+		if ($requestId) {
+			$appointmentRequest = $em->getRepository(AppointmentRequest::class)->find($requestId);
+			if ($appointmentRequest) {
+				// Заполняем поля из запроса
+				if ($appointmentRequest->getUser()) {
+					$appointment->setUser($appointmentRequest->getUser());
+				} else {
+					$guestContact = new AppointmentGuestContact();
+					$guestContact->setName($appointmentRequest->getName());
+					$guestContact->setPhone($appointmentRequest->getPhone());
+					$guestContact->setEmail($appointmentRequest->getEmail());
+					$appointment->setGuestContact($guestContact);
+				}
+				if ($appointmentRequest->getTreatment()) {
+					$appointment->setTreatment($appointmentRequest->getTreatment());
+				}
+			}
+		}
+
+		$form = $this->createForm(AppointmentType::class, $appointment, [
+			'patientType' => $appointment->getGuestContact() ? 'guest' : 'user',
+		]);
+
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			$appointment->setCreatedBy($this->getUser());
+			$em->persist($appointment);
+			$em->flush();
+
+
+			return $this->renderStatus('Success', 'New appointment created successfully!<br><a href="' . $this->generateUrl('appointment_new') . '">Create another appointment</a>', 1);
+		}
+
+		return $this->render('appointment/new.html.twig', [
+			'form' => $form->createView(),
 		]);
 	}
 }

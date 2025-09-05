@@ -27,6 +27,7 @@ use App\Controller\Traits\FormErrorTrait;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use Symfony\Component\Form\FormError;
+use App\Controller\Traits\StatusRenderTrait;
 
 use App\Repository\UserRepository;
 
@@ -34,6 +35,7 @@ class AccountController extends AbstractController
 {
 
 	use FormErrorTrait;
+	use StatusRenderTrait;
 	public const TYPE_FORGOT_PASSWORD = 1;
 	public const TYPE_CREATE_ACCOUNT = 2;
 	public const TYPE_CHANGE_EMAIL = 3;
@@ -236,23 +238,6 @@ class AccountController extends AbstractController
 			'action' => $action,
 			'code' => $code,
 		], Response::HTTP_SEE_OTHER);
-	}
-
-	/**
-	 * Renders a status message.
-	 *
-	 * @param string $title
-	 * @param string $message
-	 * @param integer $status (1 - success, 0 - failure)
-	 * @return Response
-	 */
-	private function renderStatus(string $title, string $message, int $status = 1): Response
-	{
-		$statusTemplate = $status === 1 ? 'confirm_success.html.twig' : 'confirm_fail.html.twig';
-		return $this->render('messages/' . $statusTemplate, [
-			'title' => $title,
-			'message' => $message,
-		]);
 	}
 
 	/**

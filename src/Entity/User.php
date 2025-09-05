@@ -104,4 +104,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isActive = $isActive;
         return $this;
     }
+
+    public function getFullName(): string {
+        return trim($this->firstName . ' ' . $this->lastName);
+    }
 }

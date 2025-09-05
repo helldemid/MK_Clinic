@@ -20,4 +20,14 @@ class UserRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, User::class);
     }
+
+    public function findByTerm(?string $term)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.firstName LIKE :term OR u.lastName LIKE :term OR u.id LIKE :term')
+            ->setParameter('term', '%' . $term . '%')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 }

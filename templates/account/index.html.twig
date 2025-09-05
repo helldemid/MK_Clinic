@@ -100,7 +100,31 @@
 
 				<div id="history-block" style="display:none;" class="account-block">
 					<h3>Visit History</h3>
-					<p>Your visit history is empty...</p>
+					<div class="timeline">
+						<div class="timeline-item">
+							<div class="timeline-marker"></div>
+							<div class="timeline-content">
+							<h4>2025-09-01</h4>
+							<p>Консультация у стоматолога</p>
+							</div>
+						</div>
+
+						<div class="timeline-item">
+							<div class="timeline-marker"></div>
+							<div class="timeline-content">
+							<h4>2025-09-03</h4>
+							<p>Чистка зубов</p>
+							</div>
+						</div>
+
+						<div class="timeline-item">
+							<div class="timeline-marker"></div>
+							<div class="timeline-content">
+							<h4>2025-09-05</h4>
+							<p>Удаление зуба мудрости</p>
+							</div>
+						</div>
+					</div>
 				</div>
 				{% if is_granted('ROLE_ADMIN') %}
 					<div id="requests-block" style="display:none;" class="account-block">
@@ -129,7 +153,7 @@
 										<td>{{ request.phone ?: 'Not set' }}</td>
 										<td>{{ request.treatment ? request.treatment.name : 'Not set' }}</td>
 										<td>
-											<select class="request-status-select colored-select {{ request.status }}" data-request-id="{{ request.id }}">
+											<select class="request-status-select colored-select {{ request.status }}" data-request-id="{{ request.id }}" {% if request.status == 'confirmed' %}disabled{% endif %}>
 												<option class="created" value="created" {{ 'created' in request.status ? 'selected' : '' }}>Created</option>
 												<option class="in_progress" value="in_progress" {{ 'in_progress' in request.status ? 'selected' : '' }}>In Progress</option>
 												<option class="confirmed" value="confirmed" {{ 'confirmed' in request.status ? 'selected' : '' }}>Confirmed</option>

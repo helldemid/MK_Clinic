@@ -63,6 +63,7 @@
 
 .filters select {
 	min-width: 225px;
+	width: auto;
 	height: 40px;
 	margin: 0;
 	cursor: pointer;

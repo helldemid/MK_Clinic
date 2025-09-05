@@ -57,6 +57,7 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="password"],
+input[type="datetime-local"],
 select,
 textarea {
 	height: 3rem;
@@ -65,9 +66,25 @@ textarea {
 	border-radius: 12px;
 	padding-left: 1rem;
 	font-size: 1rem;
-	font-weight: 300;
-	color: #0000007a;
+	color: #000000;
 	box-sizing: border-box;
+	&::placeholder {
+		font-size: 1rem;
+		font-weight: 300;
+	}
+}
+
+select {
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
+	background-size: 24px;
+	padding-right: 2rem;
+	cursor: pointer;
+	width: 100%;
 }
 
 textarea {

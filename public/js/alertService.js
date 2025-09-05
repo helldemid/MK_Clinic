@@ -18,7 +18,7 @@ const AlertService = {
 			customClass: { popup: 'my-popup-class' }
 		});
 	},
-	confirm(text = 'This action cannot be canceled', title = 'Are you sure?') {
+	confirm(text = 'This action cannot be canceled', title = 'Are you sure?', buttonsText = { confirm: 'Confirm', cancel: 'Cancel' }) {
 		return Swal.fire({
 			icon: 'warning',
 			title: title,
@@ -26,8 +26,8 @@ const AlertService = {
 			showCancelButton: true,
 			confirmButtonColor: '#222',
 			customClass: { popup: 'my-popup-class' },
-			confirmButtonText: "Confirm",
-			cancelButtonText: "Cancel"
+			confirmButtonText: buttonsText.confirm,
+			cancelButtonText: buttonsText.cancel
 		});
 	},
 	htmlFromTemplate(selector, title = 'Form', showButtons = true) {
