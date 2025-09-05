@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Appointment;
 use App\Entity\AppointmentRequest;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
@@ -617,6 +618,50 @@ class AccountController extends AbstractController
 		$token = $this->emailVerificationService->getToken($user->getId(), self::TYPE_CHANGE_EMAIL);
 
 		return $this->redirectToRoute('app_change_email', ['token' => $token]);
+	}
+
+	#[Route('/account/appointments/history', name: 'account_appointments_history')]
+	public function history(Request $request, EntityManagerInterface $em): JsonResponse
+	{
+		$user = $this->getUser();
+		$offset = max(0, (int)$request->query->get('offset', 0));
+		$limit = min(20, (int)$request->query->get('limit', 10));
+
+		$appointments = $em->getRepository(Appointment::class)
+			->createQueryBuilder('a')
+			->where('a.user = :user')
+			->setParameter('user', $user)
+			->orderBy('a.appointmentDate', 'DESC')
+			->setFirstResult($offset)
+			->setMaxResults($limit + 1)
+			->getQuery()
+			->getResult();
+
+		$hasMore = count($appointments) > $limit;
+		if ($hasMore) {
+			array_pop($appointments);
+		}
+
+		$items = [];
+		foreach ($appointments as $appointment) {
+			$items[] = [
+				'html' => $this->renderView('components/timeline_item.html.twig', [
+					'date' => $appointment->getAppointmentDate()->format('d/m/Y H:i'),
+					'status' => $appointment->getStatus(),
+					'treatment' => $appointment->getTreatment()->getName(),
+					'therapist' => $appointment->getDoctor() ? $appointment->getDoctor() : 'No therapist assigned',
+					'status_label' => match ($appointment->getStatus()) {
+						'scheduled' => 'Scheduled',
+						'no_show' => 'No show',
+						'completed' => 'Completed',
+						'cancelled' => 'Cancelled',
+						default => 'Unknown',
+					}
+				])
+			];
+		}
+
+		return $this->json(['items' => $items, 'hasMore' => $hasMore]);
 	}
 
 }

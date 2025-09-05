@@ -38,7 +38,7 @@ class Appointment
 
 	// --- Статус ---
 	#[ORM\Column(length: 50)]
-	#[Assert\Choice(choices: ['scheduled', 'cancelled', 'confirmed', 'no_show', 'completed'], message: 'Invalid status.')]
+	#[Assert\Choice(choices: ['scheduled', 'cancelled', 'no_show', 'completed'], message: 'Invalid status.')]
 	private string $status = 'scheduled';
 	// возможные значения: scheduled, cancelled, no_show, completed
 
