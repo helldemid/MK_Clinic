@@ -44,7 +44,15 @@ class MailerService
 		'twig_path' => 'emails/consultation_request_to_client.html.twig',
 	];
 
+	public const NEW_APPOINTMENT = [
+		'subject' => "Your Appointment is Scheduled",
+		'twig_path' => 'emails/new_appointment.html.twig',
+	];
 
+	public const APPOINTMENT_CHANGED = [
+		'subject' => "Your appointment details have changed",
+		'twig_path' => 'emails/appointment_changed.html.twig',
+	];
 
 	private MailerInterface $mailer;
 	private Environment $twig;

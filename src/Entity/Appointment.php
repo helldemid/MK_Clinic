@@ -8,6 +8,15 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Appointment
 {
+
+	const APPOINTMENT_STATUSES = [
+		'scheduled' => 'Scheduled',
+		'cancelled' => 'Cancelled',
+		'no_show' => 'No Show',
+		'completed' => 'Completed',
+		'created_by_mistake' => 'Created by Mistake',
+	];
+
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column]
@@ -38,7 +47,7 @@ class Appointment
 
 	// --- Статус ---
 	#[ORM\Column(length: 50)]
-	#[Assert\Choice(choices: ['scheduled', 'cancelled', 'no_show', 'completed'], message: 'Invalid status.')]
+	#[Assert\Choice(choices: ['scheduled', 'cancelled', 'no_show', 'completed', 'created_by_mistake'], message: 'Invalid status.')]
 	private string $status = 'scheduled';
 	// возможные значения: scheduled, cancelled, no_show, completed
 
@@ -50,6 +59,22 @@ class Appointment
 	// --- Дата создания ---
 	#[ORM\Column(type: 'datetime')]
 	private \DateTimeInterface $createdAt;
+
+	#[ORM\OneToOne(cascade: ['persist', 'remove'])]
+	#[ORM\JoinColumn(nullable: true)]
+	private ?AppointmentPayment $payment = null;
+
+	public function getPayment(): ?AppointmentPayment
+	{
+		return $this->payment;
+	}
+
+	public function setPayment(?AppointmentPayment $payment): self
+	{
+		$this->payment = $payment;
+		return $this;
+	}
+
 
 	public function __construct()
 	{
@@ -147,5 +172,16 @@ class Appointment
 			return $this->guestContact->getName();
 		}
 		return '-';
+	}
+
+	public function getEmail(): ?string
+	{
+		if ($this->user) {
+			return $this->user->getEmail();
+		}
+		if ($this->guestContact) {
+			return $this->guestContact->getEmail();
+		}
+		return null;
 	}
 }

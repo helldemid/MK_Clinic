@@ -1,0 +1,117 @@
+<div class="appointment-modal" data-appointment-id="{{ appointment.id }}">
+
+	<!-- Close button -->
+	<button type="button" class="modal-close" onclick="Swal.close()">×</button>
+
+	<!-- Notification -->
+	{% if bNotifyToCall and not bOverdue %}
+		<div class="modal-alert today">
+			🔔 Don't forget to call the patient today!
+		</div>
+	{% elseif bOverdue %}
+		<div class="modal-alert overdue">
+			⚠️ Appointment overdue and not processed!
+		</div>
+	{% endif %}
+
+	<!-- Header -->
+	<div class="modal-header">
+		<div>
+			<strong>№
+				{{ appointment.id }}</strong>
+		</div>
+		<select id="appointment-status" class="appointment-status-select colored-select {{ appointment.status }}" data-appointment-id="{{ appointment.id }}" {% if appointment.status == 'completed' %} disabled {% endif %}>
+			{% for key, label in appointmentStatuses %}
+				<option class="{{ key }}" value="{{ key }}" {{ key == appointment.status ? 'selected' : '' }}>{{ label }}</option>
+			{% endfor %}
+		</select>
+		<div data-controller="appointment-details">
+			<button data-action="click->appointment-details#save" type="button" class="create_button">Save</button>
+		</div>
+	</div>
+
+	<!-- Content -->
+	<div
+		class="modal-content">
+		<!-- User data -->
+		<div class="modal-section">
+			<h4>Patient contacts</h4>
+
+			<div class="form-group">
+				<label for="patient_name">Full Name</label>
+				<input class="form-control" type="text" id="patient_name" value="{{ appointment.user ? appointment.user.lastName ~ ' ' ~ appointment.user.firstName : appointment.guestContact.name }}" {% if not bUserDataEditable %} readonly {% endif %}>
+			</div>
+
+			<div class="form-group">
+				<label for="patient_phone">Phone</label>
+				<input class="form-control" type="tel" id="patient_phone" value="{{ appointment.user ? appointment.user.phone : appointment.guestContact.phone }}" {% if not bUserDataEditable %} readonly {% endif %}>
+			</div>
+
+			<div class="form-group">
+				<label for="patient_email">Email</label>
+				<input class="form-control" type="email" id="patient_email" value="{{ appointment.user ? appointment.user.email : appointment.guestContact.email }}" {% if not bUserDataEditable %} readonly {% endif %}>
+			</div>
+		</div>
+
+		<!-- Manager -->
+		<div class="modal-section">
+			<h4>Manager</h4>
+			<div class="form-group">
+				<label for="patient_name">Created by</label>
+				<input class="form-control" type="text" id="created_by" value="{{ appointment.createdBy.fullName ?? 'System' }}" readonly>
+			</div>
+			<div class="form-group">
+				<label for="patient_name">Created at</label>
+				<input class="form-control" type="datetime-local" id="created_at" value="{{ appointment.createdAt|date('Y-m-d H:i') }}" readonly>
+			</div>
+		</div>
+
+		<!-- Treatment -->
+		<div class="modal-section">
+			<h4>Treatment</h4>
+			<div class="form-group">
+				<label for="appointment-treatment">Treatment:</label>
+				<select class="form-select" id="appointment-treatment" data-field="treatment" {% if not bAppointmentEditable %} disabled {% endif %}>
+					{% for treatment in treatments %}
+						<option value="{{ treatment.id }}" {% if appointment.treatment and appointment.treatment.id == treatment.id %} selected {% endif %}>
+							{{ treatment.name }}
+						</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="patient_name">Doctor</label>
+				<input class="form-control" type="text" id="doctor" placeholder="Enter doctor's name" value="{{ appointment.doctor ?? '' }}" {% if not bAppointmentEditable %} readonly {% endif %}>
+			</div>
+			<div class="form-group">
+				<label for="appointment-date">Appointment date and time</label>
+				<input class="form-control" type="datetime-local" id="appointment-date" value="{{ appointment.appointmentDate ? appointment.appointmentDate|date('Y-m-d H:i') : '' }}" {% if not bAppointmentEditable %} readonly {% endif %}>
+			</div>
+		</div>
+
+		<!-- Payment -->
+		<div class="modal-section">
+			<h4>Payment</h4>
+			<div class="form-group">
+				<label for="payment_status">Status</label>
+				<select class="form-select" id="payment-status" data-field="payment_status" {% if not bAppointmentEditable %} disabled {% endif %}>
+					{% for key, label in paymentStatuses %}
+						<option value="{{ key }}" {% if appointment.payment and appointment.payment.status == key %} selected {% endif %}>{{ label }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="payment_method">Method</label>
+				<select class="form-select" id="payment-method" data-field="payment_method" {% if not bAppointmentEditable %} disabled {% endif %}>
+					{% for key, label in paymentMethods %}
+						<option value="{{ key }}" {% if appointment.payment and appointment.payment.method == key %} selected {% endif %}>{{ label }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="payment_amount">Amount £</label>
+				<input class="form-control" type="number" id="payment-amount" min="0" step="1" value="{{ appointment.payment ? appointment.payment.amount : '' }}">
+			</div>
+		</div>
+	</div>
+</div>

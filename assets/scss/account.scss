@@ -173,7 +173,7 @@ input[aria-invalid="true"] {
 	outline: 2px solid #d32f2f;
 }
 
-#requests-table {
+#requests-table, #appointments-table {
 	font-size: calc(1rem - 2px);
 
 	button {

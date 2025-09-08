@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 {% import 'macros/roles.twig' as roles_macros %}
+{% import 'macros/appointment_macros.html.twig' as macros %}
 
 {% block title %}Account
 {% endblock %}
@@ -25,6 +26,9 @@
 						<a href="#" nofollow>Visit history</a>
 					</li>
 					{% if is_granted('ROLE_ADMIN') %}
+						<li data-target="appointments-block">
+							<a href="#" nofollow>Appointments</a>
+						</li>
 						<li data-target="requests-block">
 							<a href="#" nofollow>Requests</a>
 						</li>
@@ -107,6 +111,66 @@
 				</div>
 
 				{% if is_granted('ROLE_ADMIN') %}
+					<div id="appointments-block" style="display:none;" class="account-block">
+						<h3>Appointments</h3>
+						<button type="button" class="create_button" onclick="window.open('{{ path('appointment_new') }}', '_blank')">
+							Create Appointment +
+						</button>
+						<table id="appointments-table" class="display">
+							<thead>
+								<tr>
+									<th>№</th>
+									<th>Date</th>
+									<th>Full Name</th>
+									<th>Phone</th>
+									<th>Doctor</th>
+									<th>Treatment</th>
+									<th>Status</th>
+									<th>Info</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for appointment in appointments %}
+									<tr>
+										<td>{{ appointment.id }}</td>
+										{{ macros.statusCell(appointment) }}
+										<td>
+											{{
+												appointment.user
+													? appointment.user.lastName ~ ' ' ~ appointment.user.firstName ~ ', ' ~ appointment.user.id
+													: appointment.guestContact
+														? appointment.guestContact.name ~ ', Guest'
+														: 'Unknown'
+											}}
+										</td>
+										<td>
+											{{
+												appointment.user
+													? (appointment.user.phone ? appointment.user.phone : 'Not set by user')
+													: (appointment.guestContact ? appointment.guestContact.phone : 'Unknown')
+											}}
+										</td>
+										<td>{{ appointment.doctor ? appointment.doctor : 'Not set' }}</td>
+										<td>{{ appointment.treatment ? appointment.treatment.name : 'Not set' }}</td>
+										<td>
+											<select class="appointment-status-select colored-select {{ appointment.status }}" data-appointment-id="{{ appointment.id }}" {% if appointment.status == 'completed' %} disabled {% endif %}>
+												<option class="scheduled" value="scheduled" {{ 'scheduled' in appointment.status ? 'selected' : '' }}>Scheduled</option>
+												<option class="no_show" value="no_show" {{ 'no_show' in appointment.status ? 'selected' : '' }}>No Show</option>
+												<option class="completed" value="completed" {{ 'completed' in appointment.status ? 'selected' : '' }}>Completed</option>
+												<option class="cancelled" value="cancelled" {{ 'cancelled' in appointment.status ? 'selected' : '' }}>Cancelled</option>
+												<option class="created_by_mistake" value="created_by_mistake" {{ 'created_by_mistake' in appointment.status ? 'selected' : '' }}>Created by Mistake</option>
+											</select>
+										</td>
+										<td>
+											<button class="transparent_black_button" data-controller="appointment-details" data-action="click->appointment-details#show" data-appointment-id="{{ appointment.id }}">
+												Details
+											</button>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
 					<div id="requests-block" style="display:none;" class="account-block">
 						<h3>Appointment & Consultation requests</h3>
 						<table id="requests-table" class="display">
@@ -114,7 +178,6 @@
 								<tr>
 									<th>Date</th>
 									<th>Type</th>
-									<th>User id</th>
 									<th>Full Name</th>
 									<th>Phone</th>
 									<th>Treatment</th>
@@ -125,11 +188,9 @@
 							<tbody>
 								{% for request in appointmentRequests %}
 									<tr>
-										<td>{{ request.createdAt ? request.createdAt|date('Y-m-d') : '' }}</td>
+										<td>{{ request.createdAt ? request.createdAt|date('d/m/Y') : '' }}</td>
 										<td>{{ request.question ? 'Consultation' : 'Appointment' }}</td>
-										<td>{{ request.user ? request.user.id : 'Guest' }}</td>
-										<td>{{ request.name }}
-										</td>
+										<td>{{ request.name ~ (request.user ? '' : '/Guest') }}</td>
 										<td>{{ request.phone ?: 'Not set' }}</td>
 										<td>{{ request.treatment ? request.treatment.name : 'Not set' }}</td>
 										<td>

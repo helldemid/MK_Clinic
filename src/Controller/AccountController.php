@@ -113,9 +113,19 @@ class AccountController extends AbstractController
 				->orderBy('ar.createdAt', 'DESC')
 				->getQuery()
 				->getResult();
+
+			$appointments = $this->entityManager->getRepository(Appointment::class)
+				->createQueryBuilder('a')
+				->orderBy('a.appointmentDate', 'DESC')
+				->getQuery()
+				->getResult();
 		}
 
-		return $this->render('account/index.html.twig', ['user' => $user, 'users' => $users ?? [], 'appointmentRequests' => $appointmentRequests ?? []]);
+		return $this->render('account/index.html.twig', [
+			'user' => $user, 'users' => $users ?? [],
+			'appointmentRequests' => $appointmentRequests ?? [],
+			'appointments' => $appointments ?? []
+		]);
 	}
 
 	#[Route('/account/user/{id}/change-role', name: 'admin_change_role', methods: ['POST'])]

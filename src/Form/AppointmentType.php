@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class AppointmentType extends AbstractType
@@ -45,6 +46,16 @@ class AppointmentType extends AbstractType
 			->add('appointmentDate', DateTimeType::class, [
 				'widget' => 'single_text',
 				'label' => 'Date and time',
+				'html5' => true,
+				'attr' => [
+					'min' => (new \DateTime())->format('Y-m-d\TH:i'),
+				],
+				'constraints' => [
+					new GreaterThanOrEqual([
+						'value' => 'today',
+						'message' => 'The appointment date cannot be earlier than today.',
+					]),
+				],
 			])
 			// Service
 			->add('treatment', EntityType::class, [

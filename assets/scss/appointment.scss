@@ -1,0 +1,98 @@
+.appointment-details-modal {
+	background: transparent;
+	/* чтобы фон задавался через .appointment-modal */
+	padding: 0;
+}
+
+.appointment-modal {
+	width: 900px;
+	max-width: 90vw;
+	background-color: #f5f5f5;
+	padding: var(--big-padding);
+	border-radius: 12px;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+	font-family: inherit;
+	color: #333;
+	position: relative;
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+
+	select {
+		max-width: 200px;
+	}
+}
+
+.modal-close {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	background: none;
+	border: none;
+	font-size: 1.5rem;
+	cursor: pointer;
+	color: #666;
+}
+
+.modal-content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 2rem;
+}
+
+.modal-section {
+	background-color: #fff;
+	padding: 1rem 1.25rem;
+	margin-bottom: 1rem;
+	border-radius: 10px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+
+	.form-group {
+		display: flex;
+		flex-direction: column;
+		label {
+			margin-bottom: 0.25rem;
+			font-weight: 500;
+			text-align: left;
+		}
+	}
+}
+
+.modal-section h4 {
+	margin-bottom: 0.5rem;
+	font-size: 1.25rem;
+	font-weight: bold;
+	color: #0d6efd;
+}
+
+.status-badge {
+	padding: 4px 10px;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.modal-alert {
+	padding: 10px 15px;
+	border-radius: 8px;
+	margin-bottom: 15px;
+	font-weight: bold;
+}
+
+.modal-alert.today {
+	background: #fffbe6;
+	color: #b8860b;
+}
+
+.modal-alert.overdue {
+	background: #ffeaea;
+	color: #d32f2f;
+}

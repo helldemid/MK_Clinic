@@ -17,3 +17,4 @@ import './scss/treatments.scss';
 import './scss/autorotation.scss';
 import './scss/messages.scss';
 import './scss/account.scss';
+import './scss/appointment.scss';

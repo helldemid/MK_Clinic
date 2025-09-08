@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			minimumInputLength: 2,
 			width: '100%',
 			ajax: {
-				url: '{{ path("user_autocomplete") }}',
+				url: '/user/autocomplete',
 				dataType: 'json',
 				delay: 250,
 				data: function (params) {

@@ -57,6 +57,7 @@ input[type="text"],
 input[type="email"],
 input[type="tel"],
 input[type="password"],
+input[type="number"],
 input[type="datetime-local"],
 select,
 textarea {
@@ -71,6 +72,10 @@ textarea {
 	&::placeholder {
 		font-size: 1rem;
 		font-weight: 300;
+	}
+
+	&[readonly] {
+		background: #e9ecef;
 	}
 }
 
@@ -149,12 +154,13 @@ button[type="submit"] {
 
 	background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='16' viewBox='0 0 24 24' width='16' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
 
-	& .created, &.created     { background-color: #4b4b4b; } /* серый */
+	& .created, &.created, & .scheduled, &.scheduled     { background-color: #4b4b4b; } /* серый */
 	& .in_progress, &.in_progress { background-color: #1961a8; } /* синий */
 	& .confirmed, &.confirmed   { background-color: #145a32; } /* зелёный */
-	& .no_answer, &.no_answer   { background-color: #b7950b; } /* жёлтый */
+	& .no_answer, &.no_answer, & .no_show, &.no_show { background-color: #b7950b; } /* жёлтый */
 	& .cancelled, &.cancelled   { background-color: #7b241c; } /* красный */
-	& .processed, &.processed   { background-color: #117864; } /* бирюзовый */
+	& .created_by_mistake, &.created_by_mistake   { background-color: #470a38; } /* розовый */
+	& .processed, &.processed, & .completed, &.completed { background-color: #117864; } /* бирюзовый */
 }
 
 

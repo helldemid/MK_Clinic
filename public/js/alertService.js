@@ -53,14 +53,15 @@ const AlertService = {
 			}
 		});
 	},
-	htmlModalTemplate(content, title = 'Form', showButtons = true) {
+	htmlModalTemplate(content, title = 'Form', showButtons = true, customClass = '') {
 		return Swal.fire({
 			title: title,
 			html: content,
 			showCancelButton: showButtons,
 			confirmButtonColor: '#222',
 			focusConfirm: false,
-			customClass: { popup: 'my-popup-class' },
+			width: 'auto',
+			customClass: { popup: customClass },
 			preConfirm: () => {
 				const form = Swal.getPopup().querySelector("form");
 				if (form) {
@@ -69,5 +70,18 @@ const AlertService = {
 				}
 			}
 		});
+	},
+	customModal(content, customClass = '') {
+		return Swal.fire({
+			title: null,
+			html: content,
+			showCancelButton: false,
+			showConfirmButton: false,
+			confirmButtonColor: '#222',
+			focusConfirm: false,
+			width: 'auto',
+			customClass: { popup: customClass },
+		});
 	}
+
 };

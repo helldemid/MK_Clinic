@@ -30,6 +30,29 @@ const ApiService = {
 	},
 
 	/**
+	 * Send GET request
+	 * @param {string} url - endpoint URL
+	 * @returns {Promise<Object>} response JSON
+	 */
+	async get(url) {
+		try {
+			const response = await fetch(url, {
+				method: "GET",
+				headers: { "X-Requested-With": "XMLHttpRequest" }
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			return await response.json();
+		} catch (error) {
+			console.error("ApiService.get error:", error);
+			throw error;
+		}
+	},
+
+	/**
 	 * Send DELETE request
 	 * @param {string} url - endpoint URL
 	 * @returns {Promise<Object>} response JSON

@@ -1,0 +1,39 @@
+<div style="font-family: Arial, sans-serif; color: #333; text-align: center;">
+	<h2 style="color: #222;">
+		Dear
+		{{ appointment.fullName }}!
+	</h2>
+	<p>
+		You have been booked for an appointment at MK Aesthetic Clinic.
+	</p>
+	<ul style="list-style: none; padding: 0;">
+		{% if appointment.treatmentName %}
+			<li>
+				<strong>Treatment:</strong>
+				{{ appointment.treatmentName }}
+			</li>
+		{% endif %}
+		{% if appointment.appointmentDate %}
+			<li>
+				<strong>Date and time:</strong>
+				{{ appointment.appointmentDate|date('d/m/Y H:i') }}
+			</li>
+		{% endif %}
+		{% if appointment.doctor %}
+			<li>
+				<strong>Doctor:</strong>
+				{{ appointment.doctor }}
+			</li>
+		{% endif %}
+	</ul>
+	<p>
+		If you have any questions or need to reschedule, please,
+		<a href="https://mkaestheticclinic.com/contacts">contact us</a>.
+	</p>
+	<p>
+		<a href="https://mkaestheticclinic.com" style="display:inline-block;padding:10px 15px;background:#222;color:#fff;text-decoration:none;border-radius:5px;">Visit Our Website</a>
+	</p>
+	<p style="font-size: 12px; color: #999;">&copy;
+		{{ "now"|date("Y") }}
+		M.K. Aesthetic Clinic. All rights reserved.</p>
+</div>

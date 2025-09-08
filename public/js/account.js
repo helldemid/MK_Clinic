@@ -163,6 +163,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			order: [[0, 'desc']]
 		});
 	}
+	if (document.getElementById('appointments-table')) {
+		$('#appointments-table').DataTable({
+			order: [[0, 'desc']]
+		});
+	}
 
 	document.querySelectorAll('.colored-select').forEach(select => {
 		select.addEventListener('change', () => {
@@ -330,35 +335,64 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 			const newStatus = this.value;
 
-			fetch(`/appointment/request/${requestId}/change-status`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-Requested-With': 'XMLHttpRequest',
-				},
-				body: JSON.stringify({ status: newStatus })
-			})
-				.then(r => r.json())
-				.then(data => {
-					if (!data.success) {
-						AlertService.error(data.message || 'Failed to change status');
-						console.error(data.error);
-					} else {
-						if (data.status !== 'confirmed') {
-							AlertService.success('Status changed');
-						} else {
-							AlertService.confirm('Do you want to create an appointment for this request now?', 'Request confirmed', { confirm: 'Yes', cancel: 'No' })
-								.then(result => {
-									if (result.isConfirmed) {
-										window.open(`/appointment/new?request_id=${requestId}`, '_blank');
-									} else {
-										AlertService.success('Status changed');
-									}
-								});
-						}
+			handleApiResponse(
+				ApiService.post(`/appointment/request/${requestId}/change-status`, { status: newStatus }),
+				"Status changed", false
+			).then(() => {
+				// additional handling for 'confirmed' status
+				if ('confirmed' !== newStatus) {
+					AlertService.success('Status changed');
+					return;
+				} else {
+					AlertService.confirm('Do you want to create an appointment for this request now?', 'Request confirmed', { confirm: 'Yes', cancel: 'No' })
+						.then(result => {
+							if (result.isConfirmed) {
+								window.open(`/appointment/new?request_id=${requestId}`, '_blank');
+							} else {
+								AlertService.success('Status changed');
+							}
+						});
+				}
+			});
+		});
+	});
 
-					}
-				});
+	function confirmAndSendNotification(appointmentId, fields) {
+		AlertService.confirm('Send notification email to patient?', 'Notify user', { confirm: 'Yes', cancel: 'No' })
+			.then(result => {
+				if (result.isConfirmed) {
+					// Send the email notification
+					handleApiResponse(
+						ApiService.post(`/appointment/${appointmentId}/send-change-notification`, fields),
+						"Notification sent", false
+					).then((response) => {
+						if (response.success) {
+							AlertService.success('Appointment updated and user notified');
+						} else {
+							AlertService.error('Something went wrong. User not notified.');
+						}
+					});
+				} else {
+					AlertService.success('Appointment updated');
+				}
+			});
+	}
+
+	document.querySelectorAll('.appointment-status-select').forEach(select => {
+		select.addEventListener('change', function () {
+			const appointmentId = this.dataset.appointmentId || null;
+			if (!appointmentId) {
+				AlertService.error('Something went wrong. Call Demyd');
+				return;
+			}
+			const newStatus = this.value;
+
+			handleApiResponse(
+				ApiService.post(`/appointment/${appointmentId}/edit-appointment`, { field: 'status', value: newStatus }),
+				"Status changed", false
+			).then(() => {
+				confirmAndSendNotification(appointmentId, {'status' : newStatus });
+			});
 		});
 	});
 

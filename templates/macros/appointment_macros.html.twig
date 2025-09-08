@@ -1,0 +1,30 @@
+{% macro statusCell(appointment) %}
+	{% set today = "now"|date('Y-m-d') %}
+	{% set midnight = date('now'|date('Y-m-d 00:00:00')) %}
+	{% set isToday = appointment.appointmentDate and appointment.appointmentDate|date('Y-m-d') == today and appointment.status == 'scheduled' %}
+	{% set isOverdue = appointment.appointmentDate
+		and appointment.appointmentDate < midnight
+		and appointment.status == 'scheduled'
+	%}
+
+	{% set cellStyle = '' %}
+	{% set icon = '' %}
+	{% set title = '' %}
+
+	{% if isToday %}
+		{% set cellStyle = 'background: #fffbe6; color: #b8860b; font-weight: bold; cursor: pointer;' %}
+		{% set icon = '🔔' %}
+		{% set title = "Don't forget to call the patient today!" %}
+	{% elseif isOverdue %}
+		{% set cellStyle = 'background: #ffeaea; color: #d32f2f; font-weight: bold; cursor: pointer;' %}
+		{% set icon = '⚠️' %}
+		{% set title = "Appointment overdue and not processed!" %}
+	{% endif %}
+
+	<td style="{{ cellStyle }}" title="{{ title }}">
+		{{ appointment.appointmentDate ? appointment.appointmentDate|date('d/m/Y') : '' }}
+		{% if icon %}
+			<span style="margin-left:5px;" title="{{ title }}">{{ icon }}</span>
+		{% endif %}
+	</td>
+{% endmacro %}
