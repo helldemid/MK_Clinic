@@ -1,4 +1,33 @@
 document.addEventListener('DOMContentLoaded', function () {
+
+	const promoPhrases = [
+		"Certified and experienced doctors",
+		"Modern equipment and comfortable environment",
+		"Personalized treatment plans for every patient",
+		"Convenient location and flexible scheduling",
+		"Wide range of aesthetic procedures",
+		"Committed to patient safety and satisfaction"
+	];
+
+	let promoIndex = 0;
+	const promoText = document.getElementById('promoText');
+
+	function rotatePromo() {
+	promoText.classList.add('fade-out');
+
+	setTimeout(() => {
+		promoIndex = (promoIndex + 1) % promoPhrases.length;
+		promoText.textContent = promoPhrases[promoIndex];
+
+		promoText.classList.remove('fade-out');
+		promoText.classList.add('fade-in');
+
+		setTimeout(() => promoText.classList.remove('fade-in'), 600);
+	}, 600);
+	}
+
+	setInterval(rotatePromo, 3500);
+
 	const logoNav = document.getElementById('logo_nav');
 	const p = logoNav.querySelector('p');
 	const img = logoNav.querySelector('img');
@@ -104,8 +133,4 @@ document.addEventListener('DOMContentLoaded', function () {
 		menuBtn.classList.toggle('open');
 		mobileMenu.classList.toggle('open');
 	});
-
-	
-
-
 });
