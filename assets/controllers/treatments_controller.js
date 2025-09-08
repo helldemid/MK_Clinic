@@ -4,11 +4,26 @@ export default class extends Controller {
 	static targets = [];
 
 	async filter(event) {
-		const categoryId = event.target.value;
 		const container = document.getElementById('treatments_container');
+		const categorySelect = document.querySelector('.filters select[data-action*="filter"]:not(#activity)');
+		const activitySelect = document.getElementById('activity');
+
+		// Категория
+		const categoryId = categorySelect ? categorySelect.value : '';
+		// Активность (по умолчанию 1 — только активные)
+		let activity = 1;
+		if (activitySelect) {
+			activity = activitySelect.value;
+		}
+
+		// Если нет селектора активности (не editor), всегда только активные
+		if (!activitySelect) {
+			activity = 1;
+		}
 
 		const formData = new FormData();
 		formData.append('category_id', categoryId);
+		formData.append('activity', activity);
 
 		const response = await fetch('/treatments/filter', {
 			method: 'POST',
@@ -24,19 +39,12 @@ export default class extends Controller {
 		container.classList.add('fade-out');
 
 		container.addEventListener('transitionend', () => {
-			// Подмена контента
 			container.innerHTML = data.html;
-
-			// Анимация появления
 			container.classList.remove('fade-out');
 			container.classList.add('fade-in', 'show');
-
-			// Ждём окончания появления и чистим классы
 			container.addEventListener('transitionend', () => {
 				container.classList.remove('fade-in', 'show');
 			}, { once: true });
 		}, { once: true });
 	}
 }
-
-

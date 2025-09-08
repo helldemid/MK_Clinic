@@ -24,17 +24,23 @@ class TreatmentsRepository extends ServiceEntityRepository
 	/**
 	 * Return data for treatments cards by given category_id
 	 * @param int $categoryId
+	 * @param int $activity 1 - active only, 0 - inactive only, -1 - all
 	 * @return array
 	 */
-	public function getTreatmentsDataForCards(int $categoryId): array
+	public function getTreatmentsDataForCards(int $categoryId, int $activity): array
 	{
 		$qb = $this->createQueryBuilder('t')
-			->select('t.id, t.name, t.imageName, tsi.title, tsi.description')
-			->join('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id');
+			->select('t.id, t.name, t.imageName, t.isActive, tsi.title, tsi.description, (CASE WHEN pt.id IS NOT NULL THEN 1 ELSE 0 END) AS isPopular')
+			->join('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id')
+			->leftJoin('App\Entity\PopularTreatments', 'pt', 'WITH', 'pt.treatment = t.id');
 
 		if ($categoryId !== 0) {
 			$qb->where('t.category = :categoryId')
 				->setParameter('categoryId', $categoryId);
+		}
+		if ($activity !== -1) {
+			$qb->andWhere('t.isActive = :activity')
+				->setParameter('activity', $activity === 1);
 		}
 
 		return $qb->getQuery()->getResult();

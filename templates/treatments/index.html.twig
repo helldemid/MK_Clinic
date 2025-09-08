@@ -33,16 +33,22 @@
 				</option>
 			{% endfor %}
 		</select>
-		{% if is_granted('ROLE_SUPER_ADMIN') %}
-			{# <button type="button" class="transparent_black_button" id="create-treatment-btn">
-										Create Treatment +
-									</button> #}
+		{% if isEditor %}
+			<span>Activity</span>
+			<select id="activity" data-action="change->treatments#filter">
+				<option value="1" selected>Only active</option>
+				<option value="0">Only hidden</option>
+				<option value="-1">All</option>
+			</select>
+			<button type="button" class="create_button" id="create-treatment-btn">
+				Create Treatment +
+			</button>
 		{% endif %}
 	</div>
 
 	<section class="treatments_box">
 		<div id="treatments_container">
-			{% include 'treatments/_treatment_cards.html.twig' with {'treatments': treatments} %}
+			{% include 'treatments/_treatment_cards.html.twig' with {'treatments': treatments, 'isEditor': isEditor} %}
 		</div>
 	</section>
 
@@ -59,4 +65,8 @@
 	</section>
 
 
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/treatments.js') }}"></script>
 {% endblock %}

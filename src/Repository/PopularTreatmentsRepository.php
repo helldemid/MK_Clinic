@@ -27,9 +27,9 @@ class PopularTreatmentsRepository extends ServiceEntityRepository
      */
     public function getPopularTreatmentsData(): array {
         $treatments = $this->createQueryBuilder('pt')
-            ->select('t.id, t.name, t.imageName, tsi.title, tsi.description')
+            ->select('t.id, t.name, t.imageName, t.isActive, tsi.title, tsi.description, 1 AS isPopular')
             ->join('pt.treatment', 't')
-            ->join('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id')
+            ->join('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id and t.isActive = 1')
             ->getQuery()
             ->getResult();
 

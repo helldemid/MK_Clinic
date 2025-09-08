@@ -53,6 +53,36 @@ const ApiService = {
 	},
 
 	/**
+	 * Send PUT request with JSON body
+	 * @param {string} url - endpoint URL
+	 * @param {Object} data - payload
+	 * @returns {Promise<Object>} response JSON
+	 */
+	async put(url, data = {}) {
+		try {
+			const response = await fetch(url, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					"X-Requested-With": "XMLHttpRequest",
+					// если у тебя есть CSRF токен:
+					"X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content || ""
+				},
+				body: JSON.stringify(data)
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			return await response.json();
+		} catch (error) {
+			console.error("ApiService.put error:", error);
+			throw error;
+		}
+	},
+
+	/**
 	 * Send DELETE request
 	 * @param {string} url - endpoint URL
 	 * @returns {Promise<Object>} response JSON

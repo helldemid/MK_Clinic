@@ -1,4 +1,4 @@
-<div class="treatment_card {{ additionalClass is not empty ? additionalClass : '' }}">
+<div class="treatment_card {{ additionalClass is not empty ? additionalClass : '' }}" data-id="{{ treatment.id }}">
 	<div class="back_full_picture">
 		<img src="{{ asset(treatment_card_img_base_dir ~ treatment.imageName) }}" alt="{{ treatment.imageName }}">
 	</div>
@@ -13,6 +13,19 @@
 				{% endfor %}
 			</p>
 		</div>
+		{% if treatment.isActive and isEditor %}
+			<div class="treatment-card-actions">
+				<button class="action-btn edit" title="Edit" data-id="{{ treatment.id }}">
+					<i class="fa fa-pen"></i>
+				</button>
+				<button class="action-btn toggle treatment-hide" title="{{ treatment.isActive ? 'Hide' : 'Show' }}">
+					<i class="fa fa-eye{{ treatment.isActive ? '-slash' : '' }}"></i>
+				</button>
+				<button class="action-btn popular treatment-popular {{ treatment.isPopular ? 'active' : '' }}" title="{{ treatment.isPopular ? 'Unmark as popular' : 'Mark as popular' }}" data-id="{{ treatment.id }}">
+					<i class="fa fa-star"></i>
+				</button>
+			</div>
+		{% endif %}
 		<div class="bottom">
 			<p>{{ treatment.description }}</p>
 			<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">
@@ -20,4 +33,10 @@
 			</a>
 		</div>
 	</div>
+	{% if not treatment.isActive %}
+		<div class="inactive-overlay">
+			<span class="default-text">Hidden</span>
+			<span class="hover-text">Activate?</span>
+		</div>
+	{% endif %}
 </div>

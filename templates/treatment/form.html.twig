@@ -1,0 +1,202 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Treatment Form
+{% endblock %}
+
+{% block body %}
+	<section class="gray_back registration-section">
+		<div class="treatment-creation-form">
+			<h1 class="form-header">New Treatment</h1>
+
+			{{ form_start(form) }}
+
+			{# === Basic info card === #}
+			<div class="card-block">
+				<h3 class="card-title">Basic Information</h3>
+				<div class="form-row">
+					<div class="half">
+						{{ form_row(form.name, {
+						'attr': {
+							'class': 'form-control' ~ (form.name.vars.errors|length > 0 ? ' error' : ''),
+							'placeholder': 'Enter treatment name',
+							'required': 'required'
+						}
+					}) }}
+					</div>
+					<div class="half">
+						{{ form_row(form.category) }}
+					</div>
+				</div>
+				<div class="file-upload">
+					<label for="treatment_image_card" class="file-label">
+						<span class="file-button">📁 Card Image</span>
+						<span class="file-name">No file chosen</span>
+					</label>
+					{{ form_widget(form.image_card, {'attr': {'class': 'file-input'}}) }}
+					<p class="file-hint">Use a narrow format, like Instagram portrait (e.g. 4:5).</p>
+				</div>
+
+				<div class="file-upload">
+					<label for="treatment_image_page" class="file-label">
+						<span class="file-button">📁 Page image</span>
+						<span class="file-name">No file chosen</span>
+					</label>
+					{{ form_widget(form.image_page, {'attr': {'class': 'file-input'}}) }}
+					<p class="file-hint">Use a wide format, suitable for page headers (e.g. 16:9).</p>
+				</div>
+
+			</div>
+
+			{# === Short Info card === #}
+			<div class="card-block">
+				<h3 class="card-title">Card data</h3>
+				<div class="full">
+					{{ form_row(form.shortInfo.title, {
+						'attr': {
+							'class': 'form-control' ~ (form.shortInfo.title.vars.errors|length > 0 ? ' error' : ''),
+							'placeholder': 'Enter short title',
+							'required': 'required'
+						}
+					}) }}
+					<p class="input-hint">A short phrase to describe the benefit (e.g. Add volume. Improve contours.).</p>
+				</div>
+				<div class="full">
+					{{ form_row(form.shortInfo.description, {
+						'attr': {
+							'class': 'form-control' ~ (form.shortInfo.description.vars.errors|length > 0 ? ' error' : ''),
+							'placeholder': 'Enter treatment description',
+							'required': 'required'
+						}
+					}) }}
+					<p class="input-hint">A short description of the treatment.</p>
+				</div>
+
+			</div>
+
+			<div class="card-block">
+				<h3 class="card-title">Details</h3>
+				<div class="full">
+					{{ form_row(form.fullDescription, {
+						'attr': {
+							'class': 'form-control' ~ (form.fullDescription.vars.errors|length > 0 ? ' error' : ''),
+							'placeholder': 'Enter full description'
+						}
+					}) }}
+					<p class="input-hint">A detailed description of the treatment.</p>
+				</div>
+				<div class="full">
+					{{ form_row(form.discomfortLevel, {
+						'attr': {
+							'class': 'form-control' ~ (form.discomfortLevel.vars.errors|length > 0 ? ' error' : '')
+						}
+					}) }}
+					<p class="input-hint">How much discomfort does the procedure cause?</p>
+				</div>
+			</div>
+
+			{# === Duration & Recovery card === #}
+			<div class="card-block">
+				<h3 class="card-title">Duration & Recovery</h3>
+				<div class="form-row">
+					{{ form_row(form.time.hours, {
+						'attr': {
+							'placeholder': 'Specify hours',
+							'class': 'form-control' ~ (form.time.hours.vars.errors|length > 0 ? ' error' : ''),
+							'min': 0,
+							'max': 23,
+							'value': form.time.hours.vars.value ?: 0
+						}
+					}) }}
+					{{ form_row(form.time.minutes, {
+						'attr': {
+							'class': 'form-control' ~ (form.time.minutes.vars.errors|length > 0 ? ' error' : ''),
+							'min': 0,
+							'max': 59,
+							'value': form.time.minutes.vars.value ?: 0
+						}
+					}) }}
+				</div>
+				<p class="input-hint">When setting the number of hours to 0, only minutes are displayed.</p>
+				<div class="form-row">
+					{{ form_row(form.recover.min, {
+						'attr': {
+							'class': 'form-control' ~ (form.recover.min.vars.errors|length > 0 ? ' error' : ''),
+							'min': 0,
+							'value': form.recover.min.vars.value ?: 0
+						}
+					}) }}
+					{{ form_row(form.recover.max, {
+						'attr': {
+							'class': 'form-control' ~ (form.recover.max.vars.errors|length > 0 ? ' error' : ''),
+							'min': 0,
+							'value': form.recover.max.vars.value ?: 0
+						}
+					}) }}
+					{{ form_row(form.recover.period, {
+						'attr': {
+							'class': 'form-control' ~ (form.recover.period.vars.errors|length > 0 ? ' error' : ''),
+						}
+					}) }}
+				</div>
+				<span class="input-hint">
+					<ul>
+						<li>If both values ​​are empty (0–0) → the recovery period is considered minimal.</li>
+						<li>If only the "To" field is filled in → an approximate time is specified (e.g., ~10 days).</li>
+						<li>If only the "From" field is filled in → the period "from ..." is specified (e.g., `from 5 days").</li>
+						<li>If both fields are filled in → a range is specified (e.g., from 5 to 10 days).</li>
+					</ul>
+				</span>
+			</div>
+
+
+			{# === Price card === #}
+			<div class="card-block">
+				<h3 class="card-title">Price</h3>
+				{{ form_row(form.price.isFixed, { 'row_attr': {'class': 'form-checkbox'} }) }}
+				<div class="form-row">
+					<div id="price-type-row" {% if form.price.isFixed.vars.value %} style="display:none" {% endif %}>
+						{{ form_row(form.price.priceType) }}
+					</div>
+					{{ form_row(form.price.price, {
+						'attr': {
+							'class': 'form-control' ~ (form.price.price.vars.errors|length > 0 ? ' error' : ''),
+							'min': 0,
+							'value': form.price.price.vars.value ?: 0
+						}
+					}) }}
+				</div>
+				<span class="input-hint">
+					<ul>
+						<li>If price is fixed → the exact price is displayed (e.g., £500).</li>
+						<li>Otherwise → the following pattern is displayed [from PRICE per TYPE] (e.g., from £300 per course).</li>
+					</ul>
+				</span>
+			</div>
+
+			{# === Questions card === #}
+			<div class="card-block">
+				<h3 class="card-title">Questions & Answers</h3>
+				<div id="questions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
+					{% for questionForm in form.questions %}
+						<div class="question-block">
+							{{ form_widget(questionForm) }}
+							<button type="button" class="remove-question">Remove</button>
+						</div>
+					{% endfor %}
+				</div>
+				<button type="button" id="add-question" class="btn transparent_black_button">Add Question</button>
+			</div>
+
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">Save Treatment</button>
+			</div>
+
+			{{ form_end(form) }}
+		</div>
+	</section>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/treatments.js') }}"></script>
+{% endblock %}

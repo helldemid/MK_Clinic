@@ -2,7 +2,7 @@
 	<div class="swiper-wrapper">
 		{% for slide in slides %}
 			<div class="swiper-slide">
-				{% include 'components/treatment_card.html.twig' with {'treatment': slide, 'additionalClass': ''} %}
+				{% include 'components/treatment_card.html.twig' with {'treatment': slide, 'additionalClass': '', 'isEditor' : false} %}
 			</div>
 		{% else %}
 			<p>No treatments yet</p>

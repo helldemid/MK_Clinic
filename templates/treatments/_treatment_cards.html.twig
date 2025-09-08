@@ -1,5 +1,5 @@
 {% for treatment in treatments %}
-	{% include 'components/treatment_card.html.twig' with {'treatment': treatment, 'additionalClass': 'fixed_card'} %}
+	{% include 'components/treatment_card.html.twig' with {'treatment': treatment, 'additionalClass': 'fixed_card', 'isEditor' : isEditor} %}
 {% else %}
 	<p>No treatments yet</p>
 {% endfor %}

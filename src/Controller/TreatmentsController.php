@@ -11,6 +11,11 @@ use App\Repository\CategoriesRepository;
 use App\Repository\TreatmentsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Categories;
+use App\Entity\Treatments;
+use App\Entity\TreatmentQuestions;
+use App\Entity\PopularTreatments;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use App\Form\TreatmentType;
 
 class TreatmentsController extends AbstractController
 {
@@ -20,12 +25,13 @@ class TreatmentsController extends AbstractController
 		$categories = $categoryRepo->findAll();
 
 		$categoryId = (int) $request->query->get('category', 0);
-		$treatments = $treatmentRepo->getTreatmentsDataForCards($categoryId);
+		$treatments = $treatmentRepo->getTreatmentsDataForCards($categoryId, 1);
 
 		return $this->render('treatments/index.html.twig', [
 			'categories' => $categories,
 			'treatments' => $treatments,
-			'selectedCategory' => $categoryId
+			'selectedCategory' => $categoryId,
+			'isEditor' => $this->isGranted('ROLE_SUPER_ADMIN'),
 		]);
 	}
 
@@ -33,11 +39,13 @@ class TreatmentsController extends AbstractController
 	public function filter(Request $request, TreatmentsRepository $treatmentRepo)
 	{
 		$categoryId = (int) $request->request->get('category_id', 0);
+		$activity = (int) $request->request->get('activity', 1);
 
-		$treatments = $treatmentRepo->getTreatmentsDataForCards($categoryId);
+		$treatments = $treatmentRepo->getTreatmentsDataForCards($categoryId, $activity);
 
 		$html = $this->renderView('treatments/_treatment_cards.html.twig', [
 			'treatments' => $treatments,
+			'isEditor' => $this->isGranted('ROLE_SUPER_ADMIN'),
 		]);
 
 		return new JsonResponse(['html' => $html]);
@@ -148,6 +156,154 @@ class TreatmentsController extends AbstractController
 				'errors' => [$e->getMessage()]
 			], 500);
 		}
+	}
+
+
+	#[Route('/treatment/{id}/toggle', name: 'admin_treatment_toggle', methods: ['PUT'])]
+	public function toggle(Treatments $treatment, EntityManagerInterface $em): JsonResponse
+	{
+		// Deny access if the current user is not a SUPER_ADMIN
+		$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+		try {
+			$treatment->setIsActive(!$treatment->isActive());
+			$em->flush();
+
+			return $this->json([
+				'success' => true,
+				'isActive' => $treatment->isActive(),
+			]);
+		} catch (\Throwable $e) {
+			return $this->json([
+				'success' => false,
+				'error' => $e->getMessage(),
+			], 500);
+		}
+	}
+
+	#[Route('/treatment/{id}/popular', name: 'admin_treatment_popular', methods: ['PUT'])]
+	public function togglePopular(Treatments $treatment, EntityManagerInterface $em): JsonResponse
+	{
+		// Deny access if the current user is not a SUPER_ADMIN
+		$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+		try {
+			$response = false;
+			$treatmentId = $treatment->getId();
+			$em->flush();
+
+			$popularTreatment = $em->getRepository(PopularTreatments::class)->findOneBy(['treatment' => $treatmentId]);
+			if ($popularTreatment) {
+				$em->remove($popularTreatment);
+			} else {
+				$newPopular = new PopularTreatments();
+				$newPopular->setTreatment($treatment);
+				$em->persist($newPopular);
+				$response = true;
+			}
+			$em->flush();
+
+			return $this->json([
+				'success' => true,
+				'isPopular' => $response
+			]);
+		} catch (\Throwable $e) {
+			return $this->json([
+				'success' => false,
+				'error' => $e->getMessage(),
+			], 500);
+		}
+	}
+
+	#[Route('/treatment/new', name: 'admin_treatment_new')]
+	// #[Route('/treatment/{id}/edit', name: 'admin_treatment_edit')]
+	public function form(Request $request, EntityManagerInterface $em, Treatments $treatment = null)
+	{
+		// Deny access if the current user is not a SUPER_ADMIN
+		$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+		$isEdit = $treatment !== null;
+
+		if (!$treatment) {
+			$treatment = new Treatments();
+		}
+
+		// Подготовка категорий для select
+		$categories = $em->getRepository(Categories::class)->findAll();
+
+		$form = $this->createForm(TreatmentType::class, $treatment, [
+			'categories' => $categories
+		]);
+
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+			// --- Файлы ---
+			$cardFile = $form->get('image_card')->getData();
+			$pageFile = $form->get('image_page')->getData();
+
+			if ($cardFile || $pageFile) {
+				// Генерируем одно имя для обоих файлов
+				$extension = $cardFile ? $cardFile->guessExtension() : $pageFile->guessExtension();
+				$filename = uniqid() . '.' . $extension;
+
+				if ($cardFile) {
+					try {
+						$cardFile->move($this->getParameter('treatment_card_dir'), $filename);
+					} catch (FileException $e) {
+						$this->addFlash('error', 'Failed to upload card image');
+					}
+				}
+
+				if ($pageFile) {
+					try {
+						$pageFile->move($this->getParameter('treatment_page_dir'), $filename);
+					} catch (FileException $e) {
+						$this->addFlash('error', 'Failed to upload page image');
+					}
+				}
+
+				// Сохраняем имя в сущности
+				$treatment->setImageName($filename);
+			}
+
+			// --- Подформы ---
+			foreach (['recover', 'time', 'price'] as $subform) {
+				$data = $form->get($subform)->getData();
+				if ($data) {
+					$setter = 'set' . ucfirst($subform);
+					$treatment->$setter($data);
+				}
+			}
+
+			$cardData = $form->get('shortInfo')->getData();
+			if ($cardData) {
+				$cardData->setTreatment($treatment); // если есть связь
+				$em->persist($cardData);
+			}
+
+			// --- Вопросы ---
+			$questionsData = $form->get('questions')->getData(); // если в форме есть коллекция
+			foreach ($questionsData as $qData) {
+				$question = new TreatmentQuestions();
+				$question->setTreatment($treatment);
+				$question->setQuestion($qData->getQuestion());
+				$question->setAnswer($qData->getAnswer());
+				$em->persist($question);
+			}
+
+			$em->persist($treatment->getRecover());
+			$em->persist($treatment->getPrice());
+			$em->persist($treatment->getTime());
+			$em->persist($treatment);
+			$em->flush();
+
+			$this->addFlash('success', $isEdit ? 'Treatment updated!' : 'Treatment created!');
+
+			return $this->redirectToRoute('admin_treatment_list');
+		}
+
+		return $this->render('treatment/form.html.twig', [
+			'form' => $form->createView(),
+			'isEdit' => $isEdit,
+		]);
 	}
 
 }
