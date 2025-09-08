@@ -10,17 +10,21 @@
 	{% set cellStyle = '' %}
 	{% set icon = '' %}
 	{% set title = '' %}
+	{% set important = 0 %}
 
 	{% if isToday %}
 		{% set cellStyle = 'background: #fffbe6; color: #b8860b; font-weight: bold; cursor: pointer;' %}
 		{% set icon = '🔔' %}
 		{% set title = "Don't forget to call the patient today!" %}
+		{% set important = 1 %}
 	{% elseif isOverdue %}
 		{% set cellStyle = 'background: #ffeaea; color: #d32f2f; font-weight: bold; cursor: pointer;' %}
 		{% set icon = '⚠️' %}
 		{% set title = "Appointment overdue and not processed!" %}
+		{% set important = 2 %}
 	{% endif %}
 
+	<td style="display:none;">{{ important }}</td>
 	<td style="{{ cellStyle }}" title="{{ title }}">
 		{{ appointment.appointmentDate ? appointment.appointmentDate|date('d/m/Y') : '' }}
 		{% if icon %}

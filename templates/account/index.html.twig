@@ -120,6 +120,7 @@
 							<thead>
 								<tr>
 									<th>№</th>
+									<th style="display:none;">Marked</th>
 									<th>Date</th>
 									<th>Full Name</th>
 									<th>Phone</th>
@@ -152,7 +153,7 @@
 										</td>
 										<td>{{ appointment.doctor ? appointment.doctor : 'Not set' }}</td>
 										<td>{{ appointment.treatment ? appointment.treatment.name : 'Not set' }}</td>
-										<td>
+										<td data-order="{{ appointment.status }}">
 											<select class="appointment-status-select colored-select {{ appointment.status }}" data-appointment-id="{{ appointment.id }}" {% if appointment.status == 'completed' %} disabled {% endif %}>
 												<option class="scheduled" value="scheduled" {{ 'scheduled' in appointment.status ? 'selected' : '' }}>Scheduled</option>
 												<option class="no_show" value="no_show" {{ 'no_show' in appointment.status ? 'selected' : '' }}>No Show</option>

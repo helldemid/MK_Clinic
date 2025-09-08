@@ -165,7 +165,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 	if (document.getElementById('appointments-table')) {
 		$('#appointments-table').DataTable({
-			order: [[0, 'desc']]
+			order: [
+				[1, 'desc'],
+				[0, 'desc']
+			],
+			columnsDef: [
+				{ targets: 1, visible: false }
+			],
+			"autoWidth": false,
+			responsive: true
 		});
 	}
 
