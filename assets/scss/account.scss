@@ -303,10 +303,17 @@ input[aria-invalid="true"] {
 					margin: 0;
 				}
 
-				.side-menu {
+				.side-menu-wrapper {
 					grid-area: menu;
+					width: 100%;
+					overflow-x: scroll;
+					padding-bottom: 0.5rem;
+				}
+				.side-menu {
 					display: flex;
 					gap: 1rem;
+					text-align: center;
+					white-space: nowrap;
 				}
 			}
 

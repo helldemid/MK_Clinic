@@ -22,30 +22,32 @@
 					<span>{{ app.user.firstName }}</span>
 				</p>
 				<hr>
-				<ul class="side-menu">
-					<li class="active" data-target="personal-block">
-						<a href="#" nofollow>Personal Information</a>
-					</li>
-					<li class="" data-target="history-block">
-						<a href="#" nofollow>Visit history</a>
-					</li>
-					{% if is_granted('ROLE_ADMIN') %}
-						<li data-target="appointments-block">
-							<a href="#" nofollow>Appointments</a>
+				<div class="side-menu-wrapper">
+					<ul class="side-menu">
+						<li class="active" data-target="personal-block">
+							<a href="#" nofollow>Personal Information</a>
 						</li>
-						<li data-target="requests-block">
-							<a href="#" nofollow>Requests</a>
+						<li class="" data-target="history-block">
+							<a href="#" nofollow>Visit history</a>
 						</li>
-						<li data-target="users-block">
-							<a href="#" nofollow>Users</a>
-						</li>
-					{% endif %}
-					{% if is_granted('ROLE_SUPER_ADMIN') %}
-						<li data-target="categories-block">
-							<a href="#" nofollow>Treatments categories</a>
-						</li>
-					{% endif %}
-				</ul>
+						{% if is_granted('ROLE_ADMIN') %}
+							<li data-target="appointments-block">
+								<a href="#" nofollow>Appointments</a>
+							</li>
+							<li data-target="requests-block">
+								<a href="#" nofollow>Requests</a>
+							</li>
+							<li data-target="users-block">
+								<a href="#" nofollow>Users</a>
+							</li>
+						{% endif %}
+						{% if is_granted('ROLE_SUPER_ADMIN') %}
+							<li data-target="categories-block">
+								<a href="#" nofollow>Treatments categories</a>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
 				<hr>
 				<a class="logout" href="{{ path('app_logout') }}">
 					<img class="icon" src="{{ asset('media/icons/logOut.svg') }}" alt="Log Out">
