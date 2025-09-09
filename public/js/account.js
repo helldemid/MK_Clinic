@@ -1,30 +1,54 @@
-document.addEventListener('DOMContentLoaded', function () {
-	const menuLinks = document.querySelectorAll('.side-menu > li');
-	const blocks = document.querySelectorAll('.account-content > .account-block');
+const menuLinks = document.querySelectorAll('.side-menu > li');
+const blocks = document.querySelectorAll('.account-content > .account-block');
 
-	menuLinks.forEach(link => {
-		link.addEventListener('click', function (e) {
-			e.preventDefault();
-			if (this.classList.contains('active')) return;
+// флаг для каждой таблицы, чтобы не инициализировать дважды
+const tablesInitialized = {};
 
-			const targetId = this.getAttribute('data-target');
+menuLinks.forEach(link => {
+	link.addEventListener('click', function (e) {
+		e.preventDefault();
+		if (this.classList.contains('active')) return;
 
-			// hide all blocks
-			blocks.forEach(block => {
-				block.style.display = 'none';
-			});
+		const targetId = this.getAttribute('data-target');
 
-			// remove active class from all menu items
-			menuLinks.forEach(l => l.classList.remove('active'));
-
-			// Show the target block and highlight the menu
-			const targetBlock = document.getElementById(targetId);
-			if (targetBlock) {
-				targetBlock.style.display = '';
-			}
-			this.classList.add('active');
+		// hide all blocks
+		blocks.forEach(block => {
+			block.style.display = 'none';
 		});
+
+		// remove active class from all menu items
+		menuLinks.forEach(l => l.classList.remove('active'));
+
+		// Show the target block and highlight the menu
+		const targetBlock = document.getElementById(targetId);
+		if (targetBlock) {
+			targetBlock.style.display = '';
+
+			// Initialize DataTable if exists and не инициализирована
+			const tableEl = targetBlock.querySelector('table.dataTable, table.display');
+			if (tableEl) {
+				const tableId = tableEl.id;
+				const order = tableId === 'appointments-table' ? [[1, 'desc'], [0, 'desc']] : [[0, 'desc']];
+				const columnDefs = tableId === 'appointments-table' ? [{ targets: 1, visible: false }] : [];
+				if (!tablesInitialized[tableId]) {
+					const table = $('#' + tableId).DataTable({
+						responsive: true,
+						autoWidth: false,
+						order: order,
+						columnDefs: columnDefs,
+						// можно добавить columnDefs, order и т.д.
+					});
+					tablesInitialized[tableId] = true;
+				} else {
+					// пересчет колонок для адаптивности
+					$('#' + tableEl.id).DataTable().columns.adjust().responsive.recalc();
+				}
+			}
+		}
+
+		this.classList.add('active');
 	});
+
 
 	/**
 	 * Show the edit form for a specific field.
@@ -148,34 +172,25 @@ document.addEventListener('DOMContentLoaded', function () {
 		formatText: (data) => data.phone
 	});
 
-	if (document.getElementById('users-table')) {
-		$('#users-table').DataTable({
-			order: [[0, 'desc']]
-		});
-	}
-	if (document.getElementById('categories-table')) {
-		$('#categories-table').DataTable({
-			order: [[0, 'desc']]
-		});
-	}
-	if (document.getElementById('requests-table')) {
-		$('#requests-table').DataTable({
-			order: [[0, 'desc']]
-		});
-	}
-	if (document.getElementById('appointments-table')) {
-		$('#appointments-table').DataTable({
-			order: [
-				[1, 'desc'],
-				[0, 'desc']
-			],
-			columnsDef: [
-				{ targets: 1, visible: false }
-			],
-			"autoWidth": false,
-			responsive: true
-		});
-	}
+	// ['users-table','categories-table','requests-table','appointments-table'].forEach(id => {
+	// 	const el = document.getElementById(id);
+	// 	if(el){
+	// 		const options = {
+	// 			order: [[0, 'desc']],
+	// 			responsive: true,
+	// 			autoWidth: false
+	// 		};
+
+	// 		if(id === 'appointments-table'){
+	// 			options.order = [[1,'desc'],[0,'desc']];
+	// 			options.columnDefs = [{targets:1, visible:false}]; // исправлено
+	// 		}
+
+	// 		const table = $(el).DataTable(options);
+	// 		table.columns.adjust().responsive.recalc();
+	// 	}
+	// });
+
 
 	document.querySelectorAll('.colored-select').forEach(select => {
 		select.addEventListener('change', () => {
@@ -399,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				ApiService.post(`/appointment/${appointmentId}/edit-appointment`, { field: 'status', value: newStatus }),
 				"Status changed", false
 			).then(() => {
-				confirmAndSendNotification(appointmentId, {'status' : newStatus });
+				confirmAndSendNotification(appointmentId, { 'status': newStatus });
 			});
 		});
 	});

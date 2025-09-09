@@ -12,7 +12,7 @@ class Treatments
 	#[ORM\Id]
 	#[ORM\GeneratedValue]
 	#[ORM\Column(type: 'integer')]
-	private int $id;
+	private ?int $id = null;
 
 	#[ORM\Column(length: 255)]
 	private string $name = '';
@@ -49,7 +49,7 @@ class Treatments
 	#[ORM\Column(type: 'boolean', options: ['default' => true])]
 	private bool $isActive = true;
 
-	public function getId(): int
+	public function getId(): ?int
 	{
 		return $this->id;
 	}

@@ -252,6 +252,7 @@ button[type="submit"] {
 			display: flex;
 			gap: 15px;
 			align-items: center;
+			flex-wrap: wrap;
 		}
 
 		.form-group,
@@ -413,6 +414,15 @@ button[type="submit"] {
 		.book_form_wrap form {
 			h3 {
 				font-size: 1.25rem;
+			}
+		}
+	}
+
+	.treatment-creation-form {
+		.card-block {
+			.half {
+				width: 100%;
+				margin-right: 0 !important;
 			}
 		}
 	}
