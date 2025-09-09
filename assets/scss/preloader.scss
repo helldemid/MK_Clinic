@@ -1,9 +1,10 @@
 @use "variables" as *;
+
 #preloader {
 	position: fixed;
 	inset: 0;
 	background: rgb(0, 0, 0);
-	display: none; // temporary disabled
+	display: flex;
 	justify-content: center;
 	align-items: center;
 	z-index: 9999;
@@ -71,5 +72,39 @@
 	to {
 		max-width: 1000px;
 		transform: translateX(0);
+	}
+}
+
+@media (max-width: 780px) {
+	#preloader {
+		.clinic-name {
+			font-size: 1.5em;
+		}
+
+		.logo_el_wrap {
+			.logo-container {
+				.logo {
+					width: 150px;
+					height: 150px;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 520px) {
+	#preloader {
+		.clinic-name {
+			font-size: 1em;
+		}
+
+		.logo_el_wrap {
+			.logo-container {
+				.logo {
+					width: 100px;
+					height: 100px;
+				}
+			}
+		}
 	}
 }
