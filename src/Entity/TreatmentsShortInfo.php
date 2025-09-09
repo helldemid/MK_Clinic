@@ -33,7 +33,7 @@ class TreatmentsShortInfo
         return $this;
     }
 
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -42,7 +42,7 @@ class TreatmentsShortInfo
         $this->title = $title;
         return $this;
     }
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }

@@ -1,12 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Treatment Form
+{% block title %}
+	{% if isEdit %}Edit Treatment{% else %}New Treatment
+	{% endif %}
 {% endblock %}
 
 {% block body %}
-	<section class="gray_back registration-section">
+	<section class="gray_back treatments-updating-section">
 		<div class="treatment-creation-form">
-			<h1 class="form-header">New Treatment</h1>
+			<h1 class="form-header">
+				{% if isEdit %}Edit Treatment{% else %}New Treatment
+				{% endif %}
+			</h1>
+
+			{% for message in app.flashes('error') %}
+				<div class="alert alert-danger">{{ message }}</div>
+			{% endfor %}
+
+			{% if app.environment == 'dev' %}
+				<h3>Development Mode Messages</h3>
+				{% for message in app.flashes('errorDev') %}
+					<div class="alert alert-danger">{{ message }}</div>
+				{% endfor %}
+			{% endif %}
+
 
 			{{ form_start(form) }}
 
@@ -176,20 +193,23 @@
 			{# === Questions card === #}
 			<div class="card-block">
 				<h3 class="card-title">Questions & Answers</h3>
-				<div id="questions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
-					{% for questionForm in form.questions %}
-						<div class="question-block">
-							{{ form_widget(questionForm) }}
-							<button type="button" class="remove-question">Remove</button>
-						</div>
-					{% endfor %}
-				</div>
-				<button type="button" id="add-question" class="btn transparent_black_button">Add Question</button>
+					<div id="questions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
+						{% for questionForm in form.questions %}
+							<div class="question-block">
+								{{ form_widget(questionForm) }}
+								<button type="button" class="remove-question">Remove</button>
+							</div>
+						{% endfor %}
+					</div>
+					<button class="transparent_black_button" type="button" id="add-question">Add Question</button>
 			</div>
 
 			<div class="form-actions">
 				<button type="submit" class="btn btn-primary">Save Treatment</button>
 			</div>
+			{# <div style="display: none;">
+				{{ form_row(form.questions) }}
+			</div> #}
 
 			{{ form_end(form) }}
 		</div>

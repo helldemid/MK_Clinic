@@ -45,21 +45,25 @@ class TreatmentType extends AbstractType
 				'label' => false,
 				'required' => false,
 				'mapped' => false,
+				'data' => $options['shortInfo'] ?? null,
 			])
 			->add('recover', TreatmentRecoverType::class, [
 				'label' => false,
 				'required' => false,
 				'mapped' => false,
+				'data' => $options['recover'] ?? null,
 			])
 			->add('time', TreatmentTimeType::class, [
 				'label' => false,
 				'required' => false,
 				'mapped' => false,
+				'data' => $options['time'] ?? null,
 			])
 			->add('price', TreatmentPriceType::class, [
 				'label' => false,
 				'required' => false,
 				'mapped' => false,
+				'data' => $options['price'] ?? null,
 			])
 			->add('questions', CollectionType::class, [
 				'entry_type' => TreatmentQuestionType::class,
@@ -69,6 +73,7 @@ class TreatmentType extends AbstractType
 				'label' => null,
 				'required' => false,
 				'mapped' => false,
+				'data' => $options['questions'] ?? [],
 			])
 			->add('fullDescription', TextareaType::class, [
 				'label' => 'Full description',
@@ -101,7 +106,12 @@ class TreatmentType extends AbstractType
 	{
 		$resolver->setDefaults([
 			'data_class' => Treatments::class,
-			'categories' => [], // сюда передаем массив категорий для select
+			'categories' => [],
+			'shortInfo' => null,
+			'recover' => null,
+			'time' => null,
+			'price' => null,
+			'questions' => [],
 		]);
 	}
 }

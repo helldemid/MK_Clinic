@@ -51,7 +51,7 @@ document.addEventListener('click', function (e) {
 
 const container = document.getElementById('questions-container');
 const addButton = document.getElementById('add-question');
-let index = container.children.length;
+let index = container.querySelectorAll('.question-block').length; // учёт существующих
 
 addButton.addEventListener('click', () => {
 	const prototype = container.dataset.prototype.replace(/__name__/g, index);
@@ -67,6 +67,7 @@ container.addEventListener('click', (e) => {
 		e.target.closest('.question-block').remove();
 	}
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const fileInputs = document.querySelectorAll('.file-upload .file-input');

@@ -40,7 +40,7 @@
 				<option value="0">Only hidden</option>
 				<option value="-1">All</option>
 			</select>
-			<button type="button" class="create_button" id="create-treatment-btn">
+			<button type="button" class="create_button" id="create-treatment-btn" onclick="window.open('{{ path('treatment_new') }}', '_blank')">
 				Create Treatment +
 			</button>
 		{% endif %}

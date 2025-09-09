@@ -15,7 +15,7 @@
 		</div>
 		{% if treatment.isActive and isEditor %}
 			<div class="treatment-card-actions">
-				<button class="action-btn edit" title="Edit" data-id="{{ treatment.id }}">
+				<button class="action-btn edit" title="Edit" data-id="{{ treatment.id }}" onclick="window.open('{{ path('treatment_edit', {id: treatment.id}) }}', '_blank')">
 					<i class="fa fa-pen"></i>
 				</button>
 				<button class="action-btn toggle treatment-hide" title="{{ treatment.isActive ? 'Hide' : 'Show' }}">

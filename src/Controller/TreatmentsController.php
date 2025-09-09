@@ -12,13 +12,19 @@ use App\Repository\TreatmentsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Categories;
 use App\Entity\Treatments;
+use App\Entity\TreatmentsShortInfo;
+use App\Entity\TreatmentTime;
+use App\Entity\TreatmentRecover;
+use App\Entity\TreatmentPrice;
 use App\Entity\TreatmentQuestions;
 use App\Entity\PopularTreatments;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Form\TreatmentType;
+use App\Controller\Traits\StatusRenderTrait;
 
 class TreatmentsController extends AbstractController
 {
+	use StatusRenderTrait;
 	#[Route('/treatments', name: 'treatments')]
 	public function index(Request $request, CategoriesRepository $categoryRepo, TreatmentsRepository $treatmentRepo)
 	{
@@ -213,8 +219,8 @@ class TreatmentsController extends AbstractController
 		}
 	}
 
-	#[Route('/treatment/new', name: 'admin_treatment_new')]
-	// #[Route('/treatment/{id}/edit', name: 'admin_treatment_edit')]
+	#[Route('/treatment/new', name: 'treatment_new')]
+	#[Route('/treatment/{id}/edit', name: 'treatment_edit')]
 	public function form(Request $request, EntityManagerInterface $em, Treatments $treatment = null)
 	{
 		// Deny access if the current user is not a SUPER_ADMIN
@@ -225,11 +231,27 @@ class TreatmentsController extends AbstractController
 			$treatment = new Treatments();
 		}
 
+		$shortInfo = $em->getRepository(TreatmentsShortInfo::class)
+			->findOneBy(['treatment' => $treatment]) ?? new TreatmentsShortInfo();
+
+		$recover = $treatment->getRecover() ?? new TreatmentRecover();
+		$time = $treatment->getTime() ?? new TreatmentTime();
+		$price = $treatment->getPrice() ?? new TreatmentPrice();
+
+		$questions = $treatment->getId()
+			? $em->getRepository(TreatmentQuestions::class)->findBy(['treatment' => $treatment])
+			: [];
+
 		// Подготовка категорий для select
 		$categories = $em->getRepository(Categories::class)->findAll();
 
 		$form = $this->createForm(TreatmentType::class, $treatment, [
-			'categories' => $categories
+			'categories' => $categories,
+			'shortInfo' => $shortInfo,
+			'recover' => $recover,
+			'time' => $time,
+			'price' => $price,
+			'questions' => $questions,
 		]);
 
 		$form->handleRequest($request);
@@ -240,29 +262,36 @@ class TreatmentsController extends AbstractController
 			$pageFile = $form->get('image_page')->getData();
 
 			if ($cardFile || $pageFile) {
-				// Генерируем одно имя для обоих файлов
-				$extension = $cardFile ? $cardFile->guessExtension() : $pageFile->guessExtension();
-				$filename = uniqid() . '.' . $extension;
+				// Берем текущее имя или генерируем новое
+				$filename = $treatment->getImageName();
+				if (!$filename || $filename === 'placeholder.png') {
+					$extension = ($cardFile ?: $pageFile)->guessExtension() ?: 'bin';
+					$filename = uniqid() . '.' . $extension;
+					$treatment->setImageName($filename);
+				}
 
-				if ($cardFile) {
-					try {
+				try {
+					if ($cardFile) {
 						$cardFile->move($this->getParameter('treatment_card_dir'), $filename);
-					} catch (FileException $e) {
-						$this->addFlash('error', 'Failed to upload card image');
 					}
-				}
-
-				if ($pageFile) {
-					try {
+					if ($pageFile) {
 						$pageFile->move($this->getParameter('treatment_page_dir'), $filename);
-					} catch (FileException $e) {
-						$this->addFlash('error', 'Failed to upload page image');
 					}
-				}
+				} catch (FileException $e) {
+					$this->addFlash('error', 'Image upload failed. Please try again.');
+					$this->addFlash('errorDev', $e->getMessage());
 
-				// Сохраняем имя в сущности
-				$treatment->setImageName($filename);
+					// Возвращаем форму обратно с ошибкой
+					return $this->render('treatment/form.html.twig', [
+						'form' => $form->createView(),
+						'isEdit' => $isEdit,
+					]);
+				}
+			} else if (!$isEdit && !$treatment->getImageName()) {
+				// Для новых объектов без файлов ставим плейсхолдер
+				$treatment->setImageName('placeholder.jpg');
 			}
+
 
 			// --- Подформы ---
 			foreach (['recover', 'time', 'price'] as $subform) {
@@ -277,6 +306,12 @@ class TreatmentsController extends AbstractController
 			if ($cardData) {
 				$cardData->setTreatment($treatment); // если есть связь
 				$em->persist($cardData);
+			}
+
+			// Удаляем все старые вопросы
+			$oldQuestions = $em->getRepository(TreatmentQuestions::class)->findBy(['treatment' => $treatment]);
+			foreach ($oldQuestions as $oldQ) {
+				$em->remove($oldQ);
 			}
 
 			// --- Вопросы ---
@@ -297,7 +332,7 @@ class TreatmentsController extends AbstractController
 
 			$this->addFlash('success', $isEdit ? 'Treatment updated!' : 'Treatment created!');
 
-			return $this->redirectToRoute('admin_treatment_list');
+			return $this->renderStatus('Success', $isEdit ? 'Treatment updated!' : 'Treatment created!', 1);
 		}
 
 		return $this->render('treatment/form.html.twig', [
