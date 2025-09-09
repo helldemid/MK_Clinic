@@ -20,6 +20,7 @@ use App\Form\ChangeEmailType;
 use App\Form\ForgotPasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use App\Dto\FullnameInput;
 use App\Dto\PhoneInput;
@@ -245,10 +246,14 @@ class AccountController extends AbstractController
 	 */
 	private function createConfirmationLink(string $code, string $action): string
 	{
-		return $this->generateUrl('app_email_verified', [
-			'action' => $action,
-			'code' => $code,
-		], Response::HTTP_SEE_OTHER);
+		return $this->generateUrl(
+			'app_email_verified', // имя маршрута
+			[
+				'action' => $action,
+				'code' => $code,
+			],
+			UrlGeneratorInterface::ABSOLUTE_URL // вернёт полный URL с доменом
+		);
 	}
 
 	/**
