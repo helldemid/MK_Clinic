@@ -4,7 +4,7 @@
 			<h4>{{ benefit.title }}</h4>
 			<p>{{ benefit.description }}</p>
 			<div class="benefit_icon">
-				<img src="{{ asset('media/icons/' ~ benefit.icon) }}">
+				<img src="{{ asset('media/icons/' ~ benefit.icon) }}" alt="{{ benefit.title }} Icon">
 			</div>
 		</div>
 	{% endfor %}

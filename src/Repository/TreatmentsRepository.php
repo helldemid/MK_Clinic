@@ -57,13 +57,13 @@ class TreatmentsRepository extends ServiceEntityRepository
 			->leftJoin('App\Entity\Categories', 'c', 'WITH', 'c.id = t.category')
 			->addSelect('c.name as categoryName')
 			// join с ценами через поле treatment_id в таблице TreatmentPrice
-			->leftJoin('App\Entity\TreatmentPrice', 'tp', 'WITH', 'tp.id = t.id')
+			->leftJoin('App\Entity\TreatmentPrice', 'tp', 'WITH', 'tp.id = t.price')
 			->addSelect('tp.isFixed, tp.price, tp.priceType')
 			// join с временем через поле treatment_id в таблице TreatmentTime
-			->leftJoin('App\Entity\TreatmentTime', 'tt', 'WITH', 'tt.id = t.id')
+			->leftJoin('App\Entity\TreatmentTime', 'tt', 'WITH', 'tt.id = t.time')
 			->addSelect('tt.hours, tt.minutes')
 			// join с восстановлением, если есть
-			->leftJoin('App\Entity\TreatmentRecover', 'tr', 'WITH', 'tr.id = t.id')
+			->leftJoin('App\Entity\TreatmentRecover', 'tr', 'WITH', 'tr.id = t.recover')
 			->addSelect('tr.min as recover_from, tr.max as recover_to, tr.period')
 			->where('t.id = :id')
 			->setParameter('id', $treatment_id)

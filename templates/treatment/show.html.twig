@@ -42,18 +42,27 @@
 							<span class="accordion-icon" data-accordion-icon="">
 								<svg class="accordion-icon-svg" viewbox="0 0 17 8.85">
 									<polyline data-accordion-icon-shape="" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" fill-rule="evenodd" points="15 7.72 8.5 1.13 2 7.72">
-										<animate data-accordion-animate="expand" attributename="points" values="15 1.13 8.5 7.72 2 1.13;
-																																																																													15.85 4.42 8.5 4.42 1.15 4.42;
-																																																																													15 7.72 8.5 1.13 2 7.72" dur="320ms" begin="indefinite" fill="freeze" keytimes="0;
-																																																																													0.5;
-																																																																													1" calcmode="spline" keysplines="0.12, 0, 0.38, 0;
-																																																																													0.2, 1, 0.68, 1"></animate>
-										<animate data-accordion-animate="collapse" attributename="points" values="15 7.72 8.5 1.13 2 7.72;
-																																																																													15.85 4.42 8.5 4.42 1.15 4.42;
-																																																																													15 1.13 8.5 7.72 2 1.13" dur="320ms" begin="indefinite" fill="freeze" keytimes="0;
-																																																																													0.5;
-																																																																													1" calcmode="spline" keysplines="0.2, 0, 0.68, 0;
-																																																																													0.2, 1, 0.68, 1"></animate>
+										<animate
+											data-accordion-animate="expand"
+											attributename="points" values="15 1.13 8.5 7.72 2 1.13; 15.85 4.42 8.5 4.42 1.15 4.42; 15 7.72 8.5 1.13 2 7.72"
+											dur="320ms"
+											begin="indefinite"
+											fill="freeze"
+											keytimes="0; 0.5; 1"
+											calcmode="spline"
+											keysplines="0.12, 0, 0.38, 0; 0.2, 1, 0.68, 1">
+										</animate>
+										<animate
+											data-accordion-animate="collapse"
+											attributename="points"
+											values="15 7.72 8.5 1.13 2 7.72; 15.85 4.42 8.5 4.42 1.15 4.42; 15 1.13 8.5 7.72 2 1.13"
+											dur="320ms"
+											begin="indefinite"
+											fill="freeze"
+											keytimes="0; 0.5; 1"
+											calcmode="spline"
+											keysplines="0.2, 0, 0.68, 0; 0.2, 1, 0.68, 1">
+										</animate>
 									</polyline>
 								</svg>
 							</span>
@@ -71,7 +80,7 @@
 		<div class="book_form_wrap">
 			{% include 'components/book_form.html.twig' with { treatments: [treatment] } %}
 			<div class="book_pic">
-				<img src="{{ asset('media/book_pic_1.png') }}">
+				<img src="{{ asset('media/book_pic_1.png') }}" alt="Book Picture">
 			</div>
 		</div>
 	</section>

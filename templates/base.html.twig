@@ -6,6 +6,29 @@
 		<title>
 			{% block title %}{% endblock %}
 		</title>
+
+		<meta name="description" content="M.K. Aesthetic Clinic — certified specialists and modern equipment. Safe and effective cosmetic treatments tailored to your beauty needs.">
+
+		<meta property="og:title" content="Cosmetic Treatments | M.K. Aesthetic Clinic">
+		<meta property="og:description" content="Certified specialists, modern equipment, and a wide range of safe cosmetic treatments for your beauty and confidence.">
+		<meta property="og:image" content="{{ asset('media/og-image.png') }}">
+		<meta property="og:type" content="website">
+		<meta property="og:url" content="{{ app.request.uri }}">
+		<meta property="og:locale" content="en_GB">
+
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:image" content="{{ asset('media/og-image.png') }}">
+
+		<meta name="theme-color" content="#ffffff">
+
+		<link rel="canonical" href="{{ app.request.uri }}">
+		<link rel="icon" type="image/x-icon" sizes="48x48" href="{{ asset('media/favicon-48x48.ico') }}">
+		<link rel="icon" type="image/x-icon" sizes="16x16" href="{{ asset('media/favicon-16x16.ico') }}">
+
+		<link rel="apple-touch-icon" href="{{ asset('media/apple-logo.png') }}">
+
+		<meta name="author" content="M.K. Aesthetic Clinic">
+
 		{% block stylesheets %}{% endblock %}
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 		{{ encore_entry_link_tags('app') }}
@@ -44,7 +67,7 @@
 					<a href="{{ path('contacts') }}">CONTACT US</a>
 				</div>
 				<div class="logo_nav" id="logo_nav">
-					<img src="{{ asset('media/navigation_logo.svg') }}">
+					<img src="{{ asset('media/navigation_logo.svg') }}" alt="Logo" class="logo">
 					<p class="active">M.K. AESTHETIC CLINIC</p>
 				</div>
 				<div class="header_interactive">
@@ -52,11 +75,11 @@
 					<div class="account_icon">
 						{% if not app.user %}
 						<a href="{{ path('app_login') }}">
-							<img src="{{ asset('media/icons/account.svg') }}">
+							<img src="{{ asset('media/icons/account.svg') }}" alt="Account">
 						</a>
 						{% else %}
 						<a href="{{ path('app_account') }}">
-							<img src="{{ asset('media/icons/profile.svg') }}">
+							<img src="{{ asset('media/icons/profile.svg') }}" alt="Profile">
 						</a>
 						{% endif %}
 					</div>
@@ -70,7 +93,7 @@
 
 		<footer>
 			<div class="logo_wrap">
-				<img src="{{ asset('media/footer_logo.svg') }}">
+				<img src="{{ asset('media/footer_logo.svg') }}" alt="Logo" class="logo">
 				<h3>M.K. Aesthetic Clinic</h3>
 			</div>
 			<div class="content">

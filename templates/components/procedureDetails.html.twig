@@ -2,7 +2,7 @@
 	{% for point in points %}
 		<div class="point">
 			<div class="point_icon">
-				<img src="{{ asset('media/icons/' ~ point.icon) }}">
+				<img src="{{ asset('media/icons/' ~ point.icon) }}" alt="{{ point.name }} Icon">
 			</div>
 			<h4>{{ point.name }}</h4>
 			<p>{{ point.description }}</p>
