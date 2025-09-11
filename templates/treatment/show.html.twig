@@ -19,7 +19,10 @@
 			</div>
 		</div>
 		<div class="treatment_main_photo">
-			<img src="{{ asset(treatment_page_img_base_dir ~ treatment.imageName) }}" alt="{{ treatment.imageName }}">
+			<img src="{{ asset(treatment_page_img_base_dir ~ treatment.imageName) }}"
+				alt="{{ treatment.imageName }}"
+				onerror="this.src.startsWith('data') || this.fallbackApplied ? 0 : (this.fallbackApplied = 1, this.src = '{{ asset('media/treatments/placeholder.png') }}')"
+			>
 		</div>
 	</section>
 	<section class="key_details">
