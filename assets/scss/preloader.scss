@@ -22,22 +22,23 @@
 				width: 200px;
 				height: 200px;
 				transform: scale(0);
-				animation: logoMove 2s ease forwards;
+				animation: logoMove 1s ease forwards;
 			}
 		}
 	}
 
 	.clinic-name {
 		font-size: 3em;
-		font-weight: 400;
+		text-transform: uppercase;
+		font-weight: 300;
 		color: white;
 		letter-spacing: 5px;
 		white-space: nowrap;
 		max-width: 0;
 		overflow: hidden;
 		transform: translateX(20px);
-		animation: showName 1.5s ease forwards;
-		animation-delay: 1.5s;
+		animation: showName 0.75s ease forwards;
+		animation-delay: 0.75s;
 		position: relative;
 
 		&::before {

@@ -76,12 +76,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	window.onload = function () {
 		setTimeout(() => {
-			document.getElementById('preloader').style.opacity = '0';
-			document.getElementById('preloader').style.transition = 'opacity 0.5s';
+			const preloader = document.getElementById('preloader');
+			if (!preloader) return;
+			preloader.style.opacity = '0';
+			preloader.style.transition = 'opacity 0.5s';
 			setTimeout(() => {
-				document.getElementById('preloader').style.display = 'none';
+				preloader.style.display = 'none';
 			}, 500);
-		}, 2200); // ждём завершения анимации
+		}, 1100);
 	};
 
 	document.querySelectorAll('.question_block h3').forEach(header => {

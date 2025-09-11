@@ -51,38 +51,41 @@ document.addEventListener('click', function (e) {
 
 const container = document.getElementById('questions-container');
 const addButton = document.getElementById('add-question');
-let index = container.querySelectorAll('.question-block').length; // учёт существующих
+if (container && addButton) {
+	const questionBlocks = container.querySelectorAll('.question-block');
+	let index = questionBlocks.length; // учёт существующих
 
-addButton.addEventListener('click', () => {
-	const prototype = container.dataset.prototype.replace(/__name__/g, index);
-	const div = document.createElement('div');
-	div.classList.add('question-block');
-	div.innerHTML = prototype + '<button type="button" class="remove-question">Remove</button>';
-	container.appendChild(div);
-	index++;
-});
+	addButton.addEventListener('click', () => {
+		const prototype = container.dataset.prototype.replace(/__name__/g, index);
+		const div = document.createElement('div');
+		div.classList.add('question-block');
+		div.innerHTML = prototype + '<button type="button" class="remove-question">Remove</button>';
+		container.appendChild(div);
+		index++;
+	});
 
-container.addEventListener('click', (e) => {
-	if (e.target.classList.contains('remove-question')) {
-		e.target.closest('.question-block').remove();
-	}
-});
+	container.addEventListener('click', (e) => {
+		if (e.target.classList.contains('remove-question')) {
+			e.target.closest('.question-block').remove();
+		}
+	});
+}
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    const fileInputs = document.querySelectorAll('.file-upload .file-input');
+	const fileInputs = document.querySelectorAll('.file-upload .file-input');
 
-    fileInputs.forEach(input => {
-        input.addEventListener('change', () => {
-            // Найти ближайший .file-upload и внутри него .file-name
-            const fileUpload = input.closest('.file-upload');
-            if (!fileUpload) return;
-            const fileNameSpan = fileUpload.querySelector('.file-name');
-            if (fileNameSpan) {
-                fileNameSpan.textContent = input.files.length ? input.files[0].name : 'No file chosen';
-            }
-        });
-    });
+	fileInputs.forEach(input => {
+		input.addEventListener('change', () => {
+			// Найти ближайший .file-upload и внутри него .file-name
+			const fileUpload = input.closest('.file-upload');
+			if (!fileUpload) return;
+			const fileNameSpan = fileUpload.querySelector('.file-name');
+			if (fileNameSpan) {
+				fileNameSpan.textContent = input.files.length ? input.files[0].name : 'No file chosen';
+			}
+		});
+	});
 });
 
 // В treatments.js
