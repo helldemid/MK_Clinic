@@ -28,7 +28,7 @@ menuLinks.forEach(link => {
 			const tableEl = targetBlock.querySelector('table.dataTable, table.display');
 			if (tableEl) {
 				const tableId = tableEl.id;
-				const order = tableId === 'appointments-table' ? [[1, 'desc'], [0, 'desc']] : [[0, 'desc']];
+				const order = tableId === 'appointments-table' ? [[1, 'desc'], [2, 'desc']] : [[0, 'desc']];
 				const columnDefs = tableId === 'appointments-table' ? [{ targets: 1, visible: false }] : [];
 				if (!tablesInitialized[tableId]) {
 					const table = $('#' + tableId).DataTable({
@@ -241,8 +241,6 @@ document.querySelectorAll('.user-active-checkbox').forEach(checkbox => {
 	});
 });
 
-
-// Delete category
 // ================== DELETE CATEGORY ==================
 document.querySelectorAll("#categories-table .delete-button").forEach(button => {
 	button.addEventListener("click", async (e) => {

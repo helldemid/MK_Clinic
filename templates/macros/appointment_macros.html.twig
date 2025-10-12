@@ -25,8 +25,15 @@
 	{% endif %}
 
 	<td style="display:none;">{{ important }}</td>
-	<td style="{{ cellStyle }}" title="{{ title }}">
-		{{ appointment.appointmentDate ? appointment.appointmentDate|date('d/m/Y') : '' }}
+	<td style="{{ cellStyle }}" title="{{ title }}"
+		{% if appointment.appointmentDate %}
+			data-order="{{ appointment.appointmentDate|date('Y-m-d H:i:s') }}"
+		{% endif %}
+	>
+		{{ appointment.appointmentDate
+			? (appointment.appointmentDate|date('d/m/Y') ~ '<br>' ~ appointment.appointmentDate|date('H:i'))|raw
+			: ''
+		}}
 		{% if icon %}
 			<span style="margin-left:5px;" title="{{ title }}">{{ icon }}</span>
 		{% endif %}

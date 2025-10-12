@@ -195,7 +195,16 @@
 							<tbody>
 								{% for request in appointmentRequests %}
 									<tr>
-										<td>{{ request.createdAt ? request.createdAt|date('d/m/Y') : '' }}</td>
+										<td
+											{% if request.createdAt %}
+												data-order="{{ request.createdAt|date('Y-m-d H:i:s') }}"
+											{% endif %}
+										>
+											{{ request.createdAt
+												? (request.createdAt|date('d/m/Y') ~ '<br>' ~ request.createdAt|date('H:i'))|raw
+												: ''
+											}}
+										</td>
 										<td>{{ request.question ? 'Consultation' : 'Appointment' }}</td>
 										<td>{{ request.name ~ (request.user ? '' : '/Guest') }}</td>
 										<td>{{ request.phone ?: 'Not set' }}</td>
