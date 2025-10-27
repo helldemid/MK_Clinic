@@ -28,9 +28,9 @@
 	<section class="welcome">
 		<div class="back_full_picture">
 			<picture>
-				<source media="(orientation: portrait)" srcset="{{ asset('media/welcome_mobile.webp') }}">
-				<source media="(orientation: landscape)" srcset="{{ asset('media/welcome.png') }}">
-				<img src="{{ asset('media/welcome.png') }}" alt="welcome image">
+				<source media="(orientation: portrait)" srcset="{{ asset('media/welcome_mobile_1.webp') }}">
+				<source media="(orientation: landscape)" srcset="{{ asset('media/welcome_1.png') }}">
+				<img src="{{ asset('media/welcome_1.png') }}" alt="welcome image">
 			</picture>
 		</div>
 		<div class="banner_info_wrap">
@@ -57,25 +57,25 @@
 						<div>
 							<p>
 								Driven by a deep commitment to advancing every aspect of skin health, M.K. Aesthetic
-								Clinic was founded on Broadway in Leigh-on-Sea, where we specialise in aesthetic
-								medicine and anti-ageing treatments.
+																Clinic was founded on Broadway in Leigh-on-Sea, where we specialise in aesthetic
+																medicine and anti-ageing treatments.
 							</p>
 							<br>
 							<p>
 								Led by a team of elite practitioners, the clinic is renowned for its minimalist and
-								integrated approach — combining advanced techniques and complementary
-								modalities to achieve results that are always natural-looking, balanced, and refined.
+																integrated approach — combining advanced techniques and complementary
+																modalities to achieve results that are always natural-looking, balanced, and refined.
 							</p>
 							<br>
 							<p>
 								At M.K. Aesthetic Clinic, our philosophy is simple:
-								to deliver youthful, rejuvenated radiance through cutting-edge, clinically proven
-								treatments, grounded in science and guided by artistry.
+																to deliver youthful, rejuvenated radiance through cutting-edge, clinically proven
+																treatments, grounded in science and guided by artistry.
 							</p>
 							<br>
 							<p>
 								At the heart of our ethos lies a simple promise: to enhance, never to change — and to
-								reveal your most authentic, naturally beautiful self.
+																reveal your most authentic, naturally beautiful self.
 							</p>
 						</div>
 					</div>
@@ -89,26 +89,26 @@
 						<div>
 							<p>
 								Situated on Broadway in Leigh-on-Sea, M.K. Aesthetic Clinic was founded with a clear
-								vision — to enhance natural beauty and restore confidence through subtle, refined
-								results.
+																vision — to enhance natural beauty and restore confidence through subtle, refined
+																results.
 							</p>
 							<br>
 							<p>
 								We specialise in advanced skincare and anti-ageing treatments, blending the latest
-								innovations in aesthetic medicine with a highly personalised approach. Every treatment
-								is thoughtfully designed to harmonise with your unique features, ensuring results that
-								are elegant, balanced, and authentically you.
+																innovations in aesthetic medicine with a highly personalised approach. Every treatment
+																is thoughtfully designed to harmonise with your unique features, ensuring results that
+																are elegant, balanced, and authentically you.
 							</p>
 							<br>
 							<p>
 								Our team of experienced and internationally trained practitioners are dedicated to
-								delivering the highest standards of safety and care. Using only clinically proven
-								techniques and premium medical-grade products, we provide outcomes that are both
-								visible and lasting.
+																delivering the highest standards of safety and care. Using only clinically proven
+																techniques and premium medical-grade products, we provide outcomes that are both
+																visible and lasting.
 							</p>
 							<p>
 								From bespoke skin treatments to advanced injectable procedures, we are committed to
-								helping you feel confident, refreshed, and naturally radiant.
+																helping you feel confident, refreshed, and naturally radiant.
 							</p>
 						</div>
 						<div class="about_us_image">
@@ -127,13 +127,14 @@
 					{{ render_benefits() }}
 				</div>
 			</section>
-			<section class="gray_back book_form" id="book_now">
+			{# <section class="gray_back book_form" id="book_now">
 				<h2>Book now</h2>
 				<div class="book_form_wrap">
 					{% include 'components/book_form.html.twig' %}
 					<div class="book_pic">
-						<img src="{{ asset('media/book_pic_1.png') }}" alt="Book Picture">
+						<img src="{{ asset('media/book_pic_1_1.png') }}" alt="Book Picture">
 					</div>
 				</div>
-			</section>
+			</section> #}
+			{% include 'components/online_book.html.twig' %}
 		{% endblock %}

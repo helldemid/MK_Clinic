@@ -27,10 +27,8 @@
 
 		<link rel="apple-touch-icon" href="{{ asset('media/apple-logo.png') }}">
 
-		<meta name="author" content="M.K. Aesthetic Clinic">
-
-		{% block stylesheets %}{% endblock %}
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+		<meta name="author" content="M.K. Aesthetic Clinic"> {% block stylesheets %}{% endblock %}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 		{{ encore_entry_link_tags('app') }}
 	</head>
 	<body>
@@ -48,7 +46,7 @@
 					<a href="{{ path('homepage') }}">CLINIC</a>
 					<a href="{{ path('treatments') }}">TREATMENTS</a>
 					<a href="{{ path('contacts') }}">CONTACT US</a>
-					<a href="{{ path('book_now') }}">BOOK NOW</a>
+					<a href="https://partner.pabau.com/online-bookings/mkaestheticclinic">BOOK NOW</a>
 				</div>
 
 				<div class="links desktop-menu nav-links">
@@ -64,13 +62,13 @@
 					<button class="header_book book_now">BOOK NOW</button>
 					<div class="account_icon">
 						{% if not app.user %}
-						<a href="{{ path('app_login') }}">
-							<img src="{{ asset('media/icons/account.svg') }}" alt="Account">
-						</a>
+							<a href="{{ path('app_login') }}">
+								<img src="{{ asset('media/icons/account.svg') }}" alt="Account">
+							</a>
 						{% else %}
-						<a href="{{ path('app_account') }}">
-							<img src="{{ asset('media/icons/profile.svg') }}" alt="Profile">
-						</a>
+							<a href="{{ path('app_account') }}">
+								<img src="{{ asset('media/icons/profile.svg') }}" alt="Profile">
+							</a>
 						{% endif %}
 					</div>
 				</div>
@@ -118,7 +116,8 @@
 				<p>Designed and created by
 					<a href="https://www.instagram.com/helldemid">helldemid</a>
 				</p>
-				<p>©{{ "now"|date("Y") }} M.K. Aesthetic Clinic</p>
+				<p>©{{ "now"|date("Y") }}
+					M.K. Aesthetic Clinic</p>
 			</div>
 		</footer>
 
@@ -128,8 +127,7 @@
 		<script src="{{ asset('js/alertService.js') }}"></script>
 		<script src="{{ asset('js/apiService.js') }}"></script>
 		<script src="{{ asset('js/appointments.js') }}"></script>
-		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8iaoY6ZYdXVXs3IPAmtescG6JoJh-Qio&callback=initMap"></script>
-
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8iaoY6ZYdXVXs3IPAmtescG6JoJh-Qio&libraries=places&callback=initMap" async defer></script>
 		{% block javascripts %}{% endblock %}
 		{{ encore_entry_script_tags('app') }}
 	</body>

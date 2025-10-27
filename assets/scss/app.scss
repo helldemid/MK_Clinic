@@ -99,7 +99,9 @@ h2 {
 	text-align: center;
 }
 
-.transparent_white_button, .transparent_black_button, .create_button {
+.transparent_white_button,
+.transparent_black_button,
+.create_button {
 	background: transparent;
 	cursor: pointer;
 	padding: 8px 20px;
@@ -285,8 +287,12 @@ header {
 				background: #42424215;
 				border-radius: 100%;
 			}
+
 			.account_icon {
-				a { display: flex; }
+				a {
+					display: flex;
+				}
+
 				img {
 					width: 25px;
 					height: 25px;
@@ -370,9 +376,15 @@ header {
 				pointer-events: auto;
 				transform: translateY(0);
 			}
+
 			&.nav-links {
-				a::after { display: none; }
-				a:hover::after { display: none; }
+				a::after {
+					display: none;
+				}
+
+				a:hover::after {
+					display: none;
+				}
 			}
 		}
 	}
@@ -446,6 +458,120 @@ footer {
 			&:hover {
 				color: rgb(87, 87, 87);
 			}
+		}
+	}
+}
+
+.online_book {
+	position: relative;
+	min-height: 400px;
+	overflow: hidden;
+	padding: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	@media (min-width: 600px) {
+		min-height: 500px;
+		padding: 40px;
+	}
+
+	@media (min-width: 1024px) {
+		min-height: 580px;
+		padding: var(--big-padding);
+	}
+
+	.back_full_picture {
+		filter: brightness(0.5);
+	}
+
+	.content {
+		position: relative;
+		z-index: 2;
+		color: $white;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+
+		span {
+			font-weight: 300;
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 0.9rem;
+		}
+
+		h2 {
+			margin: 0;
+		}
+
+		p {
+			max-width: 725px;
+			font-size: 1rem;
+			font-weight: 400;
+			line-height: 1.5;
+			margin-top: 1rem;
+			margin-bottom: 1rem;
+			color: rgba(255, 255, 255, 0.9);
+
+			@media (min-width: 1024px) {
+				font-size: 1.25rem;
+				line-height: 1.75;
+				margin-top: 1.25rem;
+				margin-bottom: 1.25rem;
+			}
+		}
+	}
+
+	button.book_now {
+		width: fit-content;
+	}
+}
+
+.pabauPackages {
+	font-family: 'Poppins', sans-serif !important;
+
+	.widget-container-pabau {
+		padding: 35px 20px 20px;
+		gap: 2rem;
+	}
+
+	.title-pabau {
+		font-size: 2.7rem;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+
+	.header-pabau {
+		text-align: center;
+	}
+
+	.description-pabau {
+		font-size: 1rem;
+		font-weight: 400;
+		margin-top: 1rem;
+	}
+
+	.footer-pabau {
+		display: none;
+	}
+
+	@media (min-width: 1200px) {
+		.title-pabau {
+			font-size: 2.5rem;
+		}
+	}
+
+	@media (min-width: 650px) {
+		.title-pabau {
+			font-size: 2rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.title-pabau {
+			font-size: 1.5rem;
 		}
 	}
 }
@@ -540,17 +666,26 @@ footer {
 
 	header {
 		nav {
-			.desktop-menu,
-			.header_book { display: none; }
 
-			.menu-btn { display: flex; }
+			.desktop-menu,
+			.header_book {
+				display: none;
+			}
+
+			.menu-btn {
+				display: flex;
+			}
 		}
 	}
 
 	footer {
-		.content { flex-wrap: wrap; }
+		.content {
+			flex-wrap: wrap;
+		}
 
-		.links { text-align: center; }
+		.links {
+			text-align: center;
+		}
 
 		#map {
 			width: 100% !important;
@@ -558,10 +693,12 @@ footer {
 			order: 1;
 		}
 	}
+
 	.additional_information {
 		.questions_block_wrap {
 			width: 90%;
 			padding: 3rem;
+
 			.question_block {
 				h3 {
 					.accordion-title-text {
@@ -578,6 +715,7 @@ footer {
 		.questions_block_wrap {
 			width: 90%;
 			padding: 3rem;
+
 			.question_block {
 				h3 {
 					.accordion-title-text {
@@ -594,15 +732,25 @@ footer {
 		--big-padding: 2rem;
 		--huge-padding: 4rem;
 	}
-	h2 { font-size: 2rem; }
+
+	h2 {
+		font-size: 2rem;
+	}
 
 	header {
 		nav {
 			height: 60px;
+
 			.logo_nav {
-				p { font-size: 1.4rem; }
-				img { width: 48px; }
+				p {
+					font-size: 1.4rem;
+				}
+
+				img {
+					width: 48px;
+				}
 			}
+
 			.mobile-menu {
 				top: 90px;
 				height: calc(100% - 90px);
@@ -629,18 +777,30 @@ footer {
 	header {
 		nav {
 			height: 40px;
+
 			.logo_nav {
-				p { font-size: 1.1rem; }
-				img { width: 32px; }
+				p {
+					font-size: 1.1rem;
+				}
+
+				img {
+					width: 32px;
+				}
 			}
+
 			.mobile-menu {
 				top: 70px;
 				height: calc(100% - 70px);
 			}
+
 			.account_icon {
 				width: 28px;
 				height: 28px;
-				img { width: 28px; height: 28px; }
+
+				img {
+					width: 28px;
+					height: 28px;
+				}
 			}
 		}
 	}
@@ -652,10 +812,14 @@ footer {
 			align-items: center;
 			gap: 1rem;
 
-			img { width: 60px; }
+			img {
+				width: 60px;
+			}
 		}
 
-		.content { flex-direction: column; }
+		.content {
+			flex-direction: column;
+		}
 	}
 }
 

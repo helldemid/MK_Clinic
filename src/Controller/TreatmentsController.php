@@ -22,6 +22,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use App\Form\TreatmentType;
 use App\Controller\Traits\StatusRenderTrait;
 
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 class TreatmentsController extends AbstractController
 {
 	use StatusRenderTrait;
@@ -219,6 +222,37 @@ class TreatmentsController extends AbstractController
 		}
 	}
 
+	/**
+	 * Обрабатывает загрузку файла: генерирует уникальное имя, удаляет старый файл
+	 * и перемещает новый.
+	 * @param UploadedFile $newFile Новый загруженный файл.
+	 * @param string|null $oldFilename Текущее имя файла в базе данных.
+	 * @param string $directory Директория для сохранения.
+	 * @param string $prefix Префикс для уникального имени файла (например, 'card_').
+	 * @return string Новое уникальное имя файла.
+	 * @throws FileException В случае ошибки перемещения файла.
+	 */
+	private function handleFileUpload(UploadedFile $newFile, ?string $oldFilename, string $directory, string $prefix): string
+	{
+		// 1. Проверяем и удаляем старый файл (если это не заглушка)
+		$placeholderNames = ['placeholder.jpg', 'placeholder.png', 'placeholder.svg'];
+
+		if ($oldFilename && !in_array(strtolower($oldFilename), $placeholderNames)) {
+			$oldFilePath = $directory . '/' . $oldFilename;
+			if (file_exists($oldFilePath) && is_file($oldFilePath)) {
+				@unlink($oldFilePath); // Удаляем старый файл
+			}
+		}
+
+		$extension = $newFile->guessExtension() ?: 'bin';
+		$newFilename = $prefix . '_' . uniqid() . '.' . $extension;
+
+		// 3. Перемещаем новый файл
+		$newFile->move($directory, $newFilename);
+
+		return $newFilename;
+	}
+
 	#[Route('/treatment/new', name: 'treatment_new')]
 	#[Route('/treatment/{id}/edit', name: 'treatment_edit')]
 	public function form(Request $request, EntityManagerInterface $em, Treatments $treatment = null)
@@ -261,21 +295,28 @@ class TreatmentsController extends AbstractController
 			$cardFile = $form->get('image_card')->getData();
 			$pageFile = $form->get('image_page')->getData();
 
-			if ($cardFile || $pageFile) {
-				// Берем текущее имя или генерируем новое
-				$filename = $treatment->getImageName();
-				if (!$filename || $filename === 'placeholder.png') {
-					$extension = ($cardFile ?: $pageFile)->guessExtension() ?: 'bin';
-					$filename = uniqid() . '.' . $extension;
-					$treatment->setImageName($filename);
-				}
+			$oldCardFilename = $shortInfo->getCardImage();
+			$oldPageFilename = $treatment->getImageName();
 
+			if ($cardFile || $pageFile) {
 				try {
 					if ($cardFile) {
-						$cardFile->move($this->getParameter('treatment_card_dir'), $filename);
+						$newCardFilename = $this->handleFileUpload(
+							$cardFile,
+							$oldCardFilename,
+							$this->getParameter('treatment_card_dir'),
+							'card'
+						);
+						$shortInfo->setCardImage($newCardFilename);
 					}
 					if ($pageFile) {
-						$pageFile->move($this->getParameter('treatment_page_dir'), $filename);
+						$newPageFilename = $this->handleFileUpload(
+							$pageFile,
+							$oldPageFilename,
+							$this->getParameter('treatment_page_dir'),
+							'page'
+						);
+						$treatment->setImageName($newPageFilename);
 					}
 				} catch (FileException $e) {
 					$this->addFlash('error', 'Image upload failed. Please try again.');
@@ -287,9 +328,10 @@ class TreatmentsController extends AbstractController
 						'isEdit' => $isEdit,
 					]);
 				}
-			} else if (!$isEdit && !$treatment->getImageName()) {
+			} else if (!$isEdit) {
 				// Для новых объектов без файлов ставим плейсхолдер
-				$treatment->setImageName('placeholder.jpg');
+				if (!$treatment->getImageName()) $treatment->setImageName('placeholder.jpg');
+				if (!$shortInfo->getCardImage()) $shortInfo->setCardImage('placeholder.jpg');
 			}
 
 

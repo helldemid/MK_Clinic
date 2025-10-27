@@ -19,10 +19,7 @@
 			</div>
 		</div>
 		<div class="treatment_main_photo">
-			<img src="{{ asset(treatment_page_img_base_dir ~ treatment.imageName) }}"
-				alt="{{ treatment.imageName }}"
-				onerror="this.src.startsWith('data') || this.fallbackApplied ? 0 : (this.fallbackApplied = 1, this.src = '{{ asset('media/treatments/placeholder.png') }}')"
-			>
+			<img src="{{ asset(treatment_page_img_base_dir ~ treatment.imageName) }}" alt="{{ treatment.imageName }}" onerror="this.src.startsWith('data') || this.fallbackApplied ? 0 : (this.fallbackApplied = 1, this.src = '{{ asset('media/treatments/placeholder.png') }}')">
 		</div>
 	</section>
 	<section class="key_details">
@@ -45,27 +42,8 @@
 							<span class="accordion-icon" data-accordion-icon="">
 								<svg class="accordion-icon-svg" viewbox="0 0 17 8.85">
 									<polyline data-accordion-icon-shape="" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" fill="none" fill-rule="evenodd" points="15 7.72 8.5 1.13 2 7.72">
-										<animate
-											data-accordion-animate="expand"
-											attributename="points" values="15 1.13 8.5 7.72 2 1.13; 15.85 4.42 8.5 4.42 1.15 4.42; 15 7.72 8.5 1.13 2 7.72"
-											dur="320ms"
-											begin="indefinite"
-											fill="freeze"
-											keytimes="0; 0.5; 1"
-											calcmode="spline"
-											keysplines="0.12, 0, 0.38, 0; 0.2, 1, 0.68, 1">
-										</animate>
-										<animate
-											data-accordion-animate="collapse"
-											attributename="points"
-											values="15 7.72 8.5 1.13 2 7.72; 15.85 4.42 8.5 4.42 1.15 4.42; 15 1.13 8.5 7.72 2 1.13"
-											dur="320ms"
-											begin="indefinite"
-											fill="freeze"
-											keytimes="0; 0.5; 1"
-											calcmode="spline"
-											keysplines="0.2, 0, 0.68, 0; 0.2, 1, 0.68, 1">
-										</animate>
+										<animate data-accordion-animate="expand" attributename="points" values="15 1.13 8.5 7.72 2 1.13; 15.85 4.42 8.5 4.42 1.15 4.42; 15 7.72 8.5 1.13 2 7.72" dur="320ms" begin="indefinite" fill="freeze" keytimes="0; 0.5; 1" calcmode="spline" keysplines="0.12, 0, 0.38, 0; 0.2, 1, 0.68, 1"></animate>
+										<animate data-accordion-animate="collapse" attributename="points" values="15 7.72 8.5 1.13 2 7.72; 15.85 4.42 8.5 4.42 1.15 4.42; 15 1.13 8.5 7.72 2 1.13" dur="320ms" begin="indefinite" fill="freeze" keytimes="0; 0.5; 1" calcmode="spline" keysplines="0.2, 0, 0.68, 0; 0.2, 1, 0.68, 1"></animate>
 									</polyline>
 								</svg>
 							</span>
@@ -78,13 +56,17 @@
 		</section>
 	{% endif %}
 
-	<section class="gray_back book_form" id="book_now">
-		<h2>Book now</h2>
-		<div class="book_form_wrap">
-			{% include 'components/book_form.html.twig' with { treatments: [treatment] } %}
-			<div class="book_pic">
-				<img src="{{ asset('media/book_pic_1.png') }}" alt="Book Picture">
+	{# <section class="gray_back book_form" id="book_now">
+			<h2>Book now</h2>
+			<div class="book_form_wrap">
+				{% include 'components/book_form.html.twig' with { treatments: [treatment] } %}
+				<div class="book_pic">
+					<img src="{{ asset('media/book_pic_1_1.png') }}" alt="Book Picture">
+				</div>
 			</div>
-		</div>
-	</section>
+		</section> #}
+	{% include 'components/online_book.html.twig' %}
+	<div class="pabauPackages" style="width:100%">
+		<script src="https://pabau.com/widgets/pabau-packages.js?slug=mkaestheticclinic" async defer></script>
+	</div>
 {% endblock %}

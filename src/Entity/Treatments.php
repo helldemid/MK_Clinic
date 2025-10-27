@@ -27,7 +27,7 @@ class Treatments
 	#[Assert\GreaterThanOrEqual(0, message: 'Value cannot be less than 0')]
 	private ?int $discomfortLevel = null;
 
-	#[ORM\Column(length: 255)]
+	#[ORM\Column(length: 1024)]
 	private string $fullDescription = '';
 
 	#[ORM\ManyToOne(targetEntity: Categories::class)]

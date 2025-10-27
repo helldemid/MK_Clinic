@@ -124,6 +124,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	}
 
+	document.querySelectorAll('.book_now').forEach(header => {
+		header.addEventListener('click', () => {
+			window.location.href = 'https://partner.pabau.com/online-bookings/mkaestheticclinic';
+		});
+	});
+
 	createAnchors(document.querySelectorAll('.book_now'), 'book_now');
 	createAnchors(document.querySelectorAll('.learn_more'), 'additional_information');
 

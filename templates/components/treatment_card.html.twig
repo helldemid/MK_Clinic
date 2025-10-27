@@ -1,7 +1,7 @@
 <div class="treatment_card {{ additionalClass is not empty ? additionalClass : '' }}" data-id="{{ treatment.id }}">
 	<div class="back_full_picture">
-		<img src="{{ asset(treatment_card_img_base_dir ~ treatment.imageName) }}"
-				alt="{{ treatment.imageName }}"
+		<img src="{{ asset(treatment_card_img_base_dir ~ treatment.cardImage) }}"
+				alt="{{ treatment.cardImage }}"
 				onerror="this.src.startsWith('data') || this.fallbackApplied ? 0 : (this.fallbackApplied = 1, this.src = '{{ asset('media/treatments/placeholder.png') }}')"
 			>
 	</div>

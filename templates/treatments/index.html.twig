@@ -52,17 +52,21 @@
 		</div>
 	</section>
 
-	<section class="gray_back book_form" id="book_now">
+	{# <section class="gray_back book_form" id="book_now">
 		<h2>Need a consultation?</h2>
 		<div class="book_form_wrap">
 			{% include 'components/consultation_form.html.twig' %}
 			<div class="book_pic">
 				<div class="back_full_picture">
-					<img src="{{ asset('media/book_pic_2.png') }}" alt="Book Picture">
+					<img src="{{ asset('media/book_pic_2_1.png') }}" alt="Book Picture">
 				</div>
 			</div>
 		</div>
-	</section>
+	</section> #}
+	{% include 'components/online_book.html.twig' %}
+	<div class="pabauPackages" style="width:100%">
+		<script src="https://pabau.com/widgets/pabau-packages.js?slug=mkaestheticclinic" async defer></script>
+	</div>
 
 
 {% endblock %}

@@ -30,7 +30,7 @@ class TreatmentsRepository extends ServiceEntityRepository
 	public function getTreatmentsDataForCards(int $categoryId, int $activity): array
 	{
 		$qb = $this->createQueryBuilder('t')
-			->select('t.id, t.name, t.imageName, t.isActive, tsi.title, tsi.description, (CASE WHEN pt.id IS NOT NULL THEN 1 ELSE 0 END) AS isPopular')
+			->select('t.id, t.name, t.isActive, tsi.cardImage, tsi.title, tsi.description, (CASE WHEN pt.id IS NOT NULL THEN 1 ELSE 0 END) AS isPopular')
 			->join('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id')
 			->leftJoin('App\Entity\PopularTreatments', 'pt', 'WITH', 'pt.treatment = t.id');
 
