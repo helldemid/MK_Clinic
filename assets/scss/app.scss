@@ -133,7 +133,7 @@ h2 {
 	color: $white;
 
 	&:hover {
-		background: darken(rgb(0, 117, 0), 10%);
+		background: rgb(1, 82, 1);
 		color: $white;
 	}
 }
@@ -203,6 +203,17 @@ h2 {
 	}
 }
 
+.underline {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -4px;
+	height: 1px;
+	width: 0;
+	background-color: $black;
+	transition: width 0.3s ease;
+}
+
 header {
 	position: sticky;
 	top: 0;
@@ -223,30 +234,30 @@ header {
 			font-weight: 500;
 			text-decoration: none;
 			color: black;
-			padding-bottom: 4px;
 			position: relative;
 
 			&:not(:has(> .block))::after {
-				content: "";
-				position: absolute;
-				left: 0;
-				bottom: 0;
-				height: 1px;
-				width: 0;
-				background-color: $black;
-				transition: width 0.3s ease;
+				@extend .underline;
 			}
 
 			&:hover::after,
-			&:focus::after {
+			&:focus::after,
+			&.active::after {
 				width: 100%;
 			}
+		}
+
+		.menu-item {
+			height: 100%;
+			display: flex;
+			align-items: center;
 		}
 
 		.links,
 		.header_interactive {
 			display: flex;
 			gap: 25px;
+			height: 100%;
 		}
 
 		.logo_nav {
@@ -278,8 +289,6 @@ header {
 		}
 
 		.header_interactive {
-			display: flex;
-			gap: 25px;
 			align-items: center;
 
 			div:hover {
@@ -387,6 +396,75 @@ header {
 				}
 			}
 		}
+
+		.mega-menu {
+			position: absolute;
+			left: 0;
+			top: 100%;
+			transform: translateY(-30px);
+			width: 100%;
+			background: #fff;
+			box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+			padding: 2rem 2rem;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.25s ease;
+			z-index: 100;
+			box-sizing: border-box;
+
+			.inner {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 2rem;
+				padding: 0;
+				margin: 0;
+			}
+
+			.col {
+				min-width: 250px;
+
+				h4 {
+					font-weight: 500;
+					margin-bottom: 0.75rem;
+					font-size: 1rem;
+				}
+
+				ul {
+					list-style: none;
+					padding: 0;
+					margin: 0;
+
+					li {
+						margin-bottom: 0.5rem;
+
+						a {
+							color: #333;
+							font-size: 0.875rem;
+							font-weight: 300;
+							text-decoration: none;
+							position: relative;
+
+							&:not(:has(> .block))::after {
+								@extend .underline;
+							}
+
+							&:hover::after,
+							&:focus::after {
+								width: 100%;
+								color: $black;
+							}
+						}
+					}
+				}
+			}
+
+			&.show {
+				opacity: 1;
+				visibility: visible;
+				transform: translateY(0);
+			}
+		}
+
 	}
 }
 

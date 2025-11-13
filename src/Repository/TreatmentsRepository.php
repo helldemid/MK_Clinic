@@ -21,6 +21,17 @@ class TreatmentsRepository extends ServiceEntityRepository
 		parent::__construct($registry, Treatments::class);
 	}
 
+	public function getTreatmentsDataForMenu(int $categoryId = 0): ?array
+	{
+		return $this->createQueryBuilder('t')
+			->select('t.id, t.name')
+			->where('t.category = :categoryId')
+			->setParameter('categoryId', $categoryId)
+			->orderBy('LENGTH(t.name)', 'DESC')
+			->getQuery()
+			->getArrayResult();
+	}
+
 	/**
 	 * Return data for treatments cards by given category_id
 	 * @param int $categoryId

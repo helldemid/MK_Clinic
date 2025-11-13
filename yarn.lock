@@ -2886,6 +2886,11 @@ wildcard@^2.0.0:
   resolved "https://registry.npmjs.org/wildcard/-/wildcard-2.0.1.tgz"
   integrity sha512-CC1bOL87PIWSBhDcTrdeLo6eGT7mCFtrg0uIJtqJUFyK+eJnzl8A1niH56uu7KMa5XFrtiV+AQuHO3n7DsHnLQ==
 
+x-mega-menu@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.npmjs.org/x-mega-menu/-/x-mega-menu-1.4.1.tgz"
+  integrity sha512-qIb/84bTYHmPd0wycP+nwQt7hMSWXJF7yynYKCpvXv/Wa8yz3zN1bBqras2tytNN1Yv/NvcOtpe1XW1XAfRf5Q==
+
 yallist@^3.0.2:
   version "3.1.1"
   resolved "https://registry.npmjs.org/yallist/-/yallist-3.1.1.tgz"

@@ -50,17 +50,41 @@
 				</div>
 
 				<div class="links desktop-menu nav-links">
-					<a href="{{ path('homepage') }}">CLINIC</a>
-					<a href="{{ path('treatments') }}">TREATMENTS</a>
-					<a href="{{ path('contacts') }}">CONTACT US</a>
+					<div class="menu-item">
+						<a href="{{ path('homepage') }}">CLINIC</a>
+					</div>
+
+					<div class="menu-item">
+						<a href="{{ path('treatments') }}" class="menu-link" id="mega-menu-opener">TREATMENTS</a>
+					</div>
+
+					<div class="menu-item">
+						<a href="{{ path('contacts') }}">CONTACT US</a>
+					</div>
 				</div>
+
+				<div class="mega-menu" id="mega-menu">
+					<div class='inner'>
+						{% for categoryName, treatments in dataForMenu %}
+							<div class="col">
+								<h4>{{ categoryName }}</h4>
+								<ul>
+									{% for treatment in treatments %}
+										<li><a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">{{ treatment.name }}</a></li>
+									{% endfor %}
+								</ul>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+
 				<div class="logo_nav" id="logo_nav">
 					<img src="{{ asset('media/navigation_logo.svg') }}" alt="Logo" class="logo">
 					<p class="active">M.K. AESTHETIC CLINIC</p>
 				</div>
 				<div class="header_interactive">
 					<button class="header_book book_now">BOOK NOW</button>
-					<div class="account_icon">
+					<div class="account_icon" style="display: none;">
 						{% if not app.user %}
 							<a href="{{ path('app_login') }}">
 								<img src="{{ asset('media/icons/account.svg') }}" alt="Account">

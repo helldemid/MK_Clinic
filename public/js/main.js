@@ -13,17 +13,17 @@ document.addEventListener('DOMContentLoaded', function () {
 	const promoText = document.getElementById('promoText');
 
 	function rotatePromo() {
-	promoText.classList.add('fade-out');
+		promoText.classList.add('fade-out');
 
-	setTimeout(() => {
-		promoIndex = (promoIndex + 1) % promoPhrases.length;
-		promoText.textContent = promoPhrases[promoIndex];
+		setTimeout(() => {
+			promoIndex = (promoIndex + 1) % promoPhrases.length;
+			promoText.textContent = promoPhrases[promoIndex];
 
-		promoText.classList.remove('fade-out');
-		promoText.classList.add('fade-in');
+			promoText.classList.remove('fade-out');
+			promoText.classList.add('fade-in');
 
-		setTimeout(() => promoText.classList.remove('fade-in'), 600);
-	}, 600);
+			setTimeout(() => promoText.classList.remove('fade-in'), 600);
+		}, 600);
 	}
 
 	setInterval(rotatePromo, 3500);
@@ -141,4 +141,37 @@ document.addEventListener('DOMContentLoaded', function () {
 		menuBtn.classList.toggle('open');
 		mobileMenu.classList.toggle('open');
 	});
+
+	const mMenuOpener = document.getElementById('mega-menu-opener');
+	const megaMenu = document.getElementById('mega-menu');
+
+	if (mMenuOpener && megaMenu) {
+		const mMenuItem = mMenuOpener.parentElement;
+		let hideTimeout;
+
+		const showMenu = () => {
+			clearTimeout(hideTimeout);
+			megaMenu.classList.add('show');
+			mMenuOpener.classList.add('active');
+		};
+
+		const hideMenu = () => {
+			hideTimeout = setTimeout(() => {
+				megaMenu.classList.remove('show');
+				mMenuOpener.classList.remove('active');
+			}, 200);
+		};
+
+		mMenuOpener.addEventListener('mouseenter', showMenu);
+		megaMenu.addEventListener('mouseenter', showMenu);
+		mMenuItem.addEventListener('mouseleave', hideMenu);
+		megaMenu.addEventListener('mouseleave', hideMenu);
+
+		document.addEventListener('click', (e) => {
+			if (!mMenuItem.contains(e.target) && !megaMenu.contains(e.target)) {
+				megaMenu.classList.remove('show');
+				mMenuOpener.classList.remove('active');
+			}
+		});
+	}
 });
