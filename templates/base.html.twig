@@ -84,17 +84,13 @@
 				</div>
 				<div class="header_interactive">
 					<button class="header_book book_now">BOOK NOW</button>
-					<div class="account_icon" style="display: none;">
-						{% if not app.user %}
-							<a href="{{ path('app_login') }}">
-								<img src="{{ asset('media/icons/account.svg') }}" alt="Account">
-							</a>
-						{% else %}
+					{% if app.user %}
+						<div class="account_icon">
 							<a href="{{ path('app_account') }}">
 								<img src="{{ asset('media/icons/profile.svg') }}" alt="Profile">
 							</a>
-						{% endif %}
-					</div>
+						</div>
+					{% endif %}
 				</div>
 			</nav>
 		</header>
@@ -112,16 +108,16 @@
 				<div id="map" style="width:650px; height:450px;"></div>
 				<div class="links">
 					<h3>Customer care</h3>
-					<a href="https://drive.google.com/file/d/1zdg4Da_v7QiA_BsXDgxEIAcP42MkPqf1/view?usp=sharing">Rewards Programme</a>
-					<a href="https://drive.google.com/file/d/1b7Kptjm0t5FHXMYiRnwLJybVvanoKmpB/view?usp=sharing">Cancellation Policy</a>
-					<a href="https://drive.google.com/file/d/1MqHBNvXiCkzgC1-lAmw21QnrkTbWxzR-/view?usp=sharing">Access Statement</a>
-					<a href="https://drive.google.com/file/d/19ikIkR3WqmSoJiRaw5hqNExK_NwY7SY3/view?usp=sharing">Chaperone Policy</a>
-					<a href="https://drive.google.com/file/d/1_vDJFbFNgGCUUpZglmLUNR3aitqhSgzg/view?usp=sharing">Complaints Policy</a>
-					<a href="https://drive.google.com/file/d/1PT0pX_RGRqvn9nCY4d9my9Db86R4VbAI/view?usp=sharing">Patient Notice</a>
-					<a href="https://drive.google.com/file/d/1J0JnqpN4wocxvyUqfyMcinAYGINKlrNT/view?usp=sharing">Privacy Policy</a>
+					<a href="{{ path('help', { slug: 'rewards-programme' }) }}">Rewards Programme</a>
+					<a href="{{ path('help', { slug: 'cancellation-policy' }) }}">Cancellation Policy</a>
+					<a href="{{ path('help', { slug: 'access-statement' }) }}">Access Statement</a>
+					<a href="{{ path('help', { slug: 'chaperone-policy' }) }}">Chaperone Policy</a>
+					<a href="{{ path('help', { slug: 'complaints-policy' }) }}">Complaints Policy</a>
+					<a href="{{ path('help', { slug: 'patient-notice' }) }}">Patient Notice</a>
+					<a href="{{ path('help', { slug: 'privacy-policy' }) }}">Privacy Policy</a>
 					<a href="{{ path('contacts') }}">Contact us</a>
-					<a href="https://drive.google.com/file/d/1HreFbqdmLFBU7UU7_RMSnXNHyE4xbuq9/view?usp=sharing">Career</a>
-					<a href="https://drive.google.com/file/d/1hX8mZ7iE6ubUVTlk7WHP83KIBeESVBCe/view?usp=sharing">FAQs</a>
+					<a href="{{ path('help', { slug: 'career' }) }}">Career</a>
+					<a href="{{ path('help', { slug: 'faqs' }) }}">FAQs</a>
 				</div>
 				<div class="links">
 					<h3>Treatments</h3>

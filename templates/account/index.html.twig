@@ -25,25 +25,25 @@
 				<div class="side-menu-wrapper">
 					<ul class="side-menu">
 						<li class="active" data-target="personal-block">
-							<a href="#" nofollow>Personal Information</a>
+							<p nofollow>Personal Information</p>
 						</li>
-						<li class="" data-target="history-block">
-							<a href="#" nofollow>Visit history</a>
+						<li data-target="history-block">
+							<p>Visit history</p>
 						</li>
 						{% if is_granted('ROLE_ADMIN') %}
 							<li data-target="appointments-block">
-								<a href="#" nofollow>Appointments</a>
+								<p>Appointments</p>
 							</li>
 							<li data-target="requests-block">
-								<a href="#" nofollow>Requests</a>
+								<p>Requests</p>
 							</li>
 							<li data-target="users-block">
-								<a href="#" nofollow>Users</a>
+								<p>Users</p>
 							</li>
 						{% endif %}
 						{% if is_granted('ROLE_SUPER_ADMIN') %}
 							<li data-target="categories-block">
-								<a href="#" nofollow>Treatments categories</a>
+								<p>Treatments categories</p>
 							</li>
 						{% endif %}
 					</ul>

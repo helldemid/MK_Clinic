@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<section class="account-page">
+		<div class="help page-wrap">
+			<div class="sidebar">
+				<p>Help</p>
+				<hr>
+				<div class="side-menu-wrapper">
+					<ul class="side-menu" id="help-menu">
+						{% for section in sections %}
+							<li class="menu-item {{ section.position == activePosition ? 'active' : '' }}" data-slug="{{ section.slug }}" data-loaded="{{ section.position == activePosition ? 1 : 0 }}">
+								<p href="#" nofollow>{{ section.title }}</p>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
+				<hr>
+			</div>
+
+			<div class="help-content">
+				{% for section in sections %}
+					<div id="content-{{ section.slug }}" {{ section.position == activePosition ? '' : 'style="display: none;"' }}>
+						{{ section.position == activePosition ?  default|raw : '' }}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/help.js') }}"></script>
+{% endblock %}
