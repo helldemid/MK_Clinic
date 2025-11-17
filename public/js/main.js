@@ -86,26 +86,29 @@ document.addEventListener('DOMContentLoaded', function () {
 		}, 1100);
 	};
 
-	document.querySelectorAll('.question_block h3').forEach(header => {
-		header.addEventListener('click', () => {
-			const answer = header.nextElementSibling; // <p>
-			const svg = header.querySelector('.accordion-icon-svg');
-			const expand = svg.querySelector('[data-accordion-animate="expand"]');
-			const collapse = svg.querySelector('[data-accordion-animate="collapse"]');
+	document.addEventListener('click', (e) => {
+		// ищем ближайший h3 внутри .question_block
+		const header = e.target.closest('.question_block h3');
+		if (!header) return; // клик был не по заголовку
 
-			if (answer.classList.contains('opened')) {
-				// закрытие
-				answer.style.maxHeight = null;
-				answer.classList.remove('opened');
-				collapse.beginElement();
-			} else {
-				// открытие
-				answer.style.maxHeight = answer.scrollHeight + "px";
-				answer.classList.add('opened');
-				expand.beginElement();
-			}
-		});
+		const answer = header.nextElementSibling; // <p>
+		const svg = header.querySelector('.accordion-icon-svg');
+		const expand = svg.querySelector('[data-accordion-animate="expand"]');
+		const collapse = svg.querySelector('[data-accordion-animate="collapse"]');
+
+		if (answer.classList.contains('opened')) {
+			// закрытие
+			answer.style.maxHeight = null;
+			answer.classList.remove('opened');
+			collapse.beginElement();
+		} else {
+			// открытие
+			answer.style.maxHeight = answer.scrollHeight + "px";
+			answer.classList.add('opened');
+			expand.beginElement();
+		}
 	});
+
 
 	/**
 	 * Crates anchors for not links elements
