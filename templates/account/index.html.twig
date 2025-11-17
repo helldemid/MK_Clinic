@@ -24,27 +24,15 @@
 				<hr>
 				<div class="side-menu-wrapper">
 					<ul class="side-menu">
-						<li class="active" data-target="personal-block">
-							<p nofollow>Personal Information</p>
-						</li>
-						<li data-target="history-block">
-							<p>Visit history</p>
-						</li>
+						<li class="active" data-target="personal-block">Personal Information</li>
+						<li data-target="history-block">Visit history</li>
 						{% if is_granted('ROLE_ADMIN') %}
-							<li data-target="appointments-block">
-								<p>Appointments</p>
-							</li>
-							<li data-target="requests-block">
-								<p>Requests</p>
-							</li>
-							<li data-target="users-block">
-								<p>Users</p>
-							</li>
+							<li data-target="appointments-block">Appointments</li>
+							<li data-target="requests-block">Requests</li>
+							<li data-target="users-block">Users</li>
 						{% endif %}
 						{% if is_granted('ROLE_SUPER_ADMIN') %}
-							<li data-target="categories-block">
-								<p>Treatments categories</p>
-							</li>
+							<li data-target="categories-block">Treatments categories</li>
 						{% endif %}
 					</ul>
 				</div>

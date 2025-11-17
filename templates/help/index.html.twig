@@ -10,7 +10,7 @@
 					<ul class="side-menu" id="help-menu">
 						{% for section in sections %}
 							<li class="menu-item {{ section.position == activePosition ? 'active' : '' }}" data-slug="{{ section.slug }}" data-loaded="{{ section.position == activePosition ? 1 : 0 }}">
-								<p href="#" nofollow>{{ section.title }}</p>
+								{{ section.title }}
 							</li>
 						{% endfor %}
 					</ul>
