@@ -23,13 +23,18 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 		$categories = $this->catRepo->getCategoriesSortedByNameLength();
 		$dataForMenu = [];
 		$categoriesToRespond = [];
-		foreach($categories as $category) {
+		foreach ($categories as $category) {
 			$treatments = $this->tRepo->getTreatmentsDataForMenu($category['id']);
-			if($treatments && !empty($treatments)) {
+			if ($treatments && !empty($treatments)) {
 				$dataForMenu[$category['name']] = $treatments;
 				$categoriesToRespond[] = $category;
 			}
 		}
+
+		uasort($dataForMenu, function ($a, $b) {
+			return count($b) <=> count($a);
+		});
+
 		return [
 			'treatmentsCategories' => $categoriesToRespond,
 			'dataForMenu' => $dataForMenu
