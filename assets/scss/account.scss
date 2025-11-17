@@ -65,8 +65,8 @@ table {
 				cursor: pointer;
 				border: 1px solid black;
 
-				a {
-					text-decoration: none;
+				p {
+					font-size: 1rem;
 					color: rgb(0, 0, 0);
 				}
 
@@ -74,7 +74,7 @@ table {
 				&:hover {
 					background: black;
 
-					a {
+					p {
 						color: rgb(255, 255, 255);
 					}
 				}
@@ -256,9 +256,6 @@ input[aria-invalid="true"] {
 	color: #666;
 	font-size: 13px;
 }
-
-
-
 
 @media (max-width: 780px) {
 	.account-page {
