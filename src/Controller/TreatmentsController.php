@@ -31,9 +31,15 @@ class TreatmentsController extends AbstractController
 	#[Route('/treatments', name: 'treatments')]
 	public function index(Request $request, CategoriesRepository $categoryRepo, TreatmentsRepository $treatmentRepo)
 	{
-		$categories = $categoryRepo->findAll();
+		$categories = $categoryRepo->getActiveCategories();
 
 		$categoryId = (int) $request->query->get('category', 0);
+		if ($categoryId !== 0) {
+			$isActive = $categoryRepo->isActiveCategory($categoryId);
+			if (!$isActive) {
+				throw $this->createNotFoundException('The requested category was not found or is not active');
+			}
+		}
 		$treatments = $treatmentRepo->getTreatmentsDataForCards($categoryId, 1);
 
 		return $this->render('treatments/index.html.twig', [
@@ -82,6 +88,28 @@ class TreatmentsController extends AbstractController
 		}
 	}
 
+	#[Route('/treatments/category/{id}/toggle_activity', name: 'toggle_category_activity', methods: ['POST'])]
+	public function toggleCategoryActivity(int $id, EntityManagerInterface $em): JsonResponse
+	{
+		try {
+			// Deny access if the current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
+			$category = $em->getRepository(Categories::class)->find($id);
+
+			if (!$category) {
+				return $this->json(['success' => false, 'error' => 'Category not found', 'message' => 'Category not found'], 404);
+			}
+
+			$category->setIsShown(!$category->isShown());
+			$em->flush();
+
+			return $this->json(['success' => true]);
+		} catch (\Exception $e) {
+			return $this->json(['success' => false, 'error' => $e->getMessage(), 'message' => 'Server error'], 500);
+		}
+	}
+
 	#[Route('/treatments/category/{id}/edit', name: 'category_edit', methods: ['POST'])]
 	public function editCategory(
 		int $id,
@@ -106,6 +134,38 @@ class TreatmentsController extends AbstractController
 			}
 
 			$category->setName($name);
+			$em->flush();
+
+			return $this->json(['success' => true]);
+		} catch (\Exception $e) {
+			return $this->json(['success' => false, 'error' => $e->getMessage(), 'message' => 'Server error'], 500);
+		}
+	}
+
+	#[Route('/treatments/category/{id}/set_super_id', name: 'category_set_super_id', methods: ['POST'])]
+	public function editCategorySuperId(
+		int $id,
+		Request $request,
+		EntityManagerInterface $em
+	): JsonResponse {
+		try {
+			// Deny access if the current user is not a SUPER_ADMIN
+			$this->denyAccessUnlessGranted('ROLE_SUPER_ADMIN');
+
+			$category = $em->getRepository(Categories::class)->find($id);
+
+			if (!$category) {
+				return $this->json(['success' => false, 'error' => 'Category not found', 'message' => 'Category not found'], 404);
+			}
+
+			$data = json_decode($request->getContent(), true);
+			$pabauSuperId = (int) ($data['superId'] ?? 0);
+
+			if (empty($pabauSuperId)) {
+				return $this->json(['success' => false, 'error' => 'Not valid id', 'message' => 'Not valid id'], 400);
+			}
+
+			$category->setPabauMasterCategoryId($pabauSuperId);
 			$em->flush();
 
 			return $this->json(['success' => true]);

@@ -15,7 +15,7 @@
 				{% if additionalInformation %}
 					<button class="transparent_white_button learn_more">Learn more</button>
 				{% endif %}
-				<button class="transparent_white_button book book_now">Book now</button>
+				<button class="transparent_white_button book book_now" data-url="{{ get_pabau_treatment_url(treatment.pabauMasterCategoryId, treatment.name) }}">Book now</button>
 			</div>
 		</div>
 		<div class="treatment_main_photo">
@@ -65,8 +65,8 @@
 				</div>
 			</div>
 		</section> #}
-	{% include 'components/online_book.html.twig' %}
-	<div class="pabauPackages" style="width:100%">
+	{% include 'components/online_book.html.twig' with { dataUrl : get_pabau_treatment_url(treatment.pabauMasterCategoryId, treatment.name) } %}
+	<section class="pabauPackages" style="width:100%">
 		<script src="https://pabau.com/widgets/pabau-packages.js?slug=mkaestheticclinic" async defer></script>
-	</div>
+	</section>
 {% endblock %}

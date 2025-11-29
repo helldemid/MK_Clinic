@@ -66,7 +66,7 @@ class TreatmentsRepository extends ServiceEntityRepository
 		$treatmentData = $this->createQueryBuilder('t')
 			->select('t.id, t.name, t.imageName, t.discomfortLevel, t.fullDescription')
 			->leftJoin('App\Entity\Categories', 'c', 'WITH', 'c.id = t.category')
-			->addSelect('c.name as categoryName')
+			->addSelect('c.name as categoryName, c.pabauMasterCategoryId')
 			// join с ценами через поле treatment_id в таблице TreatmentPrice
 			->leftJoin('App\Entity\TreatmentPrice', 'tp', 'WITH', 'tp.id = t.price')
 			->addSelect('tp.isFixed, tp.price, tp.priceType')

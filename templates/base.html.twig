@@ -34,7 +34,7 @@
 	<body>
 		<header>
 			<div class="promo">
-				<p id="promoText">Certified and experienced doctors</p>
+				<a id="promoText" href="{{ path('help', { slug: 'rewards-programme' }) }}">REFER A FRIEND AND RECEIVE 500 CREDIT POINTS BOTH</a>
 			</div>
 			<nav>
 				<div class="menu-btn" id="menuBtn">
@@ -90,6 +90,12 @@
 								<img src="{{ asset('media/icons/profile.svg') }}" alt="Profile">
 							</a>
 						</div>
+					{% else %}
+						<div class="account_icon">
+							<a href="https://partner.pabau.com/mkaestheticclinic/login">
+								<img src="{{ asset('media/icons/account.svg') }}" alt="Profile">
+							</a>
+						</div>
 					{% endif %}
 				</div>
 			</nav>
@@ -111,8 +117,8 @@
 					<a href="{{ path('help', { slug: 'rewards-programme' }) }}">Rewards Programme</a>
 					<a href="{{ path('help', { slug: 'cancellation-policy' }) }}">Cancellation Policy</a>
 					<a href="{{ path('help', { slug: 'access-statement' }) }}">Access Statement</a>
-					<a href="{{ path('help', { slug: 'chaperone-policy' }) }}">Chaperone Policy</a>
 					<a href="{{ path('help', { slug: 'complaints-policy' }) }}">Complaints Policy</a>
+					<a href="{{ path('help', { slug: 'chaperone-policy' }) }}">Chaperone Policy</a>
 					<a href="{{ path('help', { slug: 'patient-notice' }) }}">Patient Notice</a>
 					<a href="{{ path('help', { slug: 'privacy-policy' }) }}">Privacy Policy</a>
 					<a href="{{ path('contacts') }}">Contact us</a>
@@ -122,7 +128,9 @@
 				<div class="links">
 					<h3>Treatments</h3>
 					{% for category in treatmentsCategories %}
-						<a href="{{ path('treatments', { category: category.id }) }}">{{ category.name }}</a>
+						{% if category.is_shown %}
+							<a href="{{ path('treatments', { category: category.id }) }}">{{ category.name }}</a>
+						{% endif %}
 					{% endfor %}
 				</div>
 				<div class="links">

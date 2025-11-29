@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Categories;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -27,6 +28,36 @@ class CategoriesRepository extends ServiceEntityRepository
 			->orderBy('LENGTH(c.name)', 'DESC')
 			->getQuery()
 			->getArrayResult();
+	}
+
+	public function getActiveCategories(): array
+	{
+		return $this->createQueryBuilder('c')
+			->select('c')
+			->where('c.is_shown = :status')
+			->setParameter('status', true)
+			->getQuery()
+			->getResult();
+	}
+
+	/**
+	 * Проверяет, активна ли категория по ее ID.
+	 */
+	public function isActiveCategory(int $id): bool
+	{
+		try {
+			$state = $this->createQueryBuilder('c')
+				->select('c.is_shown')
+				->where('c.id = :id')
+				->setParameter('id', $id)
+				->getQuery()
+				->getSingleScalarResult();
+
+			return (bool) $state;
+
+		} catch (\Doctrine\ORM\NoResultException $e) {
+			return false;
+		}
 	}
 
 }

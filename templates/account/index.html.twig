@@ -183,11 +183,7 @@
 							<tbody>
 								{% for request in appointmentRequests %}
 									<tr>
-										<td
-											{% if request.createdAt %}
-												data-order="{{ request.createdAt|date('Y-m-d H:i:s') }}"
-											{% endif %}
-										>
+										<td {% if request.createdAt %} data-order="{{ request.createdAt|date('Y-m-d H:i:s') }}" {% endif %}>
 											{{ request.createdAt
 												? (request.createdAt|date('d/m/Y') ~ '<br>' ~ request.createdAt|date('H:i'))|raw
 												: ''
@@ -272,7 +268,9 @@
 							<thead>
 								<tr>
 									<th>Name</th>
-									<th>Actions</th>
+									<th>Pabau category id</th>
+									<th>Activity</th>
+									<th>Delete</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -280,6 +278,14 @@
 									<tr>
 										<td>
 											<input class="category-name" data-category-id="{{ category.id }}" type="text" value="{{ category.name }}">
+										</td>
+										<td>
+											<input class="category-super-id" min="0" data-category-id="{{ category.id }}" type="number" value="{{ category.pabauMasterCategoryId }}">
+										</td>
+										<td>
+											<button data-category-id="{{ category.id }}" data-is-shown="{{ category.is_shown }}" class="edit_button hide-category {% if not category.is_shown %}hidden{% endif %}" title="{% if not category.is_shown %}Show{% else %}Hide{% endif %}">
+												<i class="fa fa-eye-slash icon"></i>
+											</button>
 										</td>
 										<td>
 											<button class="edit_button delete-button" type="button" data-category-id="{{ category.id }}">
@@ -304,10 +310,10 @@
 
 {% block javascripts %}
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+	<!-- DataTables JS -->
+	<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<!-- Responsive JS -->
-<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+	<!-- Responsive JS -->
+	<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 	<script src="{{ asset('js/account.js') }}"></script>
 {% endblock %}
