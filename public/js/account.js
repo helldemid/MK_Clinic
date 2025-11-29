@@ -265,6 +265,31 @@ document.querySelectorAll("#categories-table .delete-button").forEach(button => 
 	});
 });
 
+// ================== TOGGLE CATEGORY ACTIVITY ==================
+document.querySelectorAll("#categories-table .hide-category").forEach(button => {
+	button.addEventListener("click", async (e) => {
+		const button = e.target.parentElement;
+		const categoryId = parseInt(button.dataset.categoryId || -1);
+		const currentActivity = parseInt(button.dataset.isShown || -1);
+
+		if (categoryId < 0 || !currentActivity < 0) {
+			AlertService.error("Something went wrong. Call Demyd");
+			return;
+		}
+
+		const result = await AlertService.confirm("Treatments for this category will be " + (currentActivity == 1 ? 'hidden' : 'shown') + " for all users");
+
+		if (result.isConfirmed) {
+			handleApiResponse(
+				ApiService.post(`/treatments/category/${categoryId}/toggle_activity`),
+				"The category has been " + (currentActivity == 1 ? 'hidden' : 'shown')
+			).then(data => {
+				if (data.success) button.classList.toggle('hidden')
+			});
+		}
+	});
+});
+
 
 // ================== EDIT CATEGORY ==================
 document.querySelectorAll("#categories-table .category-name").forEach(input => {
@@ -287,6 +312,32 @@ document.querySelectorAll("#categories-table .category-name").forEach(input => {
 			} else {
 				// сохраним актуальное имя для будущего отката
 				input.dataset.oldName = newName;
+			}
+		});
+	});
+});
+
+// ================== EDIT PABAU ID ==================
+document.querySelectorAll("#categories-table .category-super-id").forEach(input => {
+	input.addEventListener("change", () => {
+		const categoryId = input.dataset.categoryId;
+		const newSuperId = parseInt(input.value.trim());
+
+		if (newSuperId <= 0) {
+			AlertService.error("Pabau master id cannot be " + newSuperId);
+			return;
+		}
+
+		handleApiResponse(
+			ApiService.post(`/treatments/category/${categoryId}/set_super_id`, { superId: newSuperId }),
+			"Super ID updated successfully"
+		).then(data => {
+			if (!data.success) {
+				// если ошибка — вернем старое имя (для UX)
+				input.value = input.dataset.oldName || newSuperId;
+			} else {
+				// сохраним актуальное имя для будущего отката
+				input.dataset.oldName = newSuperId;
 			}
 		});
 	});

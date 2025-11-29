@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-	const promoPhrases = [
-		"Certified and experienced doctors",
-		"Modern equipment and comfortable environment",
-		"Personalized treatment plans for every patient",
-		"Convenient location and flexible scheduling",
-		"Wide range of aesthetic procedures",
-		"Committed to patient safety and satisfaction"
-	];
+	// phrase => url
+	const promoPhrases = {
+		"REFER A FRIEND AND RECEIVE 500 CREDIT POINTS BOTH" : 'https://mkaestheticclinic.com/help/rewards-programme',
+		"Earn rewards with every visit" : 'https://mkaestheticclinic.com/help/rewards-programme',
+		"Refer a friend and enjoy shared benefits" : 'https://mkaestheticclinic.com/help/rewards-programme',
+		"Celebrate your birthday with us" : 'https://mkaestheticclinic.com/help/rewards-programme',
+		"Join our team" : 'https://mkaestheticclinic.com/help/career'
+	};
+	const promoKeys = Object.keys(promoPhrases);
 
 	let promoIndex = 0;
 	const promoText = document.getElementById('promoText');
@@ -16,8 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		promoText.classList.add('fade-out');
 
 		setTimeout(() => {
-			promoIndex = (promoIndex + 1) % promoPhrases.length;
-			promoText.textContent = promoPhrases[promoIndex];
+			promoIndex = (promoIndex + 1) % promoKeys.length;
+
+			const phrase = promoKeys[promoIndex];
+			promoText.textContent = phrase;
+			promoText.href = promoPhrases[phrase] || '#';
 
 			promoText.classList.remove('fade-out');
 			promoText.classList.add('fade-in');
@@ -129,7 +133,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	document.querySelectorAll('.book_now').forEach(header => {
 		header.addEventListener('click', () => {
-			window.location.href = 'https://partner.pabau.com/online-bookings/mkaestheticclinic';
+			let baseUrl = header.dataset.url || null;
+			if (!baseUrl) {
+				baseUrl = 'https://partner.pabau.com/online-bookings/mkaestheticclinic';
+			}
+			window.location.href = baseUrl;
 		});
 	});
 
