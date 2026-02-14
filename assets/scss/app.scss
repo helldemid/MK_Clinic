@@ -474,6 +474,10 @@ footer {
 	color: $white;
 	padding: 15px 30px;
 
+	footer #map div {
+		margin-bottom: 0;
+	}
+
 	div {
 		margin-bottom: 30px;
 	}

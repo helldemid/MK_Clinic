@@ -43,15 +43,16 @@ async function initMap() {
 		});
 
 		// create standard InfoWindow
+		const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${place.displayName}&query_place_id=${placeId}`;
 		const infoWindow = new google.maps.InfoWindow({
 			content: `
-				<div style="max-width:200px; color:#000;">
+				<div style="max-width:200px; color:#000; margin-bottom: 0;">
 					<strong>${place.displayName || ''}</strong><br>
 					${place.formattedAddress || ''}<br><br>
-					<a href="https://maps.app.goo.gl/842Yxuxdt8QUfx6k9"
-					target="_blank"
-					style="color:#1a73e8; text-decoration:none;">
-						Open in Google Maps →
+					<a href="${mapsUrl}"
+						target="_blank"
+						style="color:#1a73e8; text-decoration:none;">
+							Open in Google Maps →
 					</a>
 				</div>
 			`,

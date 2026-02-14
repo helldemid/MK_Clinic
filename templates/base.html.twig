@@ -34,7 +34,7 @@
 	<body>
 		<header>
 			<div class="promo">
-				<a id="promoText" href="{{ path('help', { slug: 'rewards-programme' }) }}">REFER A FRIEND AND RECEIVE 500 CREDIT POINTS BOTH</a>
+				<a id="promoText" href="#">50% OFF all laser device treatments</a>
 			</div>
 			<nav>
 				<div class="menu-btn" id="menuBtn">
@@ -46,6 +46,7 @@
 					<a href="{{ path('homepage') }}">CLINIC</a>
 					<a href="{{ path('treatments') }}">TREATMENTS</a>
 					<a href="{{ path('contacts') }}">CONTACT US</a>
+					<a href="{{ path('price_list') }}">PRICE LIST</a>
 					<a href="https://partner.pabau.com/online-bookings/mkaestheticclinic">BOOK NOW</a>
 				</div>
 
@@ -61,6 +62,9 @@
 					<div class="menu-item">
 						<a href="{{ path('contacts') }}">CONTACT US</a>
 					</div>
+					<div class="menu-item">
+						<a href="{{ path('price_list') }}">PRICE LIST</a>
+					</div>
 				</div>
 
 				<div class="mega-menu" id="mega-menu">
@@ -70,7 +74,9 @@
 								<h4>{{ categoryName }}</h4>
 								<ul>
 									{% for treatment in treatments %}
-										<li><a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">{{ treatment.name }}</a></li>
+										<li>
+											<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">{{ treatment.name }}</a>
+										</li>
 									{% endfor %}
 								</ul>
 							</div>

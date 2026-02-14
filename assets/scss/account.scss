@@ -172,7 +172,8 @@ input[aria-invalid="true"] {
 	outline: 2px solid #d32f2f;
 }
 
-#requests-table, #appointments-table {
+#requests-table,
+#appointments-table {
 	font-size: calc(1rem - 2px);
 
 	button {
@@ -305,6 +306,7 @@ input[aria-invalid="true"] {
 					overflow-x: scroll;
 					padding-bottom: 0.5rem;
 				}
+
 				.side-menu {
 					display: flex;
 					gap: 1rem;

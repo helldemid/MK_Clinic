@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Price List
+{% endblock %}
+
+{% block body %}
+	<div class="price-list-page">
+		<div class="price-list-hero">
+			<div class="back_full_picture">
+				<picture>
+					<source media="(orientation: portrait)" srcset="{{ asset('media/welcome_mobile_1.webp') }}">
+					<source media="(orientation: landscape)" srcset="{{ asset('media/welcome_3.webp') }}">
+					<img src="{{ asset('media/welcome_3.webp') }}" alt="welcome image">
+				</picture>
+			</div>
+			<div class="price-list-hero__inner">
+				<span class="price-list-hero__eyebrow">Science. Artistry. You.</span>
+				<h1>Price List</h1>
+				<p class="price-list-hero__lead">
+					Discover our comprehensive range of aesthetic treatments, from advanced laser procedures to rejuvenating injectables &mdash; all delivered with precision and care.
+				</p>
+				<ul class="price-list-hero__highlights" aria-label="Price list highlights">
+					<li>Course discounts available</li>
+					<li>Free consultations</li>
+					<li>Flexible payment options</li>
+				</ul>
+			</div>
+		</div>
+
+		<nav class="price-nav" data-price-nav aria-label="Price list sections">
+			<div class="price-nav__inner">
+				{% for section in priceSections %}
+					<a class="price-nav__link" href="#{{ section.id }}">{{ section.navLabel }}</a>
+				{% endfor %}
+			</div>
+		</nav>
+
+		<div class="price-sections">
+			{% for section in priceSections %}
+				<section class="price-section" id="{{ section.id }}" data-price-section>
+					<div class="price-section__header">
+						<div class="price-section__title-wrap">
+							<h2 class="price-section__title">{{ section.title }}</h2>
+							{% if section.description %}
+								<p class="price-section__description">{{ section.description }}</p>
+							{% endif %}
+						</div>
+						{% if section.note %}
+							<span class="price-section__note">{{ section.note }}</span>
+						{% endif %}
+					</div>
+					<div class="price-table-wrap">
+						<table class="price-table">
+							<thead>
+								<tr>
+									{% for column in section.columns %}
+										<th scope="col" class="{{ loop.index0 > 0 ? 'is-price' : '' }}">{{ column }}</th>
+									{% endfor %}
+								</tr>
+							</thead>
+							<tbody>
+								{% for row in section.rows %}
+									<tr>
+										{% for cell in row %}
+											<td class="{{ loop.index0 > 0 ? 'is-price' : '' }}">
+												{% if cell is same as(null) %}
+													<span class="price-table__na">-</span>
+												{% elseif cell is not empty and cell matches '/^[0-9]+(\\.[0-9]{2})?$/' %}
+													£{{ cell }}
+												{% else %}
+													{{ cell }}
+												{% endif %}
+											</td>
+										{% endfor %}
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</section>
+			{% endfor %}
+		</div>
+	</div>
+
+	{% include 'components/online_book.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+	<script src="{{ asset('js/price-list.js') }}"></script>
+{% endblock %}
