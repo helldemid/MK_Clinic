@@ -22,35 +22,27 @@ class HelpSectionRepository extends ServiceEntityRepository
 	}
 
 	/**
-	 * Получить все разделы, отсортированные для меню.
-	 * Обычно используется для левой боковой панели.
-	 *
 	 * @return HelpSection[]
 	 */
 	public function findAllOrdered(): array
 	{
 		return $this->createQueryBuilder('h')
-			->select('h.title, h.slug, h.position')
 			->orderBy('h.position', 'ASC')
+			->addOrderBy('h.id', 'ASC')
 			->getQuery()
 			->getResult();
 	}
 
-	/**
-	 * Найти раздел по slug
-	 */
 	public function findBySlug(string $slug): ?HelpSection
 	{
 		return $this->findOneBy(['slug' => $slug]);
 	}
 
-	/**
-	 * Получить первый раздел (для загрузки по умолчанию)
-	 */
 	public function findFirst(): ?HelpSection
 	{
 		return $this->createQueryBuilder('h')
 			->orderBy('h.position', 'ASC')
+			->addOrderBy('h.id', 'ASC')
 			->setMaxResults(1)
 			->getQuery()
 			->getOneOrNullResult();

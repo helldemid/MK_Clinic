@@ -1,5 +1,7 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    form_themes:
+        - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
     globals:
         treatment_card_img_base_dir: 'media/treatments/card/'
         treatment_page_img_base_dir: 'media/treatments/page/'

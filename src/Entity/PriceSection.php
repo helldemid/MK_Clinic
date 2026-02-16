@@ -60,6 +60,11 @@ class PriceSection
 		return $this->id;
 	}
 
+	public function __toString(): string
+	{
+		return $this->title !== '' ? $this->title : sprintf('Section #%d', $this->id ?? 0);
+	}
+
 	public function getTitle(): string
 	{
 		return $this->title;
@@ -150,6 +155,15 @@ class PriceSection
 		return $this;
 	}
 
+	public function removeColumn(PriceColumn $column): self
+	{
+		if ($this->columns->removeElement($column) && $column->getSection() === $this) {
+			$column->setSection(null);
+		}
+
+		return $this;
+	}
+
 	/**
 	 * @return Collection<int, PriceRow>
 	 */
@@ -163,6 +177,15 @@ class PriceSection
 		if (!$this->rows->contains($row)) {
 			$this->rows->add($row);
 			$row->setSection($this);
+		}
+
+		return $this;
+	}
+
+	public function removeRow(PriceRow $row): self
+	{
+		if ($this->rows->removeElement($row) && $row->getSection() === $this) {
+			$row->setSection(null);
 		}
 
 		return $this;

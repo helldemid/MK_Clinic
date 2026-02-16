@@ -222,6 +222,22 @@
 		font-weight: 500;
 		text-align: center;
 	}
+
+	.price-table__promo {
+		color: #c62828;
+		display: block;
+		font-weight: 700;
+		line-height: 1.1;
+	}
+
+	.price-table__regular-crossed {
+		color: #777;
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 500;
+		margin-top: 0.2rem;
+		text-decoration: line-through;
+	}
 }
 
 @media (max-width: 1024px) {

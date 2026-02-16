@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\PriceCell;
 use App\Entity\PriceSection;
 use App\Repository\PriceSectionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,7 +49,7 @@ class PriceListController extends AbstractController
 						continue;
 					}
 
-					$cellsByColumnPosition[$column->getPosition()] = $this->normalizeCellValue($cell->getValue());
+					$cellsByColumnPosition[$column->getPosition()] = $this->normalizeCell($cell);
 				}
 
 				$normalizedRow = [$row->getTitle()];
@@ -103,5 +104,23 @@ class PriceListController extends AbstractController
 		}
 
 		return str_contains($trimmed, '.') ? $trimmed : (int) $trimmed;
+	}
+
+	/**
+	 * @return array{value: int|string|null, promoValue: int|string|null}|null
+	 */
+	private function normalizeCell(PriceCell $cell): ?array
+	{
+		$value = $this->normalizeCellValue($cell->getValue());
+		$promoValue = $this->normalizeCellValue($cell->getPromoValue());
+
+		if ($value === null && $promoValue === null) {
+			return null;
+		}
+
+		return [
+			'value' => $value,
+			'promoValue' => $promoValue,
+		];
 	}
 }

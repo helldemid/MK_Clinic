@@ -65,6 +65,19 @@
 											<td class="{{ loop.index0 > 0 ? 'is-price' : '' }}">
 												{% if cell is same as(null) %}
 													<span class="price-table__na">-</span>
+												{% elseif cell is iterable and cell.value is defined %}
+													{% set regular = cell.value %}
+													{% set promo = cell.promoValue %}
+													{% if promo is not same as(null) %}
+														<span class="price-table__promo">£{{ promo }}</span>
+														{% if regular is not same as(null) %}
+															<span class="price-table__regular-crossed">£{{ regular }}</span>
+														{% endif %}
+													{% elseif regular is not same as(null) %}
+														£{{ regular }}
+													{% else %}
+														<span class="price-table__na">-</span>
+													{% endif %}
 												{% elseif cell is not empty and cell matches '/^[0-9]+(\\.[0-9]{2})?$/' %}
 													£{{ cell }}
 												{% else %}

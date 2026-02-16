@@ -1,0 +1,22 @@
+fos_ck_editor:
+    base_path: "ckeditor4"
+    js_path: "ckeditor4/ckeditor.js"
+    default_config: help_section
+    configs:
+        help_section:
+            allowedContent: true
+            extraAllowedContent: "*(*);*{*};*[*]"
+            entities: false
+            basicEntities: false
+            format_tags: "p;h2;h3;h4"
+            removePlugins: "elementspath"
+            toolbar:
+                - [ "Source", "-", "Format", "Styles" ]
+                - [ "Bold", "Italic", "Blockquote", "HorizontalRule" ]
+                - [ "NumberedList", "BulletedList", "-", "Outdent", "Indent" ]
+                - [ "Link", "Unlink" ]
+                - [ "Undo", "Redo" ]
+            stylesSet:
+                - { name: "Lead text", element: "p", attributes: { class: "help-lead" } }
+                - { name: "Muted text", element: "p", attributes: { class: "help-muted" } }
+                - { name: "Highlighted box", element: "blockquote", attributes: { class: "help-highlight" } }

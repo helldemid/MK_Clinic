@@ -26,6 +26,9 @@ class PriceCell
 	#[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
 	private ?string $value = null;
 
+	#[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
+	private ?string $promoValue = null;
+
 	public function getId(): ?int
 	{
 		return $this->id;
@@ -63,6 +66,18 @@ class PriceCell
 	public function setValue(?string $value): self
 	{
 		$this->value = $value;
+
+		return $this;
+	}
+
+	public function getPromoValue(): ?string
+	{
+		return $this->promoValue;
+	}
+
+	public function setPromoValue(?string $promoValue): self
+	{
+		$this->promoValue = $promoValue;
 
 		return $this;
 	}

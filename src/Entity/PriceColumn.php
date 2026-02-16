@@ -30,6 +30,11 @@ class PriceColumn
 		return $this->id;
 	}
 
+	public function __toString(): string
+	{
+		return $this->label !== '' ? $this->label : sprintf('Column #%d', $this->id ?? 0);
+	}
+
 	public function getSection(): ?PriceSection
 	{
 		return $this->section;

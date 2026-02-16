@@ -43,6 +43,11 @@ class PriceRow
 		return $this->id;
 	}
 
+	public function __toString(): string
+	{
+		return $this->title !== '' ? $this->title : sprintf('Row #%d', $this->id ?? 0);
+	}
+
 	public function getSection(): ?PriceSection
 	{
 		return $this->section;
