@@ -14,6 +14,10 @@
 		return;
 	}
 
+	let lockedActiveId = null;
+	let lockedTargetTop = 0;
+	let lockExpiresAt = 0;
+
 	const scrollNavToLink = (link) => {
 		if (!navInner) {
 			return;
@@ -34,6 +38,8 @@
 		const offset = 16;
 		const top = section.getBoundingClientRect().top + window.scrollY - headerHeight - navHeight - offset;
 		window.scrollTo({ top, behavior: 'smooth' });
+
+		return top;
 	};
 
 	const setActive = (id) => {
@@ -61,6 +67,15 @@
 
 	const observer = new IntersectionObserver(
 		(entries) => {
+			if (lockedActiveId !== null) {
+				const reachedTarget = Math.abs(window.scrollY - lockedTargetTop) <= 6;
+				if (!reachedTarget && Date.now() < lockExpiresAt) {
+					return;
+				}
+
+				lockedActiveId = null;
+			}
+
 			const visible = entries
 				.filter((entry) => entry.isIntersecting)
 				.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
@@ -90,7 +105,9 @@
 		}
 		history.pushState(null, '', `#${targetId}`);
 		setActive(targetId);
-		scrollToSection(targetSection);
+		lockedActiveId = targetId;
+		lockedTargetTop = scrollToSection(targetSection);
+		lockExpiresAt = Date.now() + 2500;
 	});
 
 	window.addEventListener('hashchange', setActiveFromHash);

@@ -1,36 +1,51 @@
 document.addEventListener('DOMContentLoaded', function () {
-
-	// phrase => url
-	const promoPhrases = {
-		"REFER A FRIEND AND RECEIVE 500 CREDIT POINTS BOTH" : 'https://mkaestheticclinic.com/help/rewards-programme',
-		"Earn rewards with every visit" : 'https://mkaestheticclinic.com/help/rewards-programme',
-		"Refer a friend and enjoy shared benefits" : 'https://mkaestheticclinic.com/help/rewards-programme',
-		"Celebrate your birthday with us" : 'https://mkaestheticclinic.com/help/rewards-programme',
-		"Join our team" : 'https://mkaestheticclinic.com/help/career'
-	};
-	const promoKeys = Object.keys(promoPhrases);
-
-	let promoIndex = 0;
 	const promoText = document.getElementById('promoText');
-
-	function rotatePromo() {
-		promoText.classList.add('fade-out');
-
-		setTimeout(() => {
-			promoIndex = (promoIndex + 1) % promoKeys.length;
-
-			const phrase = promoKeys[promoIndex];
-			promoText.textContent = phrase;
-			promoText.href = promoPhrases[phrase] || '#';
-
-			promoText.classList.remove('fade-out');
-			promoText.classList.add('fade-in');
-
-			setTimeout(() => promoText.classList.remove('fade-in'), 600);
-		}, 600);
+	const fallbackPromoItems = [
+		{ text: '50% OFF all laser device treatments', url: '#' },
+		{ text: 'REFER A FRIEND AND RECEIVE 500 CREDIT POINTS BOTH', url: 'https://mkaestheticclinic.com/help/rewards-programme' },
+		{ text: 'Earn rewards with every visit', url: 'https://mkaestheticclinic.com/help/rewards-programme' },
+		{ text: 'Refer a friend and enjoy shared benefits', url: 'https://mkaestheticclinic.com/help/rewards-programme' },
+		{ text: 'Celebrate your birthday with us', url: 'https://mkaestheticclinic.com/help/rewards-programme' },
+		{ text: 'Join our team', url: 'https://mkaestheticclinic.com/help/career' },
+	];
+	let promoItems = fallbackPromoItems;
+	if (promoText) {
+		try {
+			const decoded = JSON.parse(promoText.dataset.promoItems || '[]');
+			if (Array.isArray(decoded) && decoded.length > 0) {
+				promoItems = decoded
+					.filter(item => item && typeof item === 'object' && String(item.text || '').trim() !== '')
+					.map(item => ({
+						text: String(item.text || ''),
+						url: String(item.url || '#'),
+					}));
+			}
+		} catch (error) {
+			promoItems = fallbackPromoItems;
+		}
 	}
 
-	setInterval(rotatePromo, 3500);
+	if (promoText && promoItems.length > 1) {
+		let promoIndex = 0;
+		function rotatePromo() {
+			promoText.classList.add('fade-out');
+
+			setTimeout(() => {
+				promoIndex = (promoIndex + 1) % promoItems.length;
+				const current = promoItems[promoIndex];
+
+				promoText.textContent = current.text;
+				promoText.href = current.url || '#';
+
+				promoText.classList.remove('fade-out');
+				promoText.classList.add('fade-in');
+
+				setTimeout(() => promoText.classList.remove('fade-in'), 600);
+			}, 600);
+		}
+
+		setInterval(rotatePromo, 3500);
+	}
 
 	const logoNav = document.getElementById('logo_nav');
 	const p = logoNav.querySelector('p');
