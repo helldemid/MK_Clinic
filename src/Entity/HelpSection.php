@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\HelpSectionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,12 +28,26 @@ class HelpSection
 	private string $title = '';
 
 	#[ORM\Column(type: 'text', columnDefinition: 'LONGTEXT')]
-	#[Assert\NotBlank]
-	private string $content = '';
+	private ?string $content = null;
 
 	#[ORM\Column(type: 'integer')]
 	#[Assert\PositiveOrZero]
 	private int $position = 0;
+
+	#[ORM\Column(type: 'boolean', options: ['default' => false])]
+	private bool $faqSection = false;
+
+	/**
+	 * @var Collection<int, HelpFaq>
+	 */
+	#[ORM\OneToMany(mappedBy: 'section', targetEntity: HelpFaq::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+	#[ORM\OrderBy(['position' => 'ASC', 'id' => 'ASC'])]
+	private Collection $faqs;
+
+	public function __construct()
+	{
+		$this->faqs = new ArrayCollection();
+	}
 
 	public function getId(): ?int
 	{
@@ -67,12 +83,12 @@ class HelpSection
 		return $this;
 	}
 
-	public function getContent(): string
+	public function getContent(): ?string
 	{
 		return $this->content;
 	}
 
-	public function setContent(string $content): self
+	public function setContent(?string $content): self
 	{
 		$this->content = $content;
 
@@ -87,6 +103,45 @@ class HelpSection
 	public function setPosition(int $position): self
 	{
 		$this->position = $position;
+
+		return $this;
+	}
+
+	public function isFaqSection(): bool
+	{
+		return $this->faqSection;
+	}
+
+	public function setFaqSection(bool $faqSection): self
+	{
+		$this->faqSection = $faqSection;
+
+		return $this;
+	}
+
+	/**
+	 * @return Collection<int, HelpFaq>
+	 */
+	public function getFaqs(): Collection
+	{
+		return $this->faqs;
+	}
+
+	public function addFaq(HelpFaq $faq): self
+	{
+		if (!$this->faqs->contains($faq)) {
+			$this->faqs->add($faq);
+			$faq->setSection($this);
+		}
+
+		return $this;
+	}
+
+	public function removeFaq(HelpFaq $faq): self
+	{
+		if ($this->faqs->removeElement($faq) && $faq->getSection() === $this) {
+			$faq->setSection(null);
+		}
 
 		return $this;
 	}

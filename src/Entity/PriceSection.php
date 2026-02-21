@@ -49,6 +49,13 @@ class PriceSection
 	#[ORM\OrderBy(['position' => 'ASC'])]
 	private Collection $rows;
 
+	/**
+	 * Non-persisted payload used by the admin grid editor.
+	 *
+	 * @var array<string, mixed>|null
+	 */
+	private ?array $priceGrid = null;
+
 	public function __construct()
 	{
 		$this->columns = new ArrayCollection();
@@ -187,6 +194,94 @@ class PriceSection
 		if ($this->rows->removeElement($row) && $row->getSection() === $this) {
 			$row->setSection(null);
 		}
+
+		return $this;
+	}
+
+	/**
+	 * @return array<string, mixed>
+	 */
+	public function getPriceGrid(): array
+	{
+		if ($this->priceGrid !== null) {
+			return $this->priceGrid;
+		}
+
+		$orderedColumns = $this->getColumns()->toArray();
+		usort($orderedColumns, static fn (PriceColumn $left, PriceColumn $right): int => $left->getPosition() <=> $right->getPosition());
+
+		$orderedRows = $this->getRows()->toArray();
+		usort($orderedRows, static fn (PriceRow $left, PriceRow $right): int => $left->getPosition() <=> $right->getPosition());
+
+		$columns = [];
+		$columnKeysById = [];
+		foreach ($orderedColumns as $index => $column) {
+			$key = sprintf('col_%d', $column->getId() ?? $index);
+			$columnKeysById[$column->getId() ?? 0] = $key;
+			$columns[] = [
+				'key' => $key,
+				'id' => $column->getId(),
+				'label' => $column->getLabel(),
+				'position' => $column->getPosition(),
+			];
+		}
+
+		$rows = [];
+		foreach ($orderedRows as $index => $row) {
+			$rowKey = sprintf('row_%d', $row->getId() ?? $index);
+			$cells = [];
+
+			foreach ($columns as $columnPayload) {
+				$columnKey = (string) ($columnPayload['key'] ?? '');
+				$cells[$columnKey] = null;
+			}
+
+			foreach ($row->getCells() as $cell) {
+				$columnId = $cell->getColumn()?->getId();
+				if ($columnId === null) {
+					continue;
+				}
+
+				$columnKey = $columnKeysById[$columnId] ?? null;
+				if ($columnKey === null) {
+					continue;
+				}
+
+				$value = $cell->getValue();
+				$promoValue = $cell->getPromoValue();
+
+				if ($value === null && $promoValue === null) {
+					$cells[$columnKey] = null;
+					continue;
+				}
+
+				$cells[$columnKey] = [
+					'value' => $value,
+					'promoValue' => $promoValue,
+				];
+			}
+
+			$rows[] = [
+				'key' => $rowKey,
+				'id' => $row->getId(),
+				'title' => $row->getTitle(),
+				'position' => $row->getPosition(),
+				'cells' => $cells,
+			];
+		}
+
+		return [
+			'columns' => $columns,
+			'rows' => $rows,
+		];
+	}
+
+	/**
+	 * @param array<string, mixed>|null $priceGrid
+	 */
+	public function setPriceGrid(?array $priceGrid): self
+	{
+		$this->priceGrid = $priceGrid ?? ['columns' => [], 'rows' => []];
 
 		return $this;
 	}
