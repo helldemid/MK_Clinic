@@ -1,0 +1,9 @@
+{% if helpSection.faqSection and helpSection.faqs|length > 0 %}
+	{% include 'help/_faq_list.html.twig' with { helpSection: helpSection } %}
+{% endif %}
+
+{% if not helpSection.faqSection and helpSection.content is not empty %}
+	<div class="help-section-richtext">
+		{{ helpSection.content|raw }}
+	</div>
+{% endif %}

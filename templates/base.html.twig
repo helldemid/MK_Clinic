@@ -33,8 +33,10 @@
 	</head>
 	<body>
 		<header>
+			{% set promoItems = sitePromoItems|default([]) %}
+			{% set firstPromo = promoItems|first %}
 			<div class="promo">
-				<a id="promoText" href="#">50% OFF all laser device treatments</a>
+				<a id="promoText" href="{{ firstPromo.url|default('#') }}" data-promo-items="{{ promoItems|json_encode|e('html_attr') }}">{{ firstPromo.text|default('50% OFF all laser device treatments') }}</a>
 			</div>
 			<nav>
 				<div class="menu-btn" id="menuBtn">
