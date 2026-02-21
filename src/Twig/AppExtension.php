@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Repository\CategoriesRepository;
+use App\Repository\SiteContentSettingsRepository;
 use App\Repository\TreatmentsRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -13,15 +14,35 @@ use Twig\TwigFunction;
 use Twig\Environment;
 class AppExtension extends AbstractExtension implements GlobalsInterface
 {
+	private const DEFAULT_PROMO_ITEMS = [
+		['text' => '50% OFF all laser device treatments', 'url' => '#'],
+		['text' => 'REFER A FRIEND AND RECEIVE 500 CREDIT POINTS BOTH', 'url' => 'https://mkaestheticclinic.com/help/rewards-programme'],
+		['text' => 'Earn rewards with every visit', 'url' => 'https://mkaestheticclinic.com/help/rewards-programme'],
+		['text' => 'Refer a friend and enjoy shared benefits', 'url' => 'https://mkaestheticclinic.com/help/rewards-programme'],
+		['text' => 'Celebrate your birthday with us', 'url' => 'https://mkaestheticclinic.com/help/rewards-programme'],
+		['text' => 'Join our team', 'url' => 'https://mkaestheticclinic.com/help/career'],
+	];
+
+	private const DEFAULT_HERO_DESKTOP = 'media/welcome_3.webp';
+	private const DEFAULT_HERO_MOBILE = 'media/welcome_mobile_1.webp';
+
 	private $catRepo;
 	private $tRepo;
 	private $pabauService;
+	private SiteContentSettingsRepository $siteContentSettingsRepository;
 
-	public function __construct(CategoriesRepository $catRepo, TreatmentsRepository $tRepo, PabauService $pabauService, private Environment $twig)
+	public function __construct(
+		CategoriesRepository $catRepo,
+		TreatmentsRepository $tRepo,
+		PabauService $pabauService,
+		SiteContentSettingsRepository $siteContentSettingsRepository,
+		private Environment $twig
+	)
 	{
 		$this->catRepo = $catRepo;
 		$this->tRepo = $tRepo;
 		$this->pabauService = $pabauService;
+		$this->siteContentSettingsRepository = $siteContentSettingsRepository;
 	}
 
 	public function getFunctions(): array
@@ -68,11 +89,22 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 			return count($b) <=> count($a);
 		});
 
+		$settings = $this->siteContentSettingsRepository->findSingleton();
+		$promoItems = $settings?->getPromoItems() ?? [];
+		if ($promoItems === []) {
+			$promoItems = self::DEFAULT_PROMO_ITEMS;
+		}
+		$heroDesktopImage = $settings?->getHeroDesktopImage();
+		$heroMobileImage = $settings?->getHeroMobileImage();
+
 		return [
 			'treatmentsCategories' => $categoriesToRespond,
 			'dataForMenu' => $dataForMenu,
 			'pabauBaseUrl' => 'https://partner.pabau.com/online-bookings/mkaestheticclinic',
-			'consultationCategoryMasterId' => $consultationCategoryMasterId
+			'consultationCategoryMasterId' => $consultationCategoryMasterId,
+			'sitePromoItems' => $promoItems,
+			'siteHeroDesktopImage' => $heroDesktopImage !== null && $heroDesktopImage !== '' ? 'media/site/'.$heroDesktopImage : self::DEFAULT_HERO_DESKTOP,
+			'siteHeroMobileImage' => $heroMobileImage !== null && $heroMobileImage !== '' ? 'media/site/'.$heroMobileImage : self::DEFAULT_HERO_MOBILE,
 		];
 	}
 }
