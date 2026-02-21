@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\HelpFaq;
 use App\Entity\HelpSection;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -42,8 +43,15 @@ class HelpFaqCrudController extends AbstractCrudController
 
 	public function configureFilters(Filters $filters): Filters
 	{
+		$sectionFilter = EntityFilter::new('section')
+			->setFormTypeOption('value_type_options.query_builder', static fn (EntityRepository $entityRepository) => $entityRepository->createQueryBuilder('section')
+				->andWhere('section.faqSection = :faqSection')
+				->setParameter('faqSection', true)
+				->orderBy('section.position', 'ASC')
+				->addOrderBy('section.id', 'ASC'));
+
 		return $filters
-			->add(EntityFilter::new('section'))
+			->add($sectionFilter)
 			->add(TextFilter::new('question'))
 			->add(NumericFilter::new('position'));
 	}
@@ -53,11 +61,15 @@ class HelpFaqCrudController extends AbstractCrudController
 		$section = AssociationField::new('section')
 			->setCrudController(HelpSectionCrudController::class)
 			->autocomplete()
-			->setQueryBuilder(static fn (QueryBuilder $queryBuilder) => $queryBuilder
-				->andWhere('section.faqSection = :faqSection')
+			->setQueryBuilder(static function (QueryBuilder $queryBuilder): QueryBuilder {
+				$rootAlias = $queryBuilder->getRootAliases()[0] ?? 'entity';
+
+				return $queryBuilder
+				->andWhere(sprintf('%s.faqSection = :faqSection', $rootAlias))
 				->setParameter('faqSection', true)
-				->orderBy('section.position', 'ASC')
-				->addOrderBy('section.id', 'ASC'));
+				->orderBy(sprintf('%s.position', $rootAlias), 'ASC')
+				->addOrderBy(sprintf('%s.id', $rootAlias), 'ASC');
+			});
 		$question = TextField::new('question');
 		$answer = TextareaField::new('answer')
 			->setFormType(CKEditorType::class)

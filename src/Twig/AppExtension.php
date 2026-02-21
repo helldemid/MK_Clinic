@@ -5,6 +5,7 @@ namespace App\Twig;
 use App\Repository\CategoriesRepository;
 use App\Repository\SiteContentSettingsRepository;
 use App\Repository\TreatmentsRepository;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -30,12 +31,14 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 	private $tRepo;
 	private $pabauService;
 	private SiteContentSettingsRepository $siteContentSettingsRepository;
+	private SluggerInterface $slugger;
 
 	public function __construct(
 		CategoriesRepository $catRepo,
 		TreatmentsRepository $tRepo,
 		PabauService $pabauService,
 		SiteContentSettingsRepository $siteContentSettingsRepository,
+		SluggerInterface $slugger,
 		private Environment $twig
 	)
 	{
@@ -43,13 +46,22 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 		$this->tRepo = $tRepo;
 		$this->pabauService = $pabauService;
 		$this->siteContentSettingsRepository = $siteContentSettingsRepository;
+		$this->slugger = $slugger;
 	}
 
 	public function getFunctions(): array
 	{
 		return [
 			new TwigFunction('get_pabau_treatment_url', [$this, 'getPabauTreatmentUrl'], ['is_safe' => ['html']]),
+			new TwigFunction('treatment_slug', [$this, 'buildTreatmentSlug']),
 		];
+	}
+
+	public function buildTreatmentSlug(string $name): string
+	{
+		$slug = $this->slugger->slug($name)->lower()->toString();
+
+		return $slug !== '' ? str_replace('-', '_', $slug) : 'treatment';
 	}
 
 	public function getPabauTreatmentUrl(int $superCategoryId = 0, string $treatmentName = ''): string {

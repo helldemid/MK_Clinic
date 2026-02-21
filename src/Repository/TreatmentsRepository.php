@@ -24,7 +24,8 @@ class TreatmentsRepository extends ServiceEntityRepository
 	public function getTreatmentsDataForMenu(int $categoryId = 0): ?array
 	{
 		return $this->createQueryBuilder('t')
-			->select('t.id, t.name')
+			->select('t.id, t.name, tsi.description')
+			->leftJoin('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id')
 			->where('t.category = :categoryId')
 			->setParameter('categoryId', $categoryId)
 			->orderBy('LENGTH(t.name)', 'DESC')

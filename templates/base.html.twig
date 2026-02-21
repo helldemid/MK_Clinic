@@ -77,7 +77,11 @@
 								<ul>
 									{% for treatment in treatments %}
 										<li>
-											<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">{{ treatment.name }}</a>
+											<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment_slug(treatment.name) }) }}"
+												title="{{ treatment.description|default(treatment.name)|striptags|trim }}"
+												aria-label="{{ treatment.name }}. {{ treatment.description|default('')|striptags|trim }}">
+												{{ treatment.name }}
+											</a>
 										</li>
 									{% endfor %}
 								</ul>

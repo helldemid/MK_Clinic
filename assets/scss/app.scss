@@ -474,11 +474,7 @@ footer {
 	color: $white;
 	padding: 15px 30px;
 
-	footer #map div {
-		margin-bottom: 0;
-	}
-
-	div {
+	.logo_wrap, .content, .links, #map {
 		margin-bottom: 30px;
 	}
 
@@ -707,7 +703,7 @@ footer {
 			}
 		}
 
-		p {
+		.faq-answer {
 			font-size: 1rem;
 			line-height: 1.47;
 			font-weight: 400;

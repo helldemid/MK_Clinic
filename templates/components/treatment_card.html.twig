@@ -31,7 +31,9 @@
 		{% endif %}
 		<div class="bottom">
 			<p>{{ treatment.description }}</p>
-			<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment.name|lower|replace({' ': '_'}) }) }}">
+			<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment_slug(treatment.name) }) }}"
+				title="{{ treatment.description|default(treatment.name)|striptags|trim }}"
+				aria-label="{{ treatment.name }}. {{ treatment.description|default('')|striptags|trim }}">
 				<button class="transparent_white_button">Learn more</button>
 			</a>
 		</div>
