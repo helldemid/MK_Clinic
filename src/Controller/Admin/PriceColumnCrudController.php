@@ -6,7 +6,11 @@ use App\Entity\PriceColumn;
 use App\Entity\PriceSection;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -31,6 +35,14 @@ class PriceColumnCrudController extends AbstractCrudController
 			->setEntityLabelInPlural('Price Columns')
 			->showEntityActionsInlined()
 			->setDefaultSort(['position' => 'ASC']);
+	}
+
+	public function configureFilters(Filters $filters): Filters
+	{
+		return $filters
+			->add(EntityFilter::new('section'))
+			->add(TextFilter::new('label'))
+			->add(NumericFilter::new('position'));
 	}
 
 	public function configureFields(string $pageName): iterable

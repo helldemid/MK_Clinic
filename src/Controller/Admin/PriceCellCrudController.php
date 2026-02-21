@@ -4,7 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\PriceCell;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -26,6 +29,15 @@ class PriceCellCrudController extends AbstractCrudController
 			->setEntityLabelInPlural('Price Cells')
 			->showEntityActionsInlined()
 			->setDefaultSort(['id' => 'ASC']);
+	}
+
+	public function configureFilters(Filters $filters): Filters
+	{
+		return $filters
+			->add(EntityFilter::new('row'))
+			->add(EntityFilter::new('column'))
+			->add(NumericFilter::new('value'))
+			->add(NumericFilter::new('promoValue'));
 	}
 
 	public function configureFields(string $pageName): iterable

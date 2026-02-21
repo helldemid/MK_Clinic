@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\HelpSection;
+use App\Entity\HelpFaq;
 use App\Entity\PriceCell;
 use App\Entity\PriceColumn;
 use App\Entity\PriceRow;
@@ -40,7 +41,9 @@ class DashboardController extends AbstractDashboardController
 	public function configureCrud(): Crud
 	{
 		return Crud::new()
-			->addFormTheme('@FOSCKEditor/Form/ckeditor_widget.html.twig');
+			->addFormTheme('@FOSCKEditor/Form/ckeditor_widget.html.twig')
+			->addFormTheme('admin/form/price_grid_widget.html.twig')
+			->addFormTheme('admin/form/promo_rotator_widget.html.twig');
 	}
 
 	public function configureMenuItems(): iterable
@@ -54,6 +57,8 @@ class DashboardController extends AbstractDashboardController
 
 		yield MenuItem::subMenu('Content', 'fa-solid fa-file-lines')->setSubItems([
 			MenuItem::linkToCrud('Help Sections', 'fa-solid fa-circle-question', HelpSection::class),
+			MenuItem::linkToCrud('Help FAQs', 'fa-solid fa-list-check', HelpFaq::class),
+			MenuItem::linkToRoute('Site Content', 'fa-solid fa-bullhorn', 'admin_site_content'),
 		]);
 	}
 }
