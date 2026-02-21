@@ -1,0 +1,28 @@
+.site-content-current-preview,
+.site-content-next-preview {
+	margin-top: 0.6rem;
+	padding: 0.6rem;
+	border: 1px solid #d9e0ea;
+	border-radius: 0.55rem;
+	background: #fff;
+}
+
+.site-content-preview-title {
+	font-size: 0.82rem;
+	font-weight: 700;
+	margin-bottom: 0.4rem;
+	color: #304257;
+}
+
+.site-content-preview-wrap {
+	display: grid;
+	gap: 0.4rem;
+}
+
+.site-content-preview-wrap img {
+	max-width: 100%;
+	max-height: 220px;
+	object-fit: cover;
+	border: 1px solid #d9e0ea;
+	border-radius: 0.35rem;
+}

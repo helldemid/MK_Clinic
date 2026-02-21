@@ -1,0 +1,36 @@
+.promo-rotator-toolbar {
+	margin-bottom: 0.75rem;
+}
+
+.promo-rotator-list {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.promo-rotator-row {
+	display: grid;
+	grid-template-columns: 1.4fr 1fr auto;
+	gap: 0.5rem;
+	align-items: center;
+	padding: 0.5rem;
+	border: 1px solid #d8dee9;
+	border-radius: 0.5rem;
+	background: #fff;
+}
+
+.promo-rotator-actions {
+	display: flex;
+	gap: 0.25rem;
+}
+
+.promo-rotator-actions .btn {
+	min-width: 2rem;
+	height: 2rem;
+	padding: 0;
+}
+
+@media (max-width: 900px) {
+	.promo-rotator-row {
+		grid-template-columns: 1fr;
+	}
+}
