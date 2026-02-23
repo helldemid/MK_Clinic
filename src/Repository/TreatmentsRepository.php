@@ -27,6 +27,7 @@ class TreatmentsRepository extends ServiceEntityRepository
 			->select('t.id, t.name, tsi.description')
 			->leftJoin('App\Entity\TreatmentsShortInfo', 'tsi', 'WITH', 'tsi.treatment = t.id')
 			->where('t.category = :categoryId')
+			->andWhere('t.isActive = true')
 			->setParameter('categoryId', $categoryId)
 			->orderBy('LENGTH(t.name)', 'DESC')
 			->getQuery()
