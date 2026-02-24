@@ -77,9 +77,7 @@
 								<ul>
 									{% for treatment in treatments %}
 										<li>
-											<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment_slug(treatment.name) }) }}"
-												title="{{ treatment.description|default(treatment.name)|striptags|trim }}"
-												aria-label="{{ treatment.name }}. {{ treatment.description|default('')|striptags|trim }}">
+											<a href="{{ path('treatment_show', { id: treatment.id, slug: treatment_slug(treatment.name) }) }}" title="{{ treatment.description|default(treatment.name)|striptags|trim }}" aria-label="{{ treatment.name }}. {{ treatment.description|default('')|striptags|trim }}">
 												{{ treatment.name }}
 											</a>
 										</li>
@@ -118,24 +116,41 @@
 		</main>
 
 		<footer>
-			<div class="logo_wrap">
-				<img src="{{ asset('media/footer_logo.svg') }}" alt="Logo" class="logo">
-				<h3>M.K. Aesthetic Clinic</h3>
-			</div>
 			<div class="content">
-				<div id="map" style="width:650px; height:450px;"></div>
+				<div class="brand_info">
+					<div class="brand_head">
+						<img src="{{ asset('media/footer_logo.svg') }}" alt="Logo" class="logo">
+						<h3>M.K. Aesthetic Clinic</h3>
+					</div>
+					<p>Personalised aesthetic treatments with a focus on safety, comfort and natural results.
+						Every treatment is tailored to you, using advanced techniques to enhance your natural beauty while keeping results subtle, balanced and refined.</p>
+					<div class="social_links">
+						<a href="https://www.instagram.com/mkaesthetic.clinic?igsh=c2g4NzRuOHh6MWNi" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+							<i class="fa-brands fa-instagram"></i>
+						</a>
+						<a href="https://www.facebook.com/share/1HT2JREY7s/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+							<i class="fa-brands fa-facebook-f"></i>
+						</a>
+						<a href="https://wa.me/447717205281" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+							<i class="fa-brands fa-whatsapp"></i>
+						</a>
+					</div>
+				</div>
 				<div class="links">
-					<h3>Customer care</h3>
+					<h3>Customer Care</h3>
 					<a href="{{ path('help', { slug: 'rewards-programme' }) }}">Rewards Programme</a>
 					<a href="{{ path('help', { slug: 'cancellation-policy' }) }}">Cancellation Policy</a>
-					<a href="{{ path('help', { slug: 'access-statement' }) }}">Access Statement</a>
 					<a href="{{ path('help', { slug: 'complaints-policy' }) }}">Complaints Policy</a>
 					<a href="{{ path('help', { slug: 'chaperone-policy' }) }}">Chaperone Policy</a>
+					<a href="{{ path('help', { slug: 'faqs' }) }}">FAQs</a>
+				</div>
+				<div class="links">
+					<h3>Company &amp; Legal</h3>
+					<a href="{{ path('help', { slug: 'access-statement' }) }}">Access Statement</a>
 					<a href="{{ path('help', { slug: 'patient-notice' }) }}">Patient Notice</a>
 					<a href="{{ path('help', { slug: 'privacy-policy' }) }}">Privacy Policy</a>
-					<a href="{{ path('contacts') }}">Contact us</a>
+					<a href="{{ path('contacts') }}">Contact Us</a>
 					<a href="{{ path('help', { slug: 'career' }) }}">Career</a>
-					<a href="{{ path('help', { slug: 'faqs' }) }}">FAQs</a>
 				</div>
 				<div class="links">
 					<h3>Treatments</h3>
@@ -145,18 +160,13 @@
 						{% endif %}
 					{% endfor %}
 				</div>
-				<div class="links">
-					<h3>Social media</h3>
-					<a href="https://www.instagram.com/m.k.aestheticclinic?igsh=c2g4NzRuOHh6MWNi">Instagram</a>
-					<a href="https://facebook.com">Facebook</a>
-					<a href="https://wa.me/447717205281">WhatsApp</a>
-				</div>
 			</div>
+			<div id="map"></div>
 			<div class="extra_info">
 				<p>Designed and created by
 					<a href="https://www.instagram.com/helldemid">helldemid</a>
 				</p>
-				<p>©{{ "now"|date("Y") }}
+				<p>©2025-{{ "now"|date("Y") }}
 					M.K. Aesthetic Clinic</p>
 			</div>
 		</footer>
