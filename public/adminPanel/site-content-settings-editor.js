@@ -74,7 +74,17 @@
 	};
 
 	const init = () => {
-		document.querySelectorAll('input[type="file"][name$="[heroDesktopImage][file]"], input[type="file"][name$="[heroMobileImage][file]"]').forEach((input) => {
+		const selector = [
+			'input[type="file"][data-site-content-preview="1"]',
+			'input[type="file"][name$="[heroDesktopImage][file]"]',
+			'input[type="file"][name$="[heroMobileImage][file]"]',
+			'input[type="file"][name$="[ourEthosImage][file]"]',
+			'input[type="file"][name$="[ourStoryImage][file]"]',
+			'input[type="file"][name$="[consultationImage][file]"]',
+			'input[type="file"][name$="[bookingImage][file]"]'
+		].join(', ');
+
+		document.querySelectorAll(selector).forEach((input) => {
 			if (input.dataset.siteContentPreviewReady === '1') {
 				return;
 			}

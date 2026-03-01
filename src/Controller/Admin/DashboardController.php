@@ -56,9 +56,17 @@ class DashboardController extends AbstractDashboardController
 		]);
 
 		yield MenuItem::subMenu('Content', 'fa-solid fa-file-lines')->setSubItems([
+			MenuItem::linkToRoute('Homepage: Hero', 'fa-solid fa-image', 'admin_homepage_hero'),
+			MenuItem::linkToRoute('Price List: Hero', 'fa-solid fa-list', 'admin_price_list_hero'),
+			MenuItem::linkToRoute('Contact Us', 'fa-solid fa-envelope', 'admin_contact_content'),
+			MenuItem::linkToRoute('Homepage: Our Ethos', 'fa-solid fa-hand-holding-heart', 'admin_homepage_our_ethos'),
+			MenuItem::linkToRoute('Homepage: Our Story', 'fa-solid fa-book-open', 'admin_homepage_our_story'),
+			MenuItem::linkToRoute('Consultation block', 'fa-solid fa-user-doctor', 'admin_homepage_consultation'),
+			MenuItem::linkToRoute('Booking block', 'fa-solid fa-calendar-check', 'admin_homepage_booking'),
+			MenuItem::linkToRoute('Footer', 'fa-solid fa-shoe-prints', 'admin_footer_content'),
+			MenuItem::linkToRoute('Promo Bar', 'fa-solid fa-bullhorn', 'admin_site_content'),
 			MenuItem::linkToCrud('Help Sections', 'fa-solid fa-circle-question', HelpSection::class),
 			MenuItem::linkToCrud('Help FAQs', 'fa-solid fa-list-check', HelpFaq::class),
-			MenuItem::linkToRoute('Site Content', 'fa-solid fa-bullhorn', 'admin_site_content'),
 		]);
 	}
 }

@@ -8,21 +8,19 @@
 		<div class="price-list-hero">
 			<div class="back_full_picture">
 				<picture>
-					<source media="(orientation: portrait)" srcset="{{ asset('media/welcome_mobile_1.webp') }}">
-					<source media="(orientation: landscape)" srcset="{{ asset('media/welcome_3.webp') }}">
-					<img src="{{ asset('media/welcome_3.webp') }}" alt="welcome image">
+					<source media="(orientation: portrait)" srcset="{{ asset(sitePriceListHeroMobileImage) }}">
+					<source media="(orientation: landscape)" srcset="{{ asset(sitePriceListHeroDesktopImage) }}">
+					<img src="{{ asset(sitePriceListHeroDesktopImage) }}" alt="{{ sitePriceListHeroTitle }}">
 				</picture>
 			</div>
 			<div class="price-list-hero__inner">
-				<span class="price-list-hero__eyebrow">Science. Artistry. You.</span>
-				<h1>Price List</h1>
-				<p class="price-list-hero__lead">
-					Discover our comprehensive range of aesthetic treatments, from advanced laser procedures to rejuvenating injectables &mdash; all delivered with precision and care.
-				</p>
+				<span class="price-list-hero__eyebrow">{{ sitePriceListHeroEyebrow }}</span>
+				<h1>{{ sitePriceListHeroTitle }}</h1>
+				<p class="price-list-hero__lead">{{ sitePriceListHeroLead }}</p>
 				<ul class="price-list-hero__highlights" aria-label="Price list highlights">
-					<li>Course discounts available</li>
-					<li>Free consultations</li>
-					<li>Flexible payment options</li>
+					<li>{{ sitePriceListHeroHighlight1 }}</li>
+					<li>{{ sitePriceListHeroHighlight2 }}</li>
+					<li>{{ sitePriceListHeroHighlight3 }}</li>
 				</ul>
 			</div>
 		</div>

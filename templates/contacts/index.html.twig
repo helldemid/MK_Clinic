@@ -4,69 +4,42 @@
 {% endblock %}
 
 {% block body %}
-
 	<section class="contacts">
 		<h2>Clinic contacts</h2>
 		<div class="content">
 			<div class="contacts_wrap">
-				<div class="contact_block">
-					<h3>Our phone number:</h3>
-					<div class="contact_with_icon">
-						<img src="{{ asset('media/icons/res1.svg') }}" class="phone_icon">
-						<span>
-							<a href="tel:+441702844959">+44-1702-844-959</a>
-						</span>
+				{% for block in siteContactDetailBlocks %}
+					<div class="contact_block">
+						<h3>{{ block.title }}</h3>
+						{% for item in block.items %}
+							<div class="contact_with_icon">
+								<img src="{{ asset('media/icons/' ~ item.icon) }}" alt="" class="contact_icon">
+								<span>
+									{% if item.url is not empty %}
+										<a href="{{ item.url }}">{{ item.label|nl2br }}</a>
+									{% else %}
+										{{ item.label|nl2br }}
+									{% endif %}
+								</span>
+							</div>
+						{% endfor %}
+						{% if block.note is not empty %}
+							<span class="extra_info">{{ block.note|nl2br }}</span>
+						{% endif %}
 					</div>
-					<div class="contact_with_icon">
-						<img src="{{ asset('media/icons/res1.svg') }}" class="phone_icon">
-						<span>
-							<a href="tel:+447717205281">+44-7717-205-281</a>
-						</span>
+				{% endfor %}
+				{% for block in siteContactIconBlocks %}
+					<div class="contact_block">
+						<h3>{{ block.title }}</h3>
+						<div class="contact_with_icon">
+							{% for item in block.items %}
+								<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer" class="social_media">
+									<img src="{{ asset('media/icons/' ~ item.icon) }}" alt="{{ item.label }}">
+								</a>
+							{% endfor %}
+						</div>
 					</div>
-					<span class="extra_info">Mon–Fri 10:00–18:00<br>Sat 10:00–16:00<br>Sun closed</span>
-				</div>
-				<div class="contact_block">
-					<h3>Email:</h3>
-					<div class="contact_with_icon">
-						<img src="{{ asset('media/icons/email.svg') }}" class="email_icon">
-						<span>
-							<a href="mailto:mkaestheticclinics@gmail.com">mkaestheticclinics@gmail.com</a>
-						</span>
-					</div>
-					<div class="contact_with_icon">
-						<img src="/media/icons/email.svg" class="email_icon">
-						<span>
-							<a href="mailto:info@mk-aesthetic-clinic.com">info@mk-aesthetic-clinic.com</a>
-						</span>
-					</div>
-				</div>
-				<div class="contact_block">
-					<h3>We in social networks:</h3>
-					<div class="contact_with_icon">
-						<a href="https://www.instagram.com/mkaesthetic.clinic?igsh=c2g4NzRuOHh6MWNi" target="_blank" rel="noopener noreferrer" class="social_media">
-							<img src="{{ asset('media/icons/instagram.svg') }}" alt="Instagram">
-						</a>
-						<a href="https://www.facebook.com/share/1HT2JREY7s/" target="_blank" rel="noopener noreferrer" class="social_media">
-							<img src="{{ asset('media/icons/facebook.svg') }}" alt="Facebook">
-						</a>
-						<a href="https://wa.me/447717205281" target="_blank" rel="noopener noreferrer" class="social_media">
-							<img src="{{ asset('media/icons/whatsapp.svg') }}" alt="WhatsApp">
-						</a>
-					</div>
-				</div>
-				<div class="contact_block">
-					<h3>Address:</h3>
-					<div class="contact_with_icon">
-						<img src="{{ asset('media/icons/location_grey.svg') }}" class="location_icon">
-						<span>
-							<a href="https://maps.app.goo.gl/842Yxuxdt8QUfx6k9">
-								<address>
-									135 St Clements, Broadway Leigh-on-Sea SS9 1PJ
-								</address>
-							</a>
-						</span>
-					</div>
-				</div>
+				{% endfor %}
 			</div>
 			<div id="contactsMap"></div>
 		</div>

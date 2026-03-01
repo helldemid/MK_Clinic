@@ -35,9 +35,9 @@
 		</div>
 		<div class="banner_info_wrap">
 			<div class="header_banner_info">
-				<h3>SCIENCE. ARTISTRY. YOU.</h3>
-				<h1>M.K. AESTHETIC CLINIC</h1>
-				<p>Experience a new era of aesthetics — restore youth, refine beauty, reveal confidence</p>
+				<h3>{{ siteHeroHeadlineLine1 }}</h3>
+				<h1>{{ siteHeroHeadlineLine2 }}</h1>
+				<p>{{ siteHeroSubheadline|nl2br }}</p>
 				<button class="transparent_white_button book_now">Book now</button>
 			</div>
 			<div></section>
@@ -46,37 +46,16 @@
 				{{ render_slider() }}
 			</section>
 			<section class="gray_back about_us">
-				<img src="{{ asset('media/our_ethos.png') }}" alt="clinic photo" class="wide_res">
+				<img src="{{ asset(siteOurEthosImage) }}" alt="clinic photo" class="wide_res">
 				<div class="clinic_info">
 					<span>Our Ethos</span>
-					<h2>Where Science Meets Artistry</h2>
+					<h2>{{ siteOurEthosTitle }}</h2>
 					<div class="about_us_text_block">
 						<div class="about_us_image">
-							<img src="{{ asset('media/our_ethos.png') }}" alt="clinic photo" class="narrow_res">
+							<img src="{{ asset(siteOurEthosImage) }}" alt="clinic photo" class="narrow_res">
 						</div>
 						<div>
-							<p>
-								Driven by a deep commitment to advancing every aspect of skin health, M.K. Aesthetic
-								Clinic was founded on Broadway in Leigh-on-Sea, where we specialise in aesthetic
-								medicine and anti-ageing treatments.
-							</p>
-							<br>
-							<p>
-								Led by a team of elite practitioners, the clinic is renowned for its minimalist and
-								integrated approach — combining advanced techniques and complementary
-								modalities to achieve results that are always natural-looking, balanced, and refined.
-							</p>
-							<br>
-							<p>
-								At M.K. Aesthetic Clinic, our philosophy is simple:
-								to deliver youthful, rejuvenated radiance through cutting-edge, clinically proven
-								treatments, grounded in science and guided by artistry.
-							</p>
-							<br>
-							<p>
-								At the heart of our ethos lies a simple promise: to enhance, never to change — and to
-								reveal your most authentic, naturally beautiful self.
-							</p>
+							<p>{{ siteOurEthosBody|nl2br }}</p>
 						</div>
 					</div>
 				</div>
@@ -84,39 +63,17 @@
 			<section class="about_us">
 				<div class="clinic_info">
 					<span>Our story</span>
-					<h2>Where It All Began</h2>
+					<h2>{{ siteOurStoryTitle }}</h2>
 					<div class="about_us_text_block">
 						<div>
-							<p>
-								Situated on Broadway in Leigh-on-Sea, M.K. Aesthetic Clinic was founded with a clear
-								vision — to enhance natural beauty and restore confidence through subtle, refined
-								results.
-							</p>
-							<br>
-							<p>
-								We specialise in advanced skincare and anti-ageing treatments, blending the latest
-								innovations in aesthetic medicine with a highly personalised approach. Every treatment
-								is thoughtfully designed to harmonise with your unique features, ensuring results that
-								are elegant, balanced, and authentically you.
-							</p>
-							<br>
-							<p>
-								Our team of experienced and internationally trained practitioners are dedicated to
-								delivering the highest standards of safety and care. Using only clinically proven
-								techniques and premium medical-grade products, we provide outcomes that are both
-								visible and lasting.
-							</p>
-							<p>
-								From bespoke skin treatments to advanced injectable procedures, we are committed to
-								helping you feel confident, refreshed, and naturally radiant.
-							</p>
+							<p>{{ siteOurStoryBody|nl2br }}</p>
 						</div>
 						<div class="about_us_image">
-							<img src="{{ asset('media/about_us.png') }}" alt="clinic photo" class="narrow_res">
+							<img src="{{ asset(siteOurStoryImage) }}" alt="clinic photo" class="narrow_res">
 						</div>
 					</div>
 				</div>
-				<img src="{{ asset('media/about_us.png') }}" alt="clinic photo" class="wide_res">
+				<img src="{{ asset(siteOurStoryImage) }}" alt="clinic photo" class="wide_res">
 			</section>
 			<section class="why_us">
 				<div class="back_full_picture">
