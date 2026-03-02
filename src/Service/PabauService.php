@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Symfony\Contracts\HttpClient\Exception\ExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -29,13 +30,28 @@ class PabauService
 
 			$url = "https://api.oauth.pabau.com/{$this->token}/categories/services";
 
-			$response = $this->client->request('GET', $url, [
-				'headers' => ['Accept' => 'application/json']
-			]);
+			try {
+				$response = $this->client->request('GET', $url, [
+					'headers' => ['Accept' => 'application/json']
+				]);
 
-			$data = $response->toArray();
+				$data = $response->toArray(false);
+				if (!is_array($data)) {
+					$item->expiresAfter(300);
+					return [];
+				}
 
-			return $data['service_categories'] ?? [];
+				$categories = $data['service_categories'] ?? [];
+				if (!is_array($categories)) {
+					$item->expiresAfter(300);
+					return [];
+				}
+
+				return $categories;
+			} catch (ExceptionInterface|\JsonException|\TypeError|\UnexpectedValueException) {
+				$item->expiresAfter(300);
+				return [];
+			}
 		});
 	}
 	private function normalize(string $name): string
@@ -55,10 +71,14 @@ class PabauService
 		$normalizedTarget = $this->normalize($name);
 
 		foreach ($this->getAllCategories() as $t) {
+			if (!is_array($t) || !isset($t['name'], $t['id'])) {
+				continue;
+			}
+
 			$normalizedApiName = $this->normalize($t['name']);
 
 			if ($normalizedApiName === $normalizedTarget) {
-				return $t['id'];
+				return (int) $t['id'];
 			}
 		}
 

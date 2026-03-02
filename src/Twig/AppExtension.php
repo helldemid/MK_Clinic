@@ -88,7 +88,11 @@ class AppExtension extends AbstractExtension implements GlobalsInterface
 
 		if (empty($treatmentName)) return $url;
 
-		$subcategoryId = $this->pabauService->findCategoryIdByName($treatmentName);
+		try {
+			$subcategoryId = $this->pabauService->findCategoryIdByName($treatmentName);
+		} catch (\Throwable) {
+			return $url;
+		}
 
 		if ($subcategoryId === null) return $url;
 

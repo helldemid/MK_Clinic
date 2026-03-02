@@ -1,10 +1,10 @@
 <?php
 namespace App\Form;
 
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\TreatmentQuestions;
 
@@ -17,9 +17,15 @@ class TreatmentQuestionType extends AbstractType
 				'label' => 'Question',
 				'attr' => ['class' => 'full', 'placeholder' => 'Enter the question here...']
 			])
-			->add('answer', TextareaType::class, [
+			->add('answer', CKEditorType::class, [
 				'label' => 'Answer',
-				'attr' => ['class' => 'full', 'placeholder' => 'Enter the answer here...']
+				'config_name' => 'help_section',
+				'autoload' => false,
+				'attr' => [
+					'class' => 'full js-treatment-answer-editor',
+					'placeholder' => 'Enter the answer here...',
+					'rows' => 8,
+				]
 			]);
 	}
 

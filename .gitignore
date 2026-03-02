@@ -9,6 +9,8 @@
 /var/
 /vendor/
 /public/ckeditor4
+/public/media/treatments/card
+/public/media/treatments/page
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###

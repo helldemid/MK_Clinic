@@ -1,8 +1,92 @@
 {% extends 'base.html.twig' %}
 
+{% set currentCardImage = form.shortInfo.vars.data and attribute(form.shortInfo.vars.data, 'cardImage') is defined ? attribute(form.shortInfo.vars.data, 'cardImage') : '' %}
+{% set currentPageImage = form.vars.data and attribute(form.vars.data, 'imageName') is defined ? attribute(form.vars.data, 'imageName') : '' %}
+
 {% block title %}
 	{% if isEdit %}Edit Treatment{% else %}New Treatment
 	{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('adminPanel/site-content-settings-editor.css') }}">
+	<style>
+		.treatment-form-toolbar {
+			position: sticky;
+			top: 92px;
+			z-index: 20;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.75rem;
+			align-items: center;
+			justify-content: space-between;
+			margin: 0 0 1.5rem;
+			padding: 1rem;
+			border: 1px solid #e4e1dc;
+			border-radius: 18px;
+			background: rgba(255, 255, 255, 0.92);
+			backdrop-filter: blur(10px);
+			box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+		}
+
+		.treatment-form-tabs {
+			display: flex;
+			flex: 1 1 720px;
+			flex-wrap: wrap;
+			gap: 0.65rem;
+		}
+
+		.treatment-form-tab {
+			padding: 0.65rem 1rem;
+			border: 1px solid #d8d3cb;
+			border-radius: 999px;
+			background: #f6f2ec;
+			color: #47413a;
+			font: inherit;
+			font-size: 0.92rem;
+			font-weight: 500;
+			cursor: pointer;
+			transition: 0.2s ease;
+		}
+
+		.treatment-form-tab:hover,
+		.treatment-form-tab[aria-selected="true"] {
+			border-color: #111;
+			background: #111;
+			color: #fff;
+		}
+
+		.treatment-form-toolbar__save {
+			margin: 0 !important;
+			background: #0a7500 !important;
+			border: solid 1px #0a7500 !important;
+			color: white !important;
+			white-space: nowrap;
+		}
+
+		.treatment-form-toolbar__save:hover {
+			background: #000000 !important;
+			border: solid 1px #000000 !important;
+		}
+
+		@media (max-width: 1024px) {
+			.treatment-form-toolbar {
+				top: 82px;
+			}
+		}
+
+		@media (max-width: 780px) {
+			.treatment-form-toolbar {
+				top: 74px;
+				padding: 0.85rem;
+			}
+
+			.treatment-form-tab {
+				font-size: 0.85rem;
+				padding: 0.55rem 0.8rem;
+			}
+		}
+	</style>
 {% endblock %}
 
 {% block body %}
@@ -27,8 +111,20 @@
 
 			{{ form_start(form) }}
 
+			<div class="treatment-form-toolbar" data-treatment-tabs data-storage-key="treatment-form-tab:{{ app.request.pathinfo }}">
+				<div class="treatment-form-tabs" role="tablist" aria-label="Treatment edit sections">
+					<button type="button" class="treatment-form-tab" data-tab-target="basic-information" aria-selected="true">Basic Information</button>
+					<button type="button" class="treatment-form-tab" data-tab-target="card-data" aria-selected="false">Card data</button>
+					<button type="button" class="treatment-form-tab" data-tab-target="details" aria-selected="false">Details</button>
+					<button type="button" class="treatment-form-tab" data-tab-target="duration-recovery" aria-selected="false">Duration &amp; Recovery</button>
+					<button type="button" class="treatment-form-tab" data-tab-target="price" aria-selected="false">Price</button>
+					<button type="button" class="treatment-form-tab" data-tab-target="questions-answers" aria-selected="false">Questions &amp; Answers</button>
+				</div>
+				<button type="submit" class="transparent_black_button treatment-form-toolbar__save">Save Treatment</button>
+			</div>
+
 			{# === Basic info card === #}
-			<div class="card-block">
+			<div class="card-block" data-treatment-tab-panel="basic-information">
 				<h3 class="card-title">Basic Information</h3>
 				<div class="form-row">
 					<div class="half">
@@ -47,25 +143,55 @@
 				<div class="file-upload">
 					<label for="treatment_image_card" class="file-label">
 						<span class="file-button">📁 Card Image</span>
-						<span class="file-name">No file chosen</span>
+						<span class="file-name">{{ currentCardImage ?: 'No file chosen' }}</span>
 					</label>
-					{{ form_widget(form.image_card, {'attr': {'class': 'file-input'}}) }}
+					{{ form_widget(form.image_card, {'attr': {
+						'class': 'file-input',
+						'data-treatment-file-preview': '1',
+						'data-current-file': currentCardImage,
+						'data-download-prefix': '/' ~ treatment_card_img_base_dir
+					}}) }}
 					<p class="file-hint">Use a narrow format, like Instagram portrait (e.g. 4:5).</p>
+					{% if currentCardImage %}
+						<div class="site-content-current-preview">
+							<div class="site-content-preview-title">Current image</div>
+							<div class="site-content-preview-wrap">
+								<a href="{{ asset(treatment_card_img_base_dir ~ currentCardImage) }}" download target="_blank" rel="noopener">Download current</a>
+								<img src="{{ asset(treatment_card_img_base_dir ~ currentCardImage) }}" alt="Current card image preview">
+							</div>
+						</div>
+					{% endif %}
+					<div class="site-content-next-preview" hidden></div>
 				</div>
 
 				<div class="file-upload">
 					<label for="treatment_image_page" class="file-label">
 						<span class="file-button">📁 Page image</span>
-						<span class="file-name">No file chosen</span>
+						<span class="file-name">{{ currentPageImage ?: 'No file chosen' }}</span>
 					</label>
-					{{ form_widget(form.image_page, {'attr': {'class': 'file-input'}}) }}
+					{{ form_widget(form.image_page, {'attr': {
+						'class': 'file-input',
+						'data-treatment-file-preview': '1',
+						'data-current-file': currentPageImage,
+						'data-download-prefix': '/' ~ treatment_page_img_base_dir
+					}}) }}
 					<p class="file-hint">Use a wide format, suitable for page headers (e.g. 16:9).</p>
+					{% if currentPageImage %}
+						<div class="site-content-current-preview">
+							<div class="site-content-preview-title">Current image</div>
+							<div class="site-content-preview-wrap">
+								<a href="{{ asset(treatment_page_img_base_dir ~ currentPageImage) }}" download target="_blank" rel="noopener">Download current</a>
+								<img src="{{ asset(treatment_page_img_base_dir ~ currentPageImage) }}" alt="Current page image preview">
+							</div>
+						</div>
+					{% endif %}
+					<div class="site-content-next-preview" hidden></div>
 				</div>
 
 			</div>
 
 			{# === Short Info card === #}
-			<div class="card-block">
+			<div class="card-block" data-treatment-tab-panel="card-data" style="display:none;">
 				<h3 class="card-title">Card data</h3>
 				<div class="full">
 					{{ form_row(form.shortInfo.title, {
@@ -90,7 +216,7 @@
 
 			</div>
 
-			<div class="card-block">
+			<div class="card-block" data-treatment-tab-panel="details" style="display:none;">
 				<h3 class="card-title">Details</h3>
 				<div class="full">
 					{{ form_row(form.fullDescription, {
@@ -112,7 +238,7 @@
 			</div>
 
 			{# === Duration & Recovery card === #}
-			<div class="card-block">
+			<div class="card-block" data-treatment-tab-panel="duration-recovery" style="display:none;">
 				<h3 class="card-title">Duration & Recovery</h3>
 				<div class="form-row">
 					{{ form_row(form.time.hours, {
@@ -167,7 +293,7 @@
 
 
 			{# === Price card === #}
-			<div class="card-block">
+			<div class="card-block" data-treatment-tab-panel="price" style="display:none;">
 				<h3 class="card-title">Price</h3>
 				{{ form_row(form.price.isFixed, { 'row_attr': {'class': 'form-checkbox'} }) }}
 				<div class="form-row">
@@ -191,7 +317,7 @@
 			</div>
 
 			{# === Questions card === #}
-			<div class="card-block">
+			<div class="card-block" data-treatment-tab-panel="questions-answers" style="display:none;">
 				<h3 class="card-title">Questions & Answers</h3>
 					<div id="questions-container" data-prototype="{{ form_widget(form.questions.vars.prototype)|e('html_attr') }}">
 						{% for questionForm in form.questions %}
@@ -204,9 +330,6 @@
 					<button class="transparent_black_button" type="button" id="add-question">Add Question</button>
 			</div>
 
-			<div class="form-actions">
-				<button type="submit" class="btn btn-primary">Save Treatment</button>
-			</div>
 			{% if form.questions is empty %}
 				<div style="display: none;">
 					{{ form_row(form.questions) }}
@@ -220,5 +343,9 @@
 {% endblock %}
 
 {% block javascripts %}
+	<script>
+		window.CKEDITOR_BASEPATH = '{{ asset('ckeditor4') }}/';
+	</script>
+	<script src="{{ asset('ckeditor4/ckeditor.js') }}"></script>
 	<script src="{{ asset('js/treatments.js') }}"></script>
 {% endblock %}

@@ -8,6 +8,8 @@ use App\Entity\PriceCell;
 use App\Entity\PriceColumn;
 use App\Entity\PriceRow;
 use App\Entity\PriceSection;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Asset;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -44,6 +46,12 @@ class DashboardController extends AbstractDashboardController
 			->addFormTheme('@FOSCKEditor/Form/ckeditor_widget.html.twig')
 			->addFormTheme('admin/form/price_grid_widget.html.twig')
 			->addFormTheme('admin/form/promo_rotator_widget.html.twig');
+	}
+
+	public function configureAssets(): Assets
+	{
+		return Assets::new()
+			->addJsFile(Asset::new('js/ckeditor-cleanup.js'));
 	}
 
 	public function configureMenuItems(): iterable
